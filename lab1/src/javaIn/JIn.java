@@ -1,6 +1,9 @@
 package javaIn;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.InputMismatchException;
 
 public class JIn {
 	public static String getString() {
@@ -25,6 +28,8 @@ public class JIn {
 			a = Integer.parseInt(bfr.readLine());
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InputMismatchException e) {
+			System.out.println("To nie liczba!");
 		}
 		return a;
 	}
