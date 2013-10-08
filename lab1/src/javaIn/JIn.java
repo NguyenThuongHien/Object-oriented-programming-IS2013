@@ -19,7 +19,7 @@ public class JIn {
 		return text;
 	}
 
-	public static Integer getInteger() {
+	public static int getInteger() {
 		int a = 0;
 		try {
 			InputStreamReader rd = new InputStreamReader(System.in);
