@@ -14,7 +14,7 @@ public class Reader {
 		try {
 			text = bfr.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Wpisales: " + text);
