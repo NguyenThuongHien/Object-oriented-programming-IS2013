@@ -20,8 +20,8 @@ public class Pesel {
 				pesel[i] = PESEL.charAt(i) - '0';
 			else
 				pesel[i] = -1;
-		if (PESEL.length() < 11)
-			pesel[0] = -1;
+			if (PESEL.length() < 11)
+				pesel[0] = -1;
 		}
 	}
 
@@ -49,9 +49,9 @@ public class Pesel {
 	}
 
 	/**
-     * @brief Function checks data
-     * @return true if it's proper
-     */
+	 * @brief Function checks data
+	 * @return true if it's proper
+	 */
 	public boolean checkData() {
 		int year = pesel[0] * 10 + pesel[1];
 		int month = pesel[2] * 10 + pesel[3];
