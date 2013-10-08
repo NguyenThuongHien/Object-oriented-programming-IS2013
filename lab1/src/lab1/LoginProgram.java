@@ -11,6 +11,11 @@ import java.io.*;
  * @author Szymon
  */
 public class LoginProgram {
+	/**
+	 * @brief Main function which checks login and password
+	 * @param argv
+	 *            - input arguments
+	 */
 	public static void main(String[] argv) {
 		Login log = new Login("ala", "makota");
 		try {
@@ -36,7 +41,6 @@ public class LoginProgram {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 }
 
