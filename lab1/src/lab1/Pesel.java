@@ -16,7 +16,25 @@ public class Pesel {
     	for (int i = 0; i < PESEL.length(); i++) {
     		if (PESEL.charAt(i) >= '0' && PESEL.charAt(i) <= '9')
     			pesel[i] = PESEL.charAt(i) - '0';
-    			
+    		else
+    			pesel[i] = -1;
     	}
     }
+    
+    /**
+     * @brief Checks if all numbers are OK (0-9)
+     * @return true if are.
+     */
+    public boolean checkNumbers() {
+    	boolean flag = true;
+    	for (int i = 0; i < 11 && flag; i++) {
+    		if (pesel[i] == -1)
+    			flag = false;
+    	}
+    	return flag;
+    }
+    
+    
+    
+    
 }
