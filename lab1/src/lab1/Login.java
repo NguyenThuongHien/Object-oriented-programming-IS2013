@@ -6,7 +6,6 @@ package lab1;
  */
 
 /**
- * 
  * @author Szymon
  */
 public class Login {
@@ -14,7 +13,7 @@ public class Login {
 	private String password;
 
 	/**
-	 * 
+	 * Constructor
 	 * @param _login
 	 *            login jaki dana instancja klasy będiz eprzechowywać
 	 * @param _password
@@ -26,7 +25,7 @@ public class Login {
 	}
 
 	/**
-	 * 
+	 * Checking login and password
 	 * @param _login
 	 *            login do porównania z przechowywanym wewnątrz obiektu
 	 * @param _password
@@ -37,5 +36,4 @@ public class Login {
 	public boolean check(String _login, String _password) {
 		return login.equals(_login) && _password.equals(password);
 	}
-
 }
