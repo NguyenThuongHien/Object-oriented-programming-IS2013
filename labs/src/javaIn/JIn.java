@@ -28,7 +28,7 @@ public class JIn {
 			a = Integer.parseInt(bfr.readLine());
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (InputMismatchException e) {
+		} catch (NumberFormatException e) {
 			System.out.println("To nie liczba!");
 		}
 		return a;
