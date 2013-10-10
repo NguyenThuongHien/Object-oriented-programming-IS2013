@@ -33,4 +33,19 @@ public class JIn {
 		}
 		return a;
 	}
+	
+	public static double getDouble() {
+		double a = 0.0;
+		try {
+			InputStreamReader rd = new InputStreamReader(System.in);
+			BufferedReader bfr = new BufferedReader(rd);
+			
+			a = Double.parseDouble(bfr.readLine());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("To nie liczba!");
+		}
+		return a;
+	}
 }
