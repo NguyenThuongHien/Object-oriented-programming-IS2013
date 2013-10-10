@@ -7,12 +7,12 @@ package lab1;
 import java.io.*;
 
 /**
- * 
+ * Class - authorization of login and password
  * @author Szymon
  */
 public class LoginProgram {
 	/**
-	 * @brief Main function which checks login and password
+	 * Main function which checks login and password
 	 * @param argv
 	 *            - input arguments
 	 */
@@ -37,7 +37,7 @@ public class LoginProgram {
 			if (log.check(login, haslo))
 				System.out.println("OK");
 			else
-				System.out.println("Bledne dane");
+				System.out.println("Bledne dane.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
