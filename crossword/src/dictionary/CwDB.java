@@ -7,10 +7,9 @@ package dictionary;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 
 /**
@@ -20,7 +19,7 @@ import java.util.LinkedList;
  * 
  */
 public class CwDB {
-	private LinkedList<Entry> dict; // dictionary - list of entries
+	private LinkedList<Entry> dict = new LinkedList<Entry>(); // dictionary - list of entries
 
 	/**
 	 * Constructor
@@ -86,11 +85,11 @@ public class CwDB {
 	 *            - name of output file
 	 */
 	public void saveDB(String filename) throws IOException {
-		ObjectOutputStream outputDB = null;
+		FileWriter outputDB = null;
 		try {
-			outputDB = new ObjectOutputStream(new FileOutputStream(filename));
+			outputDB = new FileWriter(filename);
 			for (int i = 0; i < getSize(); i++) {
-				outputDB.writeChars(dict.get(i).toString());
+				outputDB.write(dict.get(i).toString());
 			}
 		} finally {
 			if (outputDB != null)
