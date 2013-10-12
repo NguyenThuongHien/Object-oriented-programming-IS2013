@@ -3,7 +3,6 @@ package javaIn;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.InputMismatchException;
 
 public class JIn {
 	public static String getString() {
@@ -29,7 +28,8 @@ public class JIn {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
-			System.out.println("To nie liczba!");
+			System.out.println("To nie liczba! Wpisz ponownie!");
+			a = getInteger();
 		}
 		return a;
 	}
@@ -44,7 +44,8 @@ public class JIn {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
-			System.out.println("To nie liczba!");
+			System.out.println("To nie liczba! Wpisz ponownie!");
+			a = getDouble();
 		}
 		return a;
 	}
