@@ -20,6 +20,7 @@ public class TestPoints {
 
 	/**
 	 * Main function, with menu to operate on points.
+	 * 
 	 * @param args
 	 *            - input program parameters
 	 */
@@ -33,25 +34,31 @@ public class TestPoints {
 						.getDouble()));
 				break;
 			case 2:
-				for (int i = 0; i < points.size(); i++)
-					points.get(i).printPoint3D();
+				if (points.size() > 0)
+					for (int i = 0; i < points.size(); i++) {
+						System.out.print(i + ". ");
+						points.get(i).printPoint3D();
+					}
+				else
+					System.out.print("Brak punktów do wyswietlenia!");
+				System.out.print("\n");
 				break;
 			case 3:
 				if (points.size() > 1) {
-					System.out.println("Podaj dwie liczby (int) od 0 do "
-							+ (points.size() - 1));
+					System.out.println("Podaj dwie liczby (int) od 1 do "
+							+ (points.size()));
 					int i = JIn.getInteger();
 					int j = JIn.getInteger();
-					if ((i >= 0) && (i < points.size()) && (j >= 0)
-							&& (j < points.size()))
-						System.out.println("Odleglosc wynosi "
-								+ points.get(i).distance(points.get(j)));
+					if ((i > 0) && (i <= points.size()) && (j > 0)
+							&& (j <= points.size()))
+						System.out
+								.println("Odleglosc wynosi "
+										+ points.get(i - 1).distance(
+												points.get(j - 1)));
 					else
 						System.out.println("Bledny indeks!");
 				} else
 					System.out.println("Dodaj punkty!");
-				break;
-			case 4:
 				break;
 			default:
 				System.out.println("Brak takiej opcji, wybierz ponownie.");
@@ -63,6 +70,7 @@ public class TestPoints {
 
 	/**
 	 * Menu
+	 * 
 	 * @return integer
 	 */
 	private static int menu() {
