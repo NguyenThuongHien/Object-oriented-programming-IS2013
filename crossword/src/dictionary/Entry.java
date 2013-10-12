@@ -64,4 +64,13 @@ public class Entry {
 		this.clue = clue;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return word + "\n" + clue + "\n";
+	}
+
+	
 }
