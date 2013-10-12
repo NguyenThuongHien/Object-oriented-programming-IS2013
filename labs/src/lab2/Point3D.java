@@ -60,6 +60,9 @@ public class Point3D extends Point2D {
 				+ (getZ() - point.getZ()) * (getZ() - point.getZ()));
 	}
 	
+	/**
+	 * Print function
+	 */
 	public void printPoint3D() {
 		System.out.print(getX() + " " + getY() + " " + getZ() + "\n");
 	}
