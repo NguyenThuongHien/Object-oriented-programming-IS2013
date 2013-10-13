@@ -56,12 +56,12 @@ public class CwDB {
 	 * @return entry in dictionary with field word
 	 */
 	public Entry get(String word) {
-		for (int i = 0; i < getSize(); i++) {
-			if (dict.get(i).getWord().equals(word)) {
-				return dict.get(i);
-			}
-		}
-		return new Entry("", "");
+		Entry temp = null;
+		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter.hasNext(); temp = iter.next())
+		    if (temp.getWord().equals(word))
+		    	return temp;
+
+		return temp;
 	}
 
 	/**
@@ -71,11 +71,10 @@ public class CwDB {
 	 *            - parameter to identify entry
 	 */
 	public void remove(String word) {
-		for (int i = 0; i < getSize(); i++) {
-			if (dict.get(i).getWord().equals(word)) {
-				dict.remove(i);
-			}
-		}
+		Entry temp = null;
+		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter.hasNext(); temp = iter.next())
+		    if (temp.getWord().equals(word))
+		    	iter.remove();
 	}
 
 	/**
