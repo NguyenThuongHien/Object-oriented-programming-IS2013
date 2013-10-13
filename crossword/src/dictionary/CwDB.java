@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * 
  */
 public class CwDB {
-	private LinkedList<Entry> dict = new LinkedList<Entry>(); // dictionary -
+	protected LinkedList<Entry> dict = new LinkedList<Entry>(); // dictionary -
 																// list of
 																// entries
 
