@@ -19,7 +19,9 @@ import java.util.LinkedList;
  * 
  */
 public class CwDB {
-	private LinkedList<Entry> dict = new LinkedList<Entry>(); // dictionary - list of entries
+	private LinkedList<Entry> dict = new LinkedList<Entry>(); // dictionary -
+																// list of
+																// entries
 
 	/**
 	 * Constructor
@@ -57,9 +59,10 @@ public class CwDB {
 	 */
 	public Entry get(String word) {
 		Entry temp = null;
-		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter.hasNext(); temp = iter.next())
-		    if (temp.getWord().equals(word))
-		    	return temp;
+		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter
+				.hasNext(); temp = iter.next())
+			if (temp.getWord().equals(word))
+				return temp;
 
 		return temp;
 	}
@@ -72,9 +75,10 @@ public class CwDB {
 	 */
 	public void remove(String word) {
 		Entry temp = null;
-		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter.hasNext(); temp = iter.next())
-		    if (temp.getWord().equals(word))
-		    	iter.remove();
+		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter
+				.hasNext(); temp = iter.next())
+			if (temp.getWord().equals(word))
+				iter.remove();
 	}
 
 	/**
@@ -87,9 +91,10 @@ public class CwDB {
 		FileWriter outputDB = null;
 		try {
 			outputDB = new FileWriter(filename);
-			for (int i = 0; i < getSize(); i++) {
-				outputDB.write(dict.get(i).toString());
-			}
+			Entry temp = null;
+			for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter
+					.hasNext(); temp = iter.next())
+				outputDB.write(temp.toString());
 		} finally {
 			if (outputDB != null)
 				outputDB.close();
