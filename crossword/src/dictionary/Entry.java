@@ -71,6 +71,4 @@ public class Entry {
 	public String toString() {
 		return word + "\n" + clue + "\n";
 	}
-
-	
 }
