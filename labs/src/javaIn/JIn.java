@@ -12,7 +12,7 @@ public class JIn {
 			BufferedReader bfr = new BufferedReader(rd);
 
 			text = bfr.readLine();
-			rd.close()
+			rd.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
