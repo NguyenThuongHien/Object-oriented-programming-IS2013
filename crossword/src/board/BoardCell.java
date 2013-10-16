@@ -12,20 +12,15 @@ import java.util.Map;
  * 
  */
 public class BoardCell {
-	public enum Direction {
-		HORIZ, VERT
-	} // two options - first if word is horizontal, second - vertical
-
-	public enum Position {
-		BEG, IN, END
-	} // three options - if cell can be the at the beginning, inner, ending
-
 	private String content; // content of cell
-	private Map<DirectionPositionPair, Boolean> possibilities; // map of pairs,
-																// enables or
-																// disables
-																// possibilities
+	private Boolean[][] abilities; // array of abilities - hor/ver beg/in/end
+									// enable/disable
 
+	public static final int beg = 0;
+	public static final int in = 1;
+	public static final int end = 2;
+	public static final int hor = 0;
+	public static final int ver = 1;
 	/**
 	 * 
 	 * Constructor
@@ -40,13 +35,30 @@ public class BoardCell {
 	/**
 	 * Sets ability in certain direction/position
 	 * 
-	 * @param dirPos
-	 *            - pair - direction and position
+	 * @param dir
+	 *            - direction
+	 * @param pos
+	 *            - position
 	 * @param ability
 	 *            - boolean - true if enable
 	 */
-	public void setPossibility(DirectionPositionPair dirPos, Boolean ability) {
-		possibilities.put(dirPos, ability);
+	public void setAbility(int dir, int pos, Boolean ability) {
+		//TODO exception
+		abilities[dir][pos] = ability;
+	}
+
+	/**
+	 * Gets ability in certain direction/position
+	 * 
+	* @param dir
+	 *            - direction
+	 * @param pos
+	 *            - position
+	 * @return ability - boolean - true if enable
+	 */
+	public Boolean getAbility(int dir, int pos) {
+		//TODO exception
+		return abilities[dir][pos];
 	}
 
 	/**
@@ -66,29 +78,5 @@ public class BoardCell {
 	 */
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	/**
-	 * 
-	 * @author wukat
-	 * 
-	 */
-	public class DirectionPositionPair {
-		Direction dir; // direction
-		Position pos; // position
-
-		/**
-		 * 
-		 * Constructor
-		 * 
-		 * @param dir
-		 *            - direction
-		 * @param pos
-		 *            - position
-		 */
-		public DirectionPositionPair(Direction dir, Position pos) {
-			this.dir = dir;
-			this.pos = pos;
-		}
 	}
 }
