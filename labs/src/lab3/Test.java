@@ -15,5 +15,6 @@ public class Test {
 	public static void main(String[] args) {
 		ja.rzutujNaPracownika().dodajZajecia();
 		//TODO sprawdz
+		//TODO zadanie 2
 	}
 }
