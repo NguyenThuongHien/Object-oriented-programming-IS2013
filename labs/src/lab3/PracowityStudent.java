@@ -10,24 +10,28 @@ package lab3;
  * 
  */
 class PracowityStudent extends Student {
-	private int sumaGodzin;
-
+	// private int sumaGodzin;
+	
 	public Pracownik rzutujNaPracownika() {
 		return new InnerPracownik();
 	}
 
 	public void dodajZajecia() {
 		iloscZajec++;
-		sumaGodzin++;
+		// sumaGodzin++;
 	}
 
 	class InnerPracownik extends Pracownik {
 		public void dodajZajecia() {
-			iloscZajec++;
-			sumaGodzin++;
+			iloscZajec++; //to pracownik
+			PracowityStudent.this.iloscZajec++; //to ze studenta
+			
+			// sumaGodzin++;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -36,14 +40,13 @@ class PracowityStudent extends Student {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "PracowityStudent [sumaGodzin=" + sumaGodzin + ", iloscZajec="
-				+ iloscZajec + "]";
+		return "PracowityStudent [iloscZajec=" + iloscZajec + "]";
 	}
-
-	
 }
