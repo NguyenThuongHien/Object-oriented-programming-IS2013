@@ -26,5 +26,24 @@ class PracowityStudent extends Student {
 			iloscZajec++;
 			sumaGodzin++;
 		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "InnerPracownik [iloscZajec=" + iloscZajec + "]";
+		}
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PracowityStudent [sumaGodzin=" + sumaGodzin + ", iloscZajec="
+				+ iloscZajec + "]";
+	}
+
+	
 }

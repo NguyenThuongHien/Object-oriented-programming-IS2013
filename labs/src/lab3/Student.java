@@ -13,4 +13,13 @@ public abstract class Student {
 	protected int iloscZajec;
 
 	public abstract void dodajZajecia();
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Student [iloscZajec=" + iloscZajec + "]";
+	}
+	
 }
