@@ -17,6 +17,6 @@ public class C extends B {
 	}
 
 	void changeName() {
-    //	name = 'Cinne'; nie widzi zmiennej; package nie idzie z dziedziczeniem poza paczkę
+//         name = 'Cinne'; nie widzi zmiennej; package nie idzie z dziedziczeniem poza paczkę
     }
 }
