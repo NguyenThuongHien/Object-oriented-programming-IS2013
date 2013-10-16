@@ -5,8 +5,6 @@
  */
 package board;
 
-import java.util.Map;
-
 /**
  * @author wukat
  * 
