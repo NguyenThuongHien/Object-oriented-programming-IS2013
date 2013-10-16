@@ -12,7 +12,6 @@ public class JIn {
 			BufferedReader bfr = new BufferedReader(rd);
 
 			text = bfr.readLine();
-			rd.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -26,7 +25,6 @@ public class JIn {
 			BufferedReader bfr = new BufferedReader(rd);
 			
 			a = Integer.parseInt(bfr.readLine());
-			rd.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
@@ -43,7 +41,6 @@ public class JIn {
 			BufferedReader bfr = new BufferedReader(rd);
 			
 			a = Double.parseDouble(bfr.readLine());
-			rd.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
