@@ -7,24 +7,31 @@ package dictionary;
 
 /**
  * @author wukat
- *
+ * 
  */
 public class CwEntry extends Entry {
-	
-	public enum Direction {HORIZ, VERT};
-    private int x;
-    private int y;
-    private Direction d;
-    
+
+	public enum Direction {
+		HORIZ, VERT
+	}; // two options - first if word is horizontal, second - vertical
+
+	private int x; // level in vertical axe
+	private int y; // position in horizontal axe
+	private Direction d; // direction
+
 	/**
 	 * Constructor
-	  * @param word
+	 * 
+	 * @param word
 	 *            - word in crossword
 	 * @param clue
 	 *            - clue in crossword
-	 * @param x - level in vertical axe
-	 * @param y - level in horizontal axe
-	 * @param d - direction
+	 * @param x
+	 *            - level in vertical axe
+	 * @param y
+	 *            - level in horizontal axe
+	 * @param d
+	 *            - direction
 	 */
 	public CwEntry(String word, String clue, int x, int y, Direction d) {
 		super(word, clue);
@@ -35,6 +42,7 @@ public class CwEntry extends Entry {
 
 	/**
 	 * Getter
+	 * 
 	 * @return the x
 	 */
 	public int getX() {
@@ -42,8 +50,10 @@ public class CwEntry extends Entry {
 	}
 
 	/**
-	 * x setter 
-	 * @param x the x to set
+	 * x setter
+	 * 
+	 * @param x
+	 *            the x to set
 	 */
 	public void setX(int x) {
 		this.x = x;
@@ -51,6 +61,7 @@ public class CwEntry extends Entry {
 
 	/**
 	 * Getter
+	 * 
 	 * @return the y
 	 */
 	public int getY() {
@@ -58,8 +69,10 @@ public class CwEntry extends Entry {
 	}
 
 	/**
-	 * y setter 
-	 * @param y the y to set
+	 * y setter
+	 * 
+	 * @param y
+	 *            the y to set
 	 */
 	public void setY(int y) {
 		this.y = y;
@@ -67,6 +80,7 @@ public class CwEntry extends Entry {
 
 	/**
 	 * Getter
+	 * 
 	 * @return the d
 	 */
 	public Direction getDir() {
@@ -74,15 +88,12 @@ public class CwEntry extends Entry {
 	}
 
 	/**
-	 * d setter 
-	 * @param d the d to set
+	 * d setter
+	 * 
+	 * @param d
+	 *            the d to set
 	 */
 	public void setDir(Direction d) {
 		this.d = d;
 	}
-    
-    
-    
-    
-
 }
