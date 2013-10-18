@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import dictionary.CwEntry;
-import dictionary.Entry;
 import dictionary.InteliCwDB;
 
 /**
