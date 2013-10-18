@@ -77,4 +77,16 @@ public class BoardCell {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	/**
+	 * Function copying boardCell
+	 * @return copy
+	 */
+	public BoardCell copy() {
+		BoardCell boardCellCopy = new BoardCell(new String(getContent()));
+		for (int i = 0; i < 1; i++)
+			for (int j = 0; j < 2; j++)
+				boardCellCopy.setAbility(i, j, new Boolean(getAbility(i, j)));
+		return boardCellCopy;
+	}
 }
