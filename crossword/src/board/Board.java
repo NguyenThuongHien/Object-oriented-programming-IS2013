@@ -76,6 +76,7 @@ public class Board {
 
 	/**
 	 * Gets cells in which word can start
+	 * 
 	 * @return list of cells
 	 */
 	public LinkedList<BoardCell> getStartCells() {
@@ -89,7 +90,18 @@ public class Board {
 		return startCells;
 	}
 
-//	public createPattern(int fromx, int fromy, int tox, int toy) {
-//		
-//	}
+	/**
+	 * Copying function
+	 * @return board copy
+	 */
+	public Board copy() {
+		Board boardCopy = new Board(getWidth(), getHeight());
+        for (int i = 0; i < getWidth(); i++)
+        	for (int j = 0; j < getHeight(); j++)
+        		boardCopy.setCell(i, j, getCell(i, j).copy());
+		return boardCopy;
+	}
+	// public createPattern(int fromx, int fromy, int tox, int toy) {
+	//
+	// }
 }
