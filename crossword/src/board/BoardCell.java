@@ -19,6 +19,7 @@ public class BoardCell {
 	public static final int end = 2;
 	public static final int hor = 0;
 	public static final int ver = 1;
+
 	/**
 	 * 
 	 * Constructor
@@ -28,6 +29,17 @@ public class BoardCell {
 	 */
 	public BoardCell(String content) {
 		this.content = content;
+	}
+
+	/**
+	 * Checks if there is any content
+	 * 
+	 * @return true if it is
+	 */
+	public boolean checkContent() {
+		if (getContent().length() > 0)
+			return true;
+		return false;
 	}
 
 	/**
@@ -41,21 +53,21 @@ public class BoardCell {
 	 *            - boolean - true if enable
 	 */
 	public void setAbility(int dir, int pos, Boolean ability) {
-		//TODO exception
+		// TODO exception
 		abilities[dir][pos] = ability;
 	}
 
 	/**
 	 * Gets ability in certain direction/position
 	 * 
-	* @param dir
+	 * @param dir
 	 *            - direction
 	 * @param pos
 	 *            - position
 	 * @return ability - boolean - true if enable
 	 */
 	public Boolean getAbility(int dir, int pos) {
-		//TODO exception
+		// TODO exception
 		return abilities[dir][pos];
 	}
 
@@ -77,9 +89,10 @@ public class BoardCell {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	/**
 	 * Function copying boardCell
+	 * 
 	 * @return copy
 	 */
 	public BoardCell copy() {
