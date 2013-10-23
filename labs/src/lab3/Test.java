@@ -12,17 +12,20 @@ import java.util.LinkedList;
  * 
  */
 public class Test {
-	public static PracowityStudent ja = new PracowityStudent();
+	public static PracowityStudent pierwsza = new PracowityStudent();
 
 	public static void main(String[] args) {
-		ja.rzutujNaPracownika().dodajZajecia();
-		System.out.println(ja); //ilość zajęć w pracowniku, suma godzin w pracowitym studencie
+		Pracownik druga = pierwsza.rzutujNaPracownika();
+		druga.dodajZajecia();
+		pierwsza.dodajZajecia();
+		System.out.println(pierwsza); //ilość zajęć w studencie
+		System.out.println(druga);
 		LinkedList<Shape> Shapes = new LinkedList<Shape>();
 		Shapes.add(new Kwadrat());
 		Shapes.add(new Kolo());
 		Shapes.add(new Trojkat());
-		for (java.util.ListIterator<Shape> iter = Shapes.listIterator(); iter.hasNext();)
-			iter.next().draw();
+//		for (java.util.ListIterator<Shape> iter = Shapes.listIterator(); iter.hasNext();)
+//			iter.next().draw();
 		
 	}
 }

@@ -11,7 +11,7 @@ package lab3;
  */
 class PracowityStudent extends Student {
 	// private int sumaGodzin;
-	
+
 	public Pracownik rzutujNaPracownika() {
 		return new InnerPracownik();
 	}
@@ -23,9 +23,9 @@ class PracowityStudent extends Student {
 
 	class InnerPracownik extends Pracownik {
 		public void dodajZajecia() {
-			iloscZajec++; //to pracownik
-			PracowityStudent.this.iloscZajec++; //to ze studenta
-			
+			iloscZajec++; // to pracownik
+			PracowityStudent.this.iloscZajec++; // to ze studenta
+
 			// sumaGodzin++;
 		}
 

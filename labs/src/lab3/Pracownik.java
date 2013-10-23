@@ -7,12 +7,16 @@ package lab3;
 
 /**
  * @author wukat
- *
+ * 
  */
-abstract class Pracownik{
-	  protected int iloscZajec;
-	  public abstract void dodajZajecia();
-	/* (non-Javadoc)
+abstract class Pracownik {
+	protected int iloscZajec;
+
+	public abstract void dodajZajecia();
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
