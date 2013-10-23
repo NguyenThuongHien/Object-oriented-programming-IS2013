@@ -135,7 +135,7 @@ public class Crossword {
 	}
 
 	/**
-	 * Function generating ???
+	 * Function generating crossword
 	 * 
 	 * @param strategy
 	 */
