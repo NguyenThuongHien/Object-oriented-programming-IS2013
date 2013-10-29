@@ -59,7 +59,23 @@ public class Crossword {
 	private void setBoard(Board board) {
 		this.board = board;
 	}
+	
+	/**
+	 * Special getter
+	 * @return board's height
+	 */
+	public int getBoardHeight() {
+		return board.getHeight();
+	}
 
+	/**
+	 * Special getter
+	 * @return board's width
+	 */
+	public int getBoardWidth() {
+		return board.getWidth();
+	}
+	
 	/**
 	 * Getter
 	 * 
