@@ -81,13 +81,23 @@ public class BoardCell {
 	}
 
 	/**
-	 * content setter
+	 * string content setter
 	 * 
 	 * @param content
 	 *            the content to set
 	 */
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	/**
+	 * char content setter
+	 * 
+	 * @param content
+	 *            the content to set
+	 */
+	public void setContent(char content) {
+		this.content = "" + content;
 	}
 
 	/**
