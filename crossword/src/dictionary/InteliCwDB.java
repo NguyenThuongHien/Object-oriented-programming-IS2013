@@ -77,7 +77,10 @@ public class InteliCwDB extends CwDB {
 	public Entry getRandom(int length) {
 		Random rand = new Random();
 		LinkedList<Entry> lenDict = findAll(length);
-		return lenDict.get(rand.nextInt(lenDict.size()));
+		if (lenDict.isEmpty()) 
+			return null;
+		else
+		    return lenDict.get(rand.nextInt(lenDict.size()));
 	}
 
 	/**
@@ -88,7 +91,10 @@ public class InteliCwDB extends CwDB {
 	public Entry getRandom(String pattern) {
 		Random rand = new Random();
 		LinkedList<Entry> patDict = findAll(pattern);
-		return patDict.get(rand.nextInt(patDict.size()));
+		if (patDict.isEmpty()) 
+			return null;
+		else
+		    return patDict.get(rand.nextInt(patDict.size()));
 	}
 
 	/**
