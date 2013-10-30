@@ -5,8 +5,6 @@
  */
 package Strategies;
 
-import java.util.regex.Pattern;
-
 import board.Board;
 import board.Crossword;
 import board.Strategy;
@@ -18,6 +16,7 @@ import dictionary.CwEntry;
  */
 public class EasyStrategy extends Strategy {
     private String actualPattern;
+    private String password;
     
 	/**
 	 * Constructor
@@ -33,9 +32,12 @@ public class EasyStrategy extends Strategy {
 		//TODO is doesn't work
 		CwEntry rand = null;
 		int i = 0;
-		if (crossword.isEmpty())
+		if (crossword.isEmpty()) {
 		    rand = new CwEntry(crossword.getCwdb().getRandom(crossword.getBoardHeight()), 0, 0, CwEntry.Direction.VERT);
+		    password = rand.getWord();
+		}
 		else {
+			actualPattern = password.charAt(i) + ".*";
 			rand = new CwEntry(crossword.getCwdb().getRandom(actualPattern), 0, i, CwEntry.Direction.HORIZ);
 			i++;
 		}
@@ -47,7 +49,15 @@ public class EasyStrategy extends Strategy {
 	 */
 	@Override
 	public void updateBoard(Board board, CwEntry entry) {
-		// TODO Auto-generated method stub
-
+		if (entry.getDir() == CwEntry.Direction.VERT) {
+			for (int i = entry.getY(); i < entry.getWord().length(); i++) {
+				board.getCell(entry.getX(), i).setContent(entry.getWord().substring(i, i));
+			}
+		}
+		else {
+			for (int i = entry.getX(); i < entry.getWord().length(); i++) {
+				board.getCell(i, entry.getY()).setContent(entry.getWord().substring(i, i));
+			}
+		}
 	}
 }
