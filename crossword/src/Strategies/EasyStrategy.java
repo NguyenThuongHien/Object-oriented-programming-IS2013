@@ -51,12 +51,12 @@ public class EasyStrategy extends Strategy {
 	public void updateBoard(Board board, CwEntry entry) {
 		if (entry.getDir() == CwEntry.Direction.VERT) {
 			for (int i = entry.getY(); i < entry.getWord().length(); i++) {
-				board.getCell(entry.getX(), i).setContent(entry.getWord().substring(i, i));
+				board.getCell(entry.getX(), i).setContent(entry.getWord().charAt(i));
 			}
 		}
 		else {
 			for (int i = entry.getX(); i < entry.getWord().length(); i++) {
-				board.getCell(i, entry.getY()).setContent(entry.getWord().substring(i, i));
+				board.getCell(i, entry.getY()).setContent(entry.getWord().charAt(i));
 			}
 		}
 	}
