@@ -41,6 +41,25 @@ public class CwEntry extends Entry {
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param e
+	 *            - entry
+	 * @param x
+	 *            - level in vertical axe
+	 * @param y
+	 *            - level in horizontal axe
+	 * @param d
+	 *            - direction
+	 */
+	public CwEntry(Entry e, int x, int y, Direction d) {
+		super(e.getWord(), e.getClue());
+		this.x = x;
+		this.y = y;
+		this.d = d;
+	}
+
+	/**
 	 * Getter
 	 * 
 	 * @return the x
