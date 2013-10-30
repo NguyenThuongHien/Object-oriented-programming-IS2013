@@ -58,13 +58,13 @@ public class CwDB {
 	 * @return entry in dictionary with field word
 	 */
 	public Entry get(String word) {
-		Entry temp = null;
-		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter
-				.hasNext(); temp = iter.next())
+		java.util.ListIterator<Entry> iter = dict.listIterator(0);
+		while (iter.hasNext()) {
+			Entry temp = iter.next();
 			if (temp.getWord().equals(word))
 				return temp;
-
-		return temp;
+		}
+		return null;
 	}
 
 	/**
@@ -74,11 +74,12 @@ public class CwDB {
 	 *            - parameter to identify entry
 	 */
 	public void remove(String word) {
-		Entry temp = null;
-		for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter
-				.hasNext(); temp = iter.next())
+		java.util.ListIterator<Entry> iter = dict.listIterator(0);
+		while (iter.hasNext()) {
+			Entry temp = iter.next();
 			if (temp.getWord().equals(word))
 				iter.remove();
+		}
 	}
 
 	/**
@@ -91,10 +92,11 @@ public class CwDB {
 		FileWriter outputDB = null;
 		try {
 			outputDB = new FileWriter(filename);
-			Entry temp = null;
-			for (java.util.ListIterator<Entry> iter = dict.listIterator(0); iter
-					.hasNext(); temp = iter.next())
+			java.util.ListIterator<Entry> iter = dict.listIterator(0);
+			while (iter.hasNext()) {
+				Entry temp = iter.next();
 				outputDB.write(temp.toString());
+			}
 		} finally {
 			if (outputDB != null)
 				outputDB.close();
