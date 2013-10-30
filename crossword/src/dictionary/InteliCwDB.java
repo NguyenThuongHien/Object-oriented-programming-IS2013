@@ -36,11 +36,12 @@ public class InteliCwDB extends CwDB {
 	 */
 	public LinkedList<Entry> findAll(String pattern) {
 		LinkedList<Entry> matched = new LinkedList<Entry>();
-		Entry temp = null;
-		for (java.util.ListIterator<Entry> iter = dict.listIterator(); iter
-				.hasNext(); temp = iter.next())
+		java.util.ListIterator<Entry> iter = dict.listIterator();
+		while (iter.hasNext()) {
+			Entry temp = iter.next();
 			if (temp.getWord().matches(pattern))
 				matched.add(temp);
+		}
 		return matched;
 	}
 
@@ -52,11 +53,12 @@ public class InteliCwDB extends CwDB {
 	 */
 	public LinkedList<Entry> findAll(int length) {
 		LinkedList<Entry> matched = new LinkedList<Entry>();
-		Entry temp = null;
-		for (java.util.ListIterator<Entry> iter = dict.listIterator(); iter
-				.hasNext(); temp = iter.next())
+		java.util.ListIterator<Entry> iter = dict.listIterator();
+		while (iter.hasNext()) {
+			Entry temp = iter.next();
 			if (temp.getWord().length() == length)
 				matched.add(temp);
+		}
 		return matched;
 	}
 
