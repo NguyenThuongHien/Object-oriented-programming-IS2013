@@ -59,9 +59,10 @@ public class Crossword {
 	private void setBoard(Board board) {
 		this.board = board;
 	}
-	
+
 	/**
 	 * Special getter
+	 * 
 	 * @return board's height
 	 */
 	public int getBoardHeight() {
@@ -70,12 +71,13 @@ public class Crossword {
 
 	/**
 	 * Special getter
+	 * 
 	 * @return board's width
 	 */
 	public int getBoardWidth() {
 		return board.getWidth();
 	}
-	
+
 	/**
 	 * Getter
 	 * 
@@ -111,6 +113,15 @@ public class Crossword {
 	 */
 	public Iterator<CwEntry> getROEntryIter() {
 		return Collections.unmodifiableList(getEntries()).iterator();
+	}
+
+	/**
+	 * Checks if list of entries is empty
+	 * 
+	 * @return true if empty
+	 */
+	public boolean isEmpty() {
+		return entries.isEmpty();
 	}
 
 	/**
