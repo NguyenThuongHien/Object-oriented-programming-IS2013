@@ -17,15 +17,30 @@ import dictionary.InteliCwDB;
  * 
  */
 public class Crossword {
-	private LinkedList<CwEntry> entries = new LinkedList<CwEntry>(); // list of entries in crossword
+	private LinkedList<CwEntry> entries = new LinkedList<CwEntry>(); // list of
+																		// entries
+																		// in
+																		// crossword
 	private Board board; // crossword's board
 	private InteliCwDB cwdb; // crossword's intelligent database
-	private final long ID = -1; // ID, default setted to -1
+	private final long ID = -1; // ID, default set to -1
 
+	/**
+	 * 
+	 * Constructor
+	 * 
+	 * @param width
+	 *            - width of board
+	 * @param height
+	 *            - height of board
+	 * @param cwDB
+	 *            - data base
+	 */
 	public Crossword(int width, int height, InteliCwDB cwDB) {
 		board = new Board(width, height);
 		cwdb = cwDB;
 	}
+
 	/**
 	 * Getter
 	 * 
