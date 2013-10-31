@@ -17,6 +17,7 @@ import dictionary.CwEntry;
 public class EasyStrategy extends Strategy {
     private String actualPattern;
     private String password;
+    private int i = 0;
     
 	/**
 	 * Constructor
@@ -29,15 +30,13 @@ public class EasyStrategy extends Strategy {
 	 */
 	@Override
 	public CwEntry findEntry(Crossword crossword) {
-		//TODO is doesn't work
 		CwEntry rand = null;
-		int i = 0;
 		if (crossword.isEmpty()) {
 		    rand = new CwEntry(crossword.getCwdb().getRandom(crossword.getBoardHeight()), 0, 0, CwEntry.Direction.VERT);
 		    password = rand.getWord();
 		}
-		else {
-			actualPattern = password.charAt(i) + ".*";
+		else if (i < password.length()) {
+			actualPattern = password.charAt(i) + ".{1," + Integer.toString(crossword.getBoardWidth() - 1) + "}";
 			rand = new CwEntry(crossword.getCwdb().getRandom(actualPattern), 0, i, CwEntry.Direction.HORIZ);
 			i++;
 		}
