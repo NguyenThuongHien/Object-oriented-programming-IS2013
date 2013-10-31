@@ -49,35 +49,47 @@ public class EasyStrategy extends Strategy {
 									+ ".{1,"
 									+ Integer.toString(crossword
 											.getBoardWidth() - 1) + "}").size() <= numberOfCharUse
-					.get(i)) 
+					.get(i))
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Generates proper password
+	 * @throws FailedGeneratingCrossword
+	 * @param crossword
+	 *            - input crossword
+	 * @return password 
+	 */
+	private CwEntry generatePassword(Crossword crossword) {
+		Random random = new Random();
+		LinkedList<Entry> list = crossword.getCwdb().findAll(
+				crossword.getBoardHeight());
+		Entry temp = list.get(random.nextInt(list.size()));
+		list.remove(temp);
+		password = temp.getWord();
+		while (!checkPassword(crossword) && list.size() > 0) {
+			temp = list.get(random.nextInt(list.size()));
+			list.remove(temp);
+			password = temp.getWord();
+		}
+		// if (list.isEmpty() && !checkPassword(crossword))
+		// throw
+		return new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see board.Strategy#findEntry(board.Crossword)
+	 * @throws FailedGeneratingCrossword
 	 */
 	@Override
 	public CwEntry findEntry(Crossword crossword) {
 		CwEntry rand = null;
 		if (crossword.isEmpty()) {
-			Random random = new Random();
-			LinkedList<Entry> list = crossword.getCwdb().findAll(crossword.getBoardHeight());
-			Entry temp = list.get(random.nextInt(list.size()));
-			rand = new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
-			list.remove(temp);
-			password = rand.getWord();
-			while (!checkPassword(crossword) && list.size() > 0) {
-				temp = list.get(random.nextInt(list.size()));
-				rand = new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
-				list.remove(temp);
-				password = rand.getWord();
-			}
-//			if (list.isEmpty() && !checkPassword(crossword)) 
-//				throws 
+			rand = generatePassword(crossword);
 		} else if (i < password.length()) {
 			actualPattern = password.charAt(i) + ".{1,"
 					+ Integer.toString(crossword.getBoardWidth() - 1) + "}";
