@@ -16,7 +16,7 @@ import java.util.Random;
  * 
  */
 public class InteliCwDB extends CwDB {
-
+//TODO exceptions
 	/**
 	 * Constructor
 	 * 
@@ -68,6 +68,8 @@ public class InteliCwDB extends CwDB {
 	 */
 	public Entry getRandom() {
 		Random rand = new Random();
+		if (dict.isEmpty()) 
+			return null;
 		return dict.get(rand.nextInt(dict.size()));
 	}
 
