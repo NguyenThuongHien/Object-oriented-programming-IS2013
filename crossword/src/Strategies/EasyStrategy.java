@@ -6,12 +6,15 @@
 package Strategies;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 
 import board.Board;
 import board.Crossword;
 import board.Strategy;
 import dictionary.CwEntry;
+import dictionary.Entry;
 
 /**
  * @author wukat
@@ -46,7 +49,7 @@ public class EasyStrategy extends Strategy {
 									+ ".{1,"
 									+ Integer.toString(crossword
 											.getBoardWidth() - 1) + "}").size() <= numberOfCharUse
-					.get(i))
+					.get(i)) 
 				return false;
 		}
 		return true;
@@ -60,19 +63,21 @@ public class EasyStrategy extends Strategy {
 	@Override
 	public CwEntry findEntry(Crossword crossword) {
 		CwEntry rand = null;
-		int count = 0;
 		if (crossword.isEmpty()) {
-			rand = new CwEntry(crossword.getCwdb().getRandom(
-					crossword.getBoardHeight()), 0, 0, CwEntry.Direction.VERT);
+			Random random = new Random();
+			LinkedList<Entry> list = crossword.getCwdb().findAll(crossword.getBoardHeight());
+			Entry temp = list.get(random.nextInt(list.size()));
+			rand = new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
+			list.remove(temp);
 			password = rand.getWord();
-			while (!checkPassword(crossword) && count < 100) {
-				rand = new CwEntry(crossword.getCwdb().getRandom(
-						crossword.getBoardHeight()), 0, 0,
-						CwEntry.Direction.VERT);
+			while (!checkPassword(crossword) && list.size() > 0) {
+				temp = list.get(random.nextInt(list.size()));
+				rand = new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
+				list.remove(temp);
 				password = rand.getWord();
-				count++;
 			}
-			// if (count == 100) throw ...
+//			if (list.isEmpty() && !checkPassword(crossword)) 
+//				throws 
 		} else if (i < password.length()) {
 			actualPattern = password.charAt(i) + ".{1,"
 					+ Integer.toString(crossword.getBoardWidth() - 1) + "}";
