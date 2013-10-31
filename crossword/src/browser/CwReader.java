@@ -15,8 +15,8 @@ import board.Crossword;
  * 
  */
 public class CwReader implements Reader {
-	private Vector<Crossword> crosswords;
-	private File file;
+	private Vector<Crossword> crosswords; //vector of read crosswords
+	private File file; //folder
 
 	/**
 	 * 
