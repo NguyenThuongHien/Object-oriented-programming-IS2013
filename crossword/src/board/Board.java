@@ -26,6 +26,9 @@ public class Board {
 	 */
 	public Board(int width, int height) {
 		board = new BoardCell[width][height];
+		for (int i = 0; i < width; i++)
+			for (int j = 0; j < height; j++)
+				board[i][j] = new BoardCell("");
 	}
 
 	/**
