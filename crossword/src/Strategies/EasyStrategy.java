@@ -5,6 +5,9 @@
  */
 package Strategies;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import board.Board;
 import board.Crossword;
 import board.Strategy;
@@ -20,16 +23,22 @@ public class EasyStrategy extends Strategy {
 	private int i = 0;
 
 	/**
-	 * Creates pattern - password can't include letters for which are no entries
-	 * in data base
+	 * Checks if it's possible to generate crossword with this password.
 	 * 
 	 * @param crossword
 	 *            - input crossword
-	 * @return pattern
+	 * @return true if password is OK
 	 */
-	public String createPasswordPatter(Crossword crossword) {
-		String tempPattern = "";
-		for (char i = 'a'; i <= 'z'; i++) {
+	private boolean checkPassword(Crossword crossword) {
+		char lettersOfPassword[] = password.toCharArray();
+		Map<Character, Integer> numberOfCharUse = new HashMap<Character, Integer>();
+		for (char i : lettersOfPassword) {
+			if (!numberOfCharUse.containsKey(i))
+				numberOfCharUse.put(i, 1);
+			else
+				numberOfCharUse.put(i, numberOfCharUse.get(i) + 1);
+		}
+		for (char i : numberOfCharUse.keySet()) {
 			if (crossword
 					.getCwdb()
 					.findAll(
@@ -37,34 +46,11 @@ public class EasyStrategy extends Strategy {
 									+ i
 									+ ".{1,"
 									+ Integer.toString(crossword
-											.getBoardWidth() - 1) + "}").size() == 0)
-				tempPattern += i;
+											.getBoardWidth() - 1) + "}").size() <= numberOfCharUse
+					.get(i))
+				return false;
 		}
-		for (char i = 'A'; i <= 'Z'; i++) {
-			if (crossword
-					.getCwdb()
-					.findAll(
-							""
-									+ i
-									+ ".{1,"
-									+ Integer.toString(crossword
-											.getBoardWidth() - 1) + "}").size() == 0)
-				tempPattern += i;
-		}
-		char tab[] = { 'ż', 'Ż', 'ś', 'Ś', 'ć', 'Ć' };
-		for (char i : tab) {
-			if (crossword
-					.getCwdb()
-					.findAll(
-							""
-									+ i
-									+ ".{1,"
-									+ Integer.toString(crossword
-											.getBoardWidth() - 1) + "}").size() == 0)
-				tempPattern += i;
-		}
-		return "[^óęąźńÓĄĘŹŃ" + tempPattern + "]{"
-				+ Integer.toString(crossword.getBoardHeight()) + "}";
+		return true;
 	}
 
 	/*
@@ -75,16 +61,29 @@ public class EasyStrategy extends Strategy {
 	@Override
 	public CwEntry findEntry(Crossword crossword) {
 		CwEntry rand = null;
+		int count = 0;
 		if (crossword.isEmpty()) {
 			rand = new CwEntry(crossword.getCwdb().getRandom(
-					createPasswordPatter(crossword)), 0, 0,
-					CwEntry.Direction.VERT);
+					crossword.getBoardHeight()), 0, 0, CwEntry.Direction.VERT);
 			password = rand.getWord();
+			while (!checkPassword(crossword)
+					&& count < 100) {
+				rand = new CwEntry(crossword.getCwdb().getRandom(
+						crossword.getBoardHeight()), 0, 0,
+						CwEntry.Direction.VERT);
+				password = rand.getWord();
+				count++;
+			}
+			//if (count == 100) throw ...
 		} else if (i < password.length()) {
 			actualPattern = password.charAt(i) + ".{1,"
 					+ Integer.toString(crossword.getBoardWidth() - 1) + "}";
 			rand = new CwEntry(crossword.getCwdb().getRandom(actualPattern), 0,
 					i, CwEntry.Direction.HORIZ);
+			while (crossword.contains(rand.getWord()))
+				rand = new CwEntry(
+						crossword.getCwdb().getRandom(actualPattern), 0, i,
+						CwEntry.Direction.HORIZ);
 			i++;
 		}
 		return rand;
