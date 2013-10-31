@@ -29,15 +29,8 @@ public class CwDB {
 	 * @param filename
 	 *            - name of file with data
 	 */
-	public CwDB(String filename) {
-		try {
+	public CwDB(String filename) throws FileNotFoundException, IOException {
 			createDB(filename);
-		} catch (FileNotFoundException e) {
-			System.out.println("Nie ma takiego pliku!");
-			// TODO something here
-		} catch (IOException e) {
-			// TODO something here
-		}
 	}
 
 	/**
