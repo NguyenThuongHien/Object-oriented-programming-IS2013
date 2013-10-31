@@ -5,6 +5,8 @@
  */
 package dictionary;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -22,7 +24,7 @@ public class InteliCwDB extends CwDB {
 	 * 
 	 * @param filename
 	 */
-	public InteliCwDB(String filename) {
+	public InteliCwDB(String filename) throws FileNotFoundException, IOException {
 		super(filename);
 		Collections.sort(dict, new EntriesComparator());
 	}
