@@ -128,7 +128,7 @@ public class CwDB {
 			String line2 = null;
 			while (((line1 = br.readLine()) != null)
 					&& ((line2 = br.readLine()) != null)) {
-				add(line1, line2);
+				add(line1.toLowerCase(), line2);
 			}
 		} finally {
 			br.close();
