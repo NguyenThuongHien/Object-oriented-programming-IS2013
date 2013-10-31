@@ -160,11 +160,12 @@ public class Crossword {
 	 * @return true if contains
 	 */
 	public boolean contains(String word) {
-		CwEntry temp = null;
-		for (java.util.ListIterator<CwEntry> iter = getEntries().listIterator(); iter
-				.hasNext(); temp = iter.next())
+		java.util.ListIterator<CwEntry> iter = getEntries().listIterator();
+		while (iter.hasNext()) {
+			CwEntry temp = iter.next();
 			if (temp.getWord().equals(word))
 				return true;
+		}
 		return false;
 	}
 
