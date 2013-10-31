@@ -6,6 +6,7 @@
 package browser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 import board.Crossword;
@@ -15,8 +16,8 @@ import board.Crossword;
  * 
  */
 public class CwReader implements Reader {
-	private Vector<Crossword> crosswords; //vector of read crosswords
-	private File file; //folder
+	private Vector<Crossword> crosswords; // vector of read crosswords
+	private File file; // folder
 
 	/**
 	 * 
@@ -25,8 +26,10 @@ public class CwReader implements Reader {
 	 * @param path
 	 *            - folder with crosswords
 	 */
-	public CwReader(String path) {
+	public CwReader(String path) throws IOException {
 		file = new File(path);
+		if (!file.isDirectory())
+			throw new IOException();
 	}
 
 	/*
@@ -38,8 +41,9 @@ public class CwReader implements Reader {
 	public void getAllCws() {
 		for (File f : file.listFiles()) {
 			if (f.canRead()) {
-				//TODO reading from file (i don't know the format
-				//crosswords.add(new Crossword(Integer.parseInt(f.getName()), ....)
+				// TODO reading from file (i don't know the format
+				// crosswords.add(new Crossword(Integer.parseInt(f.getName()),
+				// ....)
 			}
 		}
 	}

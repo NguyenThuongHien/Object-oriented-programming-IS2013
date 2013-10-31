@@ -7,11 +7,11 @@ package browser;
 
 /**
  * @author wukat
- *
+ * 
  */
 interface Reader {
 	/**
 	 * Loads all crosswords into one data base.
 	 */
-    public void getAllCws();
+	public void getAllCws();
 }
