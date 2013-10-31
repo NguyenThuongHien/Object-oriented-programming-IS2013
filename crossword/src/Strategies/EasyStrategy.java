@@ -42,8 +42,7 @@ public class EasyStrategy extends Strategy {
 			if (crossword
 					.getCwdb()
 					.findAll(
-							""
-									+ i
+							i
 									+ ".{1,"
 									+ Integer.toString(crossword
 											.getBoardWidth() - 1) + "}").size() <= numberOfCharUse
@@ -66,15 +65,14 @@ public class EasyStrategy extends Strategy {
 			rand = new CwEntry(crossword.getCwdb().getRandom(
 					crossword.getBoardHeight()), 0, 0, CwEntry.Direction.VERT);
 			password = rand.getWord();
-			while (!checkPassword(crossword)
-					&& count < 100) {
+			while (!checkPassword(crossword) && count < 100) {
 				rand = new CwEntry(crossword.getCwdb().getRandom(
 						crossword.getBoardHeight()), 0, 0,
 						CwEntry.Direction.VERT);
 				password = rand.getWord();
 				count++;
 			}
-			//if (count == 100) throw ...
+			// if (count == 100) throw ...
 		} else if (i < password.length()) {
 			actualPattern = password.charAt(i) + ".{1,"
 					+ Integer.toString(crossword.getBoardWidth() - 1) + "}";
