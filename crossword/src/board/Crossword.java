@@ -5,6 +5,11 @@
  */
 package board;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,7 +30,7 @@ public class Crossword {
 																		// crossword
 	private Board board; // crossword's board
 	private InteliCwDB cwdb; // crossword's intelligent database
-	private final long ID = -1; // ID, default set to -1
+	private final long ID; // ID, default set to -1
 
 	/**
 	 * 
@@ -42,6 +47,17 @@ public class Crossword {
 	public Crossword(int width, int height, InteliCwDB cwDB) throws WrongDimensionInBoardAsked {
 		board = new Board(width, height);
 		cwdb = cwDB;
+		this.ID = -1;
+	}
+	
+	public Crossword(long ID, File f) throws FileNotFoundException, IOException {
+		this.ID = ID;
+		BufferedReader reader = new BufferedReader(new FileReader(f));
+		String temp;
+		while ((temp = reader.readLine()) != null) {
+			
+		}
+		
 	}
 
 	/**
