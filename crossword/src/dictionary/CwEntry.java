@@ -115,4 +115,12 @@ public class CwEntry extends Entry {
 	public void setDir(Direction d) {
 		this.d = d;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Integer.toString(getX()) + " " + Integer.toString(getY()) + " " + getDir() + "\n" + getWord() + "\n" + getClue();
+	}
 }
