@@ -8,6 +8,8 @@ package board;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
+import Exceptions.WrongDimensionInBoardAsked;
+
 /**
  * @author wukat
  * 
@@ -58,8 +60,9 @@ public class Board {
 	 *            - vertical position
 	 * @return certain x,y board cell
 	 */
-	public BoardCell getCell(int x, int y) {
-		// TODO exception
+	public BoardCell getCell(int x, int y) throws WrongDimensionInBoardAsked {
+		if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight())
+			throw new WrongDimensionInBoardAsked();
 		return board[x][y];
 	}
 
@@ -73,8 +76,9 @@ public class Board {
 	 * @param c
 	 *            - cell to set
 	 */
-	public void setCell(int x, int y, BoardCell c) {
-		// TODO exception
+	public void setCell(int x, int y, BoardCell c) throws WrongDimensionInBoardAsked {
+		if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight())
+			throw new WrongDimensionInBoardAsked();
 		board[x][y] = c;
 	}
 
@@ -83,7 +87,7 @@ public class Board {
 	 * 
 	 * @return list of cells
 	 */
-	public LinkedList<BoardCell> getStartCells() {
+	public LinkedList<BoardCell> getStartCells() throws WrongDimensionInBoardAsked{
 		LinkedList<BoardCell> startCells = new LinkedList<BoardCell>();
 		for (int i = 0; i < getWidth(); i++)
 			for (int j = 0; j < getHeight(); j++)
@@ -99,7 +103,7 @@ public class Board {
 	 * 
 	 * @return board copy
 	 */
-	public Board copy() {
+	public Board copy() throws WrongDimensionInBoardAsked {
 		Board boardCopy = new Board(getWidth(), getHeight());
 		for (int i = 0; i < getWidth(); i++)
 			for (int j = 0; j < getHeight(); j++)
@@ -119,7 +123,7 @@ public class Board {
 	 * @param toy
 	 *            - end in y axe
 	 */
-	public Pattern createPattern(int fromx, int fromy, int tox, int toy) {
+	public Pattern createPattern(int fromx, int fromy, int tox, int toy) throws WrongDimensionInBoardAsked{
 		String pattern = "";
 		if (fromx == tox) {
 			for (int i = fromy; i < toy; i++) {
