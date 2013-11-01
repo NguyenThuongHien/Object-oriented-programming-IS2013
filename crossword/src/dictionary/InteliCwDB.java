@@ -23,6 +23,8 @@ public class InteliCwDB extends CwDB {
 	 * Constructor
 	 * 
 	 * @param filename
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
 	public InteliCwDB(String filename) throws FileNotFoundException, IOException {
 		super(filename);
@@ -66,7 +68,7 @@ public class InteliCwDB extends CwDB {
 
 	/**
 	 * Gets random entry
-	 * @return entry
+	 * @return entry or null if dict is empty
 	 */
 	public Entry getRandom() {
 		Random rand = new Random();
@@ -78,7 +80,7 @@ public class InteliCwDB extends CwDB {
 	/**
 	 * Gets random entry with word's length equal to parameter
 	 * @param length - integer length
-	 * @return entry
+	 * @return entry or null if none match
 	 */
 	public Entry getRandom(int length) {
 		Random rand = new Random();
@@ -92,7 +94,7 @@ public class InteliCwDB extends CwDB {
 	/**
 	 * Gets random entry with word matching pattern
 	 * @param pattern - regular expression
-	 * @return entry
+	 * @return entry or null if none match
 	 */
 	public Entry getRandom(String pattern) {
 		Random rand = new Random();

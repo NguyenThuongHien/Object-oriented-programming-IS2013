@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import Exceptions.FailedToGenerateCrosswordException;
+import Exceptions.WrongDimensionInBoardAsked;
 import dictionary.CwEntry;
 import dictionary.InteliCwDB;
 
@@ -36,8 +37,9 @@ public class Crossword {
 	 *            - height of board
 	 * @param cwDB
 	 *            - data base
+	 * @throws WrongDimensionInBoardAsked 
 	 */
-	public Crossword(int width, int height, InteliCwDB cwDB) {
+	public Crossword(int width, int height, InteliCwDB cwDB) throws WrongDimensionInBoardAsked {
 		board = new Board(width, height);
 		cwdb = cwDB;
 	}
@@ -148,8 +150,9 @@ public class Crossword {
 	 * Getter (copy)
 	 * 
 	 * @return copy of board
+	 * @throws WrongDimensionInBoardAsked 
 	 */
-	public Board getBoardCopy() {
+	public Board getBoardCopy() throws WrongDimensionInBoardAsked {
 		return board.copy();
 	}
 
@@ -176,8 +179,9 @@ public class Crossword {
 	 * @param cwe
 	 *            - entry
 	 * @param strategy
+	 * @throws WrongDimensionInBoardAsked 
 	 */
-	public final void addCwEntry(CwEntry cwe, Strategy strategy) {
+	public final void addCwEntry(CwEntry cwe, Strategy strategy) throws WrongDimensionInBoardAsked {
 		entries.add(cwe);
 		strategy.updateBoard(getBoard(), cwe);
 	}
@@ -186,8 +190,9 @@ public class Crossword {
 	 * Function generating crossword
 	 * 
 	 * @param strategy
+	 * @throws FailedToGenerateCrosswordException, WrongDimensionInBoardAsked 
 	 */
-	public final void generate(Strategy strategy) throws FailedToGenerateCrosswordException {
+	public final void generate(Strategy strategy) throws FailedToGenerateCrosswordException, FailedToGenerateCrosswordException, WrongDimensionInBoardAsked {
 		CwEntry entry = null;
 		while ((entry = strategy.findEntry(this)) != null) {
 			addCwEntry(entry, strategy);

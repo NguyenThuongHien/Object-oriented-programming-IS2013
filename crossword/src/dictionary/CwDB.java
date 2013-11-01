@@ -28,9 +28,11 @@ public class CwDB {
 	 * 
 	 * @param filename
 	 *            - name of file with data
+	 * @throws FileNotFoundException
+	 * @throw IOException
 	 */
 	public CwDB(String filename) throws FileNotFoundException, IOException {
-			createDB(filename);
+		createDB(filename);
 	}
 
 	/**
@@ -80,6 +82,7 @@ public class CwDB {
 	 * 
 	 * @param filename
 	 *            - name of output file
+	 * @throws IOException
 	 */
 	public void saveDB(String filename) throws IOException {
 		FileWriter outputDB = null;

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Random;
 
 import Exceptions.FailedToGenerateCrosswordException;
+import Exceptions.WrongDimensionInBoardAsked;
 import board.Board;
 import board.Crossword;
 import board.Strategy;
@@ -62,6 +63,7 @@ public class EasyStrategy extends Strategy {
 	 * @param crossword
 	 *            - input crossword
 	 * @return password 
+	 * @throws FailedToGenerateCrosswordException
 	 */
 	private CwEntry generatePassword(Crossword crossword) throws FailedToGenerateCrosswordException {
 		Random random = new Random();
@@ -113,7 +115,7 @@ public class EasyStrategy extends Strategy {
 	 * @see board.Strategy#updateBoard(board.Board, dictionary.CwEntry)
 	 */
 	@Override
-	public void updateBoard(Board board, CwEntry entry) {
+	public void updateBoard(Board board, CwEntry entry) throws WrongDimensionInBoardAsked {
 		if (entry.getDir() == CwEntry.Direction.VERT) {
 			for (int i = entry.getY(); i < entry.getWord().length(); i++) {
 				board.getCell(entry.getX(), i).setContent(
