@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
+import Exceptions.FailedToGenerateCrosswordException;
+
 /**
  * Intelligent crossword database
  * 
@@ -18,7 +20,7 @@ import java.util.Random;
  * 
  */
 public class InteliCwDB extends CwDB {
-//TODO exceptions
+
 	/**
 	 * Constructor
 	 * 
@@ -68,10 +70,10 @@ public class InteliCwDB extends CwDB {
 	 * Gets random entry
 	 * @return entry
 	 */
-	public Entry getRandom() {
+	public Entry getRandom() throws FailedToGenerateCrosswordException {
 		Random rand = new Random();
 		if (dict.isEmpty()) 
-			return null;
+			throw new FailedToGenerateCrosswordException("Empty dictionary");
 		return dict.get(rand.nextInt(dict.size()));
 	}
 
@@ -80,11 +82,11 @@ public class InteliCwDB extends CwDB {
 	 * @param length - integer length
 	 * @return entry
 	 */
-	public Entry getRandom(int length) {
+	public Entry getRandom(int length) throws FailedToGenerateCrosswordException {
 		Random rand = new Random();
 		LinkedList<Entry> lenDict = findAll(length);
 		if (lenDict.isEmpty()) 
-			return null;
+			throw new FailedToGenerateCrosswordException("Wrong database");
 		else
 		    return lenDict.get(rand.nextInt(lenDict.size()));
 	}
@@ -94,11 +96,11 @@ public class InteliCwDB extends CwDB {
 	 * @param pattern - regular expression
 	 * @return entry
 	 */
-	public Entry getRandom(String pattern) {
+	public Entry getRandom(String pattern) throws FailedToGenerateCrosswordException {
 		Random rand = new Random();
 		LinkedList<Entry> patDict = findAll(pattern);
 		if (patDict.isEmpty()) 
-			return null;
+			throw new FailedToGenerateCrosswordException("Wrong database");
 		else
 		    return patDict.get(rand.nextInt(patDict.size()));
 	}
