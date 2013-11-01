@@ -44,6 +44,7 @@ public class EasyStrategy extends Strategy {
 				numberOfCharUse.put(i, numberOfCharUse.get(i) + 1);
 		}
 		for (char i : numberOfCharUse.keySet()) {
+			if (i == password.charAt(0)) {
 			if (crossword
 					.getCwdb()
 					.findAll(
@@ -53,7 +54,19 @@ public class EasyStrategy extends Strategy {
 											.getBoardWidth() - 1) + "}").size() <= numberOfCharUse
 					.get(i))
 				return false;
-		}
+			}
+			else {
+				if (crossword
+						.getCwdb()
+						.findAll(
+								i
+										+ ".{1,"
+										+ Integer.toString(crossword
+												.getBoardWidth() - 1) + "}").size() < numberOfCharUse
+						.get(i))
+					return false;
+				}
+			}
 		return true;
 	}
 
