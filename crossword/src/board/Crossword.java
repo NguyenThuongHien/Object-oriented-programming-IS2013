@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import Exceptions.FailedToGenerateCrosswordException;
 import dictionary.CwEntry;
 import dictionary.InteliCwDB;
 
@@ -186,7 +187,7 @@ public class Crossword {
 	 * 
 	 * @param strategy
 	 */
-	public final void generate(Strategy strategy) {
+	public final void generate(Strategy strategy) throws FailedToGenerateCrosswordException {
 		CwEntry entry = null;
 		while ((entry = strategy.findEntry(this)) != null) {
 			addCwEntry(entry, strategy);

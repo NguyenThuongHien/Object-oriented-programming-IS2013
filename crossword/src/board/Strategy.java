@@ -5,6 +5,7 @@
  */
 package board;
 
+import Exceptions.FailedToGenerateCrosswordException;
 import dictionary.CwEntry;
 
 /**
@@ -19,7 +20,7 @@ public abstract class Strategy {
 	 *            - crossword class
 	 * @return crossword entry
 	 */
-	public abstract CwEntry findEntry(Crossword crossword);
+	public abstract CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException;
 
 	/**
 	 * Updates board, inserts crossword entry to board

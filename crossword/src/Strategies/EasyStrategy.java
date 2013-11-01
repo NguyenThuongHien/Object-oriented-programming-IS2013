@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
+import Exceptions.FailedToGenerateCrosswordException;
 import board.Board;
 import board.Crossword;
 import board.Strategy;
@@ -62,10 +63,12 @@ public class EasyStrategy extends Strategy {
 	 *            - input crossword
 	 * @return password 
 	 */
-	private CwEntry generatePassword(Crossword crossword) {
+	private CwEntry generatePassword(Crossword crossword) throws FailedToGenerateCrosswordException {
 		Random random = new Random();
 		LinkedList<Entry> list = crossword.getCwdb().findAll(
 				crossword.getBoardHeight());
+		if (list.isEmpty())
+			throw new FailedToGenerateCrosswordException("No matching words");
 		Entry temp = list.get(random.nextInt(list.size()));
 		list.remove(temp);
 		password = temp.getWord();
@@ -74,8 +77,8 @@ public class EasyStrategy extends Strategy {
 			list.remove(temp);
 			password = temp.getWord();
 		}
-		// if (list.isEmpty() && !checkPassword(crossword))
-		// throw
+		if (list.isEmpty() && !checkPassword(crossword))
+		    throw new FailedToGenerateCrosswordException("No matching words");
 		return new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
 	}
 
@@ -86,7 +89,7 @@ public class EasyStrategy extends Strategy {
 	 * @throws FailedGeneratingCrossword
 	 */
 	@Override
-	public CwEntry findEntry(Crossword crossword) {
+	public CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException {
 		CwEntry rand = null;
 		if (crossword.isEmpty()) {
 			rand = generatePassword(crossword);
