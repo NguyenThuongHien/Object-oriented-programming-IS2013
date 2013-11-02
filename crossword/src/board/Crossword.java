@@ -42,22 +42,54 @@ public class Crossword {
 	 *            - height of board
 	 * @param cwDB
 	 *            - data base
-	 * @throws WrongDimensionInBoardAsked 
+	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Crossword(int width, int height, InteliCwDB cwDB) throws WrongDimensionInBoardAsked {
+	public Crossword(int width, int height, InteliCwDB cwDB)
+			throws WrongDimensionInBoardAsked {
 		board = new Board(width, height);
 		cwdb = cwDB;
 		this.ID = -1;
 	}
-	
-	public Crossword(long ID, File f) throws FileNotFoundException, IOException {
+
+	/**
+	 * 
+	 * Constructor - crossword from file, format: width, height \n, filename of
+	 * cwDB \n, CwEntries;
+	 * 
+	 * @param ID
+	 * @param f
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws WrongDimensionInBoardAsked
+	 */
+	public Crossword(long ID, File f) throws FileNotFoundException,
+			IOException, WrongDimensionInBoardAsked {
 		this.ID = ID;
 		BufferedReader reader = new BufferedReader(new FileReader(f));
-		String temp;
-		while ((temp = reader.readLine()) != null) {
-			
+		try {
+			String temp = reader.readLine();
+			String[] splited = temp.split(" ");
+			board = new Board(Integer.parseInt(splited[0]),
+					Integer.parseInt(splited[1]));
+			temp = reader.readLine();
+			cwdb = new InteliCwDB(temp);
+			while ((temp = reader.readLine()) != null) {
+				splited = temp.split(" ");
+				if (splited[2].equals("HORIZ"))
+					entries.add(new CwEntry(reader.readLine(), reader
+							.readLine(), Integer.parseInt(splited[0]), Integer
+							.parseInt(splited[1]),
+							dictionary.CwEntry.Direction.HORIZ));
+				else if (splited[2].equals("VERT"))
+					entries.add(new CwEntry(reader.readLine(), reader
+							.readLine(), Integer.parseInt(splited[0]), Integer
+							.parseInt(splited[1]),
+							dictionary.CwEntry.Direction.VERT));
+			}
+		} finally {
+			reader.close();
 		}
-		
+
 	}
 
 	/**
@@ -166,7 +198,7 @@ public class Crossword {
 	 * Getter (copy)
 	 * 
 	 * @return copy of board
-	 * @throws WrongDimensionInBoardAsked 
+	 * @throws WrongDimensionInBoardAsked
 	 */
 	public Board getBoardCopy() throws WrongDimensionInBoardAsked {
 		return board.copy();
@@ -195,9 +227,10 @@ public class Crossword {
 	 * @param cwe
 	 *            - entry
 	 * @param strategy
-	 * @throws WrongDimensionInBoardAsked 
+	 * @throws WrongDimensionInBoardAsked
 	 */
-	public final void addCwEntry(CwEntry cwe, Strategy strategy) throws WrongDimensionInBoardAsked {
+	public final void addCwEntry(CwEntry cwe, Strategy strategy)
+			throws WrongDimensionInBoardAsked {
 		entries.add(cwe);
 		strategy.updateBoard(getBoard(), cwe);
 	}
@@ -206,9 +239,12 @@ public class Crossword {
 	 * Function generating crossword
 	 * 
 	 * @param strategy
-	 * @throws FailedToGenerateCrosswordException, WrongDimensionInBoardAsked 
+	 * @throws FailedToGenerateCrosswordException
+	 *             , WrongDimensionInBoardAsked
 	 */
-	public final void generate(Strategy strategy) throws FailedToGenerateCrosswordException, FailedToGenerateCrosswordException, WrongDimensionInBoardAsked {
+	public final void generate(Strategy strategy)
+			throws FailedToGenerateCrosswordException,
+			FailedToGenerateCrosswordException, WrongDimensionInBoardAsked {
 		CwEntry entry = null;
 		while ((entry = strategy.findEntry(this)) != null) {
 			addCwEntry(entry, strategy);
