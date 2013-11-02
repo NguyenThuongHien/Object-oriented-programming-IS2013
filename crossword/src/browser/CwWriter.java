@@ -57,7 +57,7 @@ public class CwWriter implements Writer {
 			cwFile.write(crossword.getBoardWidth() + " "
 					+ crossword.getBoardHeight() + "\n");
 			cwFile.write(file.getAbsolutePath() + "/Databases/"
-					+ Long.toString(ID));
+					+ Long.toString(ID) + "\n");
 			crossword.getCwdb().saveDB(
 					file.getAbsolutePath() + "/Databases/" + Long.toString(ID));
 			Iterator<CwEntry> iter = crossword.getROEntryIter();
