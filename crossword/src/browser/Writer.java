@@ -28,6 +28,3 @@ public interface Writer {
 	 */
 	public long getUniqueID();
 }
-
-// zapisujemy krzyżówkę jako ściezkę do bazy danych, listę CwEntry i wymiary; ID
-// to nazwa pliku
