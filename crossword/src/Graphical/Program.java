@@ -30,6 +30,14 @@ import javax.swing.DropMode;
 import java.awt.TextField;
 import java.awt.TextArea;
 import java.awt.Label;
+import javax.swing.JList;
+import javax.swing.ListSelectionModel;
+import javax.swing.AbstractListModel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Choice;
+import javax.swing.JLabel;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class Program extends JFrame {
 
@@ -73,23 +81,29 @@ public class Program extends JFrame {
 		
 		Box verticalBox_1 = Box.createVerticalBox();
 		verticalBox_1.setBorder(new TitledBorder(null, "Size", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		Box verticalBox_2 = Box.createVerticalBox();
+		verticalBox_2.setBorder(new TitledBorder(null, "Wczytaj baz\u0119 danych", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(verticalBox, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(verticalBox_1, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(409, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(verticalBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(verticalBox_2, GroupLayout.PREFERRED_SIZE, 172, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(243, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+			gl_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
 					.addGap(2)
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(verticalBox_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-						.addComponent(verticalBox, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 66, Short.MAX_VALUE))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(verticalBox_2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+						.addComponent(verticalBox_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(verticalBox, GroupLayout.PREFERRED_SIZE, 70, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		
@@ -99,9 +113,9 @@ public class Program extends JFrame {
 		Label label = new Label("Width");
 		horizontalBox.add(label);
 		
-		TextField textField = new TextField();
-		horizontalBox.add(textField);
-		textField.setText("3");
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}));
+		horizontalBox.add(comboBox);
 		
 		Box horizontalBox_1 = Box.createHorizontalBox();
 		verticalBox_1.add(horizontalBox_1);
@@ -109,9 +123,9 @@ public class Program extends JFrame {
 		Label label_1 = new Label("Height");
 		horizontalBox_1.add(label_1);
 		
-		TextField textField_1 = new TextField();
-		textField_1.setText("3");
-		horizontalBox_1.add(textField_1);
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}));
+		horizontalBox_1.add(comboBox_1);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Easy");
 		verticalBox.add(rdbtnNewRadioButton);
