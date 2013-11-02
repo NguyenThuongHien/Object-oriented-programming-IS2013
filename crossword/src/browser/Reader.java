@@ -5,6 +5,11 @@
  */
 package browser;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import Exceptions.WrongDimensionInBoardAsked;
+
 /**
  * @author wukat
  * 
@@ -13,5 +18,5 @@ interface Reader {
 	/**
 	 * Loads all crosswords into one data base.
 	 */
-	public void getAllCws();
+	public void getAllCws() throws IOException, FileNotFoundException, WrongDimensionInBoardAsked;
 }

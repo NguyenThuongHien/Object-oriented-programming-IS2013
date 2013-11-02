@@ -6,9 +6,11 @@
 package browser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
+import Exceptions.WrongDimensionInBoardAsked;
 import board.Crossword;
 
 /**
@@ -28,7 +30,7 @@ public class CwReader implements Reader {
 	 */
 	public CwReader(String path) throws IOException {
 		file = new File(path);
-		if (!file.isDirectory())
+		if (!file.isDirectory() || !file.canRead())
 			throw new IOException();
 	}
 
@@ -38,12 +40,10 @@ public class CwReader implements Reader {
 	 * @see browser.Reader#getAllCws()
 	 */
 	@Override
-	public void getAllCws() {
+	public void getAllCws() throws IOException, FileNotFoundException, WrongDimensionInBoardAsked {
 		for (File f : file.listFiles()) {
 			if (f.canRead()) {
-				// TODO reading from file (i don't know the format
-				// crosswords.add(new Crossword(Integer.parseInt(f.getName()),
-				// ....)
+				 crosswords.add(new Crossword(Integer.parseInt(f.getName()), f));
 			}
 		}
 	}
