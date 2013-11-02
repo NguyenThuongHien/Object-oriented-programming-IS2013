@@ -29,7 +29,7 @@ public class Crossword {
 																		// in
 																		// crossword
 	private Board board; // crossword's board
-	private InteliCwDB cwdb; // crossword's intelligent database
+	private InteliCwDB cwdb = null; // crossword's intelligent database
 	private final long ID; // ID, default set to -1
 
 	/**
@@ -71,8 +71,8 @@ public class Crossword {
 			String[] splited = temp.split(" ");
 			board = new Board(Integer.parseInt(splited[0]),
 					Integer.parseInt(splited[1]));
-			temp = reader.readLine();
-			cwdb = new InteliCwDB(temp);
+//			temp = reader.readLine();
+//			cwdb = new InteliCwDB(temp);
 			while ((temp = reader.readLine()) != null) {
 				splited = temp.split(" ");
 				if (splited[2].equals("HORIZ"))
@@ -245,6 +245,7 @@ public class Crossword {
 	public final void generate(Strategy strategy)
 			throws FailedToGenerateCrosswordException,
 			FailedToGenerateCrosswordException, WrongDimensionInBoardAsked {
+//		if (cwdb == null) throw NODATABASE
 		CwEntry entry = null;
 		while ((entry = strategy.findEntry(this)) != null) {
 			addCwEntry(entry, strategy);
