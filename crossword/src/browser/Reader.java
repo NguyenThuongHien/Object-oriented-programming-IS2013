@@ -17,6 +17,9 @@ import Exceptions.WrongDimensionInBoardAsked;
 interface Reader {
 	/**
 	 * Loads all crosswords into one data base.
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 * @throws WrongDimensionInBoardAsked
 	 */
 	public void getAllCws() throws IOException, FileNotFoundException, WrongDimensionInBoardAsked;
 }
