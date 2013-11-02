@@ -10,7 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.ListIterator;
 
 import dictionary.CwEntry;
 import board.Crossword;
@@ -31,6 +30,7 @@ public class CwWriter implements Writer {
 	 */
 	public CwWriter(String path) throws IOException {
 		file = new File(path);
+		file.mkdirs();
 		if (!file.isDirectory() || !file.canWrite())
 			throw new IOException();
 //		boolean flag = false;
