@@ -121,6 +121,6 @@ public class CwEntry extends Entry {
 	 */
 	@Override
 	public String toString() {
-		return Integer.toString(getX()) + " " + Integer.toString(getY()) + " " + getDir() + "\n" + getWord() + "\n" + getClue();
+		return Integer.toString(getX()) + " " + Integer.toString(getY()) + " " + getDir() + "\n" + getWord() + "\n" + getClue() + "\n";
 	}
 }
