@@ -30,7 +30,7 @@ public class CwReader implements Reader {
 	 */
 	public CwReader(String path) throws IOException {
 		file = new File(path);
-		if (!file.isDirectory() || !file.canRead())
+		if (!file.isDirectory() || !file.canRead() || !file.canExecute())
 			throw new IOException();
 	}
 
