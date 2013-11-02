@@ -8,8 +8,10 @@ package browser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
+import dictionary.CwEntry;
 import Exceptions.WrongDimensionInBoardAsked;
 import board.Crossword;
 
@@ -29,6 +31,7 @@ public class CwReader implements Reader {
 	 *            - folder with crosswords
 	 */
 	public CwReader(String path) throws IOException {
+		crosswords = new Vector<Crossword>();
 		file = new File(path);
 		if (!file.isDirectory() || !file.canRead() || !file.canExecute())
 			throw new IOException();
@@ -43,7 +46,17 @@ public class CwReader implements Reader {
 	public void getAllCws() throws IOException, FileNotFoundException, WrongDimensionInBoardAsked {
 		for (File f : file.listFiles()) {
 			if (f.canRead() && f.isFile()) {
-				 crosswords.add(new Crossword(Integer.parseInt(f.getName()), f));
+				 crosswords.add(new Crossword(Long.parseLong(f.getName()), f));
+			}
+		}
+	}
+	
+	public void showCws() {
+		for (Crossword a : crosswords) {
+			Iterator<CwEntry> iter = a.getROEntryIter();
+			while (iter.hasNext()) {
+				CwEntry temp = iter.next();
+				System.out.println(temp);
 			}
 		}
 	}
