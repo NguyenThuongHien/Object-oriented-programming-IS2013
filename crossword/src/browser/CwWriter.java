@@ -33,14 +33,14 @@ public class CwWriter implements Writer {
 		file = new File(path);
 		if (!file.isDirectory() || !file.canWrite())
 			throw new IOException();
-		boolean flag = false;
-		String[] contentList = file.list();
-		for (String i : contentList) {
-			if (i.equals("Databases"))
-				flag = true;
-		}
-		if (!flag)
-			new File(path + "/Databases").mkdir();
+//		boolean flag = false;
+//		String[] contentList = file.list();
+//		for (String i : contentList) {
+//			if (i.equals("Databases"))
+//				flag = true;
+//		}
+//		if (!flag)
+//			new File(path + "/Databases").mkdir();
 	}
 
 	/*
@@ -56,10 +56,10 @@ public class CwWriter implements Writer {
 		try {
 			cwFile.write(crossword.getBoardWidth() + " "
 					+ crossword.getBoardHeight() + "\n");
-			cwFile.write(file.getAbsolutePath() + "/Databases/"
-					+ Long.toString(ID) + "\n");
-			crossword.getCwdb().saveDB(
-					file.getAbsolutePath() + "/Databases/" + Long.toString(ID));
+//			cwFile.write(file.getAbsolutePath() + "/Databases/"
+//					+ Long.toString(ID) + "\n");
+//			crossword.getCwdb().saveDB(
+//					file.getAbsolutePath() + "/Databases/" + Long.toString(ID));
 			Iterator<CwEntry> iter = crossword.getROEntryIter();
 			while (iter.hasNext()) {
 				cwFile.write(iter.next().toString());
