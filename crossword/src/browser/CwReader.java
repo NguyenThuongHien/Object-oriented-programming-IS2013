@@ -42,7 +42,7 @@ public class CwReader implements Reader {
 	@Override
 	public void getAllCws() throws IOException, FileNotFoundException, WrongDimensionInBoardAsked {
 		for (File f : file.listFiles()) {
-			if (f.canRead()) {
+			if (f.canRead() && f.isFile()) {
 				 crosswords.add(new Crossword(Integer.parseInt(f.getName()), f));
 			}
 		}
