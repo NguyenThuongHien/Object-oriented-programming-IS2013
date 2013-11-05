@@ -28,7 +28,7 @@ public class PracownikEtatowy extends Pracownik {
 	 * @see lab4.Pracownik#liczbNetto()
 	 */
 	@Override
-	public double liczbNetto() {
+	public double liczNetto() {
 		return getWynagrodzenieBrutto()*0.6;
 	}
 

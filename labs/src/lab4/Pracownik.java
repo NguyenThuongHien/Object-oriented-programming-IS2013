@@ -13,9 +13,9 @@ import lab1.Pesel;
  */
 public abstract class Pracownik {
 	Pesel numPESEL;
-	double wynagrodzenieBrutto;
+	Double wynagrodzenieBrutto;
 
-	abstract public double liczbNetto();
+	abstract public double liczNetto();
 
 	/**
 	 * Getter
@@ -41,7 +41,7 @@ public abstract class Pracownik {
 	 * 
 	 * @return the wynagrodzenieBrutto
 	 */
-	public double getWynagrodzenieBrutto() {
+	public Double getWynagrodzenieBrutto() {
 		return wynagrodzenieBrutto;
 	}
 
@@ -54,5 +54,16 @@ public abstract class Pracownik {
 	public void setWynagrodzenieBrutto(double wynagrodzenieBrutto) {
 		this.wynagrodzenieBrutto = wynagrodzenieBrutto;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Pracownik [numPESEL=" + numPESEL + ", wynagrodzenieBrutto="
+				+ wynagrodzenieBrutto + "]";
+	}
+	
+	
 
 }
