@@ -9,7 +9,7 @@ package lab4;
  * @author wukat
  * 
  */
-public class ROT11 implements Algorythm {
+public class ROT11 implements Algorithm {
 
 	private int move = 11;
 	private static final char[] alphabet= { 'a', 'b', 'c', 'd', 'e',
