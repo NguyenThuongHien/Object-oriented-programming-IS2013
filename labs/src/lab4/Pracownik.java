@@ -54,16 +54,4 @@ public abstract class Pracownik {
 	public void setWynagrodzenieBrutto(double wynagrodzenieBrutto) {
 		this.wynagrodzenieBrutto = wynagrodzenieBrutto;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Pracownik [numPESEL=" + numPESEL + ", wynagrodzenieBrutto="
-				+ wynagrodzenieBrutto + "]";
-	}
-	
-	
-
 }

@@ -34,4 +34,13 @@ public class Student extends Pracownik {
 		return getWynagrodzenieBrutto()*0.8;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Student [numPESEL=" + numPESEL + ", wynagrodzenieBrutto="
+				+ wynagrodzenieBrutto + "]";
+	}
+
 }

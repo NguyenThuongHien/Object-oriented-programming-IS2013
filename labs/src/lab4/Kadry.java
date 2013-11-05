@@ -5,6 +5,7 @@
  */
 package lab4;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -75,6 +76,12 @@ public class Kadry {
 		return znajdz(pesel).liczNetto();
 	}
 	
+	/**
+	 * 
+	 */
+	public void posortujPoWynagrodzeniu() {
+		Collections.sort(pracownicy, new PracownikComparator());
+	}
 	/**
 	 * 
 	 */

@@ -5,6 +5,8 @@
  */
 package lab4;
 
+import lab1.Pesel;
+
 /**
  * @author wukat
  *
@@ -15,8 +17,13 @@ public class zad2 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Kadry zespol = new Kadry();
+		zespol.dodajPracownika(new Student(new Pesel("93070301513"), 930.5));
+		zespol.dodajPracownika(new Student(new Pesel("93070301516"), 980.5));
+		zespol.dodajPracownika(new PracownikEtatowy(new Pesel("93070301519"), 1380.5));
+		
+		zespol.posortujPoWynagrodzeniu();
+		zespol.wyswietlWysztkich();
 	}
 
 }

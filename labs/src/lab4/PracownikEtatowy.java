@@ -32,4 +32,13 @@ public class PracownikEtatowy extends Pracownik {
 		return getWynagrodzenieBrutto()*0.6;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PracownikEtatowy [numPESEL=" + numPESEL
+				+ ", wynagrodzenieBrutto=" + wynagrodzenieBrutto + "]";
+	}
+
 }
