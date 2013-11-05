@@ -1,5 +1,7 @@
 package lab1;
 
+import java.util.Arrays;
+
 /**
  * @class Pesel - implementation of pesel number
  * @author wukat
@@ -88,4 +90,23 @@ public class Pesel {
 			flag = false;
 		return flag;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pesel other = (Pesel) obj;
+		if (!Arrays.equals(pesel, other.pesel))
+			return false;
+		return true;
+	}
+	
+	
 }
