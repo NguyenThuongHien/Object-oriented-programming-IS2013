@@ -30,10 +30,7 @@ public class Cryptographer {
 			Algorythm doCrypt) throws IOException {
 		String temp;
 		while ((temp = in.readLine()) != null)
-			for (String i : temp.split(" ")) {
-				out.write(doCrypt.crypt(i));
-				out.write(" ");
-			}
+			out.write(doCrypt.crypt(temp));
 	}
 
 	/**
@@ -51,9 +48,6 @@ public class Cryptographer {
 			Algorythm doDecrypt) throws IOException {
 		String temp;
 		while ((temp = in.readLine()) != null)
-			for (String i : temp.split(" ")) {
-				out.write(doDecrypt.decrypt(i));
-				out.write(" ");
-			}
+			out.write(doDecrypt.decrypt(temp));
 	}
 }
