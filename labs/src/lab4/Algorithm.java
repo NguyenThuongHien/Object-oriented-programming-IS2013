@@ -9,7 +9,7 @@ package lab4;
  * @author wukat
  *
  */
-public interface Algorythm {
+public interface Algorithm {
 	
 	/**
 	 * Ciphers word

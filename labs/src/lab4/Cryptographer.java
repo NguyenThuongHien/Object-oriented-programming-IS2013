@@ -27,7 +27,7 @@ public class Cryptographer {
 	 * @throws IOException
 	 */
 	public static void cryptfile(BufferedReader in, FileWriter out,
-			Algorythm doCrypt) throws IOException {
+			Algorithm doCrypt) throws IOException {
 		String temp;
 		while ((temp = in.readLine()) != null)
 			out.write(doCrypt.crypt(temp));
@@ -45,7 +45,7 @@ public class Cryptographer {
 	 * @throws IOException
 	 */
 	public static void decryptfile(BufferedReader in, FileWriter out,
-			Algorythm doDecrypt) throws IOException {
+			Algorithm doDecrypt) throws IOException {
 		String temp;
 		while ((temp = in.readLine()) != null)
 			out.write(doDecrypt.decrypt(temp) + "\n");

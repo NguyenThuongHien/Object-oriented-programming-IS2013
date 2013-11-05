@@ -9,7 +9,7 @@ package lab4;
  * @author wukat
  * 
  */
-public class Polibiusz implements Algorythm {
+public class Polibiusz implements Algorithm {
 
 	private final char[][] alphabet = { { 'A', 'B', 'C', 'D', 'E' },
 			{ 'F', 'G', 'H', 'I', 'K' }, { 'L', 'M', 'N', 'O', 'P' },
