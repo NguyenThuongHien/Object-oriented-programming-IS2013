@@ -11,11 +11,20 @@ package lab4;
  */
 public class ROT11 implements Algorythm {
 
-	static final char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-			'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
-			'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-			'V', 'W', 'X', 'Y', 'Z' };
+	private int move = 11;
+	private static final char[] alphabet= { 'a', 'b', 'c', 'd', 'e',
+			'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+			's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+			'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
+	/**
+	 * Constructor
+	 * @param move
+	 */
+	public ROT11(int move) {
+		this.move = move;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -27,9 +36,9 @@ public class ROT11 implements Algorythm {
 		String result = new String();
 		for (int i : toCrypt.toCharArray()) {
 			if (i <= 'z' && i >= 'a') {
-				result += (i + 11) % ('z' - 'a' + 1) + 'a';
+				result += (i + getMove()) % ('z' - 'a' + 1) + 'a';
 			} else if (i <= 'Z' && i >= 'A') {
-				result += (i + 11) % ('Z' - 'A' + 1) + 'A';
+				result += (i + getMove()) % ('Z' - 'A' + 1) + 'A';
 			} else {
 				result += i;
 			}
@@ -47,14 +56,30 @@ public class ROT11 implements Algorythm {
 		String result = new String();
 		for (int i : toDecrypt.toCharArray()) {
 			if (i <= 'z' && i >= 'a') {
-				result += (i - 11) % ('z' - 'a' + 1) + 'a';
+				result += (i - getMove()) % ('z' - 'a' + 1) + 'a';
 			} else if (i <= 'Z' && i >= 'A') {
-				result += (i + 11) % ('Z' - 'A' + 1) + 'A';
+				result += (i + getMove()) % ('Z' - 'A' + 1) + 'A';
 			} else {
 				result += i;
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Getter
+	 * @return the move
+	 */
+	public int getMove() {
+		return move;
+	}
+
+	/**
+	 * move setter 
+	 * @param move the move to set
+	 */
+	public void setMove(int move) {
+		this.move = move;
 	}
 
 }
