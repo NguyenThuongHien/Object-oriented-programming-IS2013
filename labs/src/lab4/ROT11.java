@@ -33,16 +33,17 @@ public class ROT11 implements Algorithm {
 	 */
 	@Override
 	public String crypt(String toCrypt) {
-		String result = new String();
-		for (int i : toCrypt.toCharArray()) {
+		String result = "";
+		for (char i : toCrypt.toCharArray()) {
 			if (i <= 'z' && i >= 'a') {
-				result += (i + getMove()) % ('z' - 'a' + 1) + 'a';
+				result = result + (char) ((i + getMove() - 'a') % ('z' - 'a' + 1) + 'a');
 			} else if (i <= 'Z' && i >= 'A') {
-				result += (i + getMove()) % ('Z' - 'A' + 1) + 'A';
+				result = result + (char) ((i + getMove() - 'A') % ('Z' - 'A' + 1) + 'A');
 			} else {
-				result += i;
+				result = result + i;
 			}
 		}
+		result += '\n';
 		return result;
 	}
 
@@ -54,15 +55,22 @@ public class ROT11 implements Algorithm {
 	@Override
 	public String decrypt(String toDecrypt) {
 		String result = new String();
-		for (int i : toDecrypt.toCharArray()) {
+		for (char i : toDecrypt.toCharArray()) {
 			if (i <= 'z' && i >= 'a') {
-				result += (i - getMove()) % ('z' - 'a' + 1) + 'a';
+				if (i - getMove() >= 'a')
+				    result = result + (char) ((i - getMove() - 'a') % ('z' - 'a' + 1) + 'a');
+				else
+					result = result + (char) (i - getMove() + 'z' - 'a' + 1);
 			} else if (i <= 'Z' && i >= 'A') {
-				result += (i + getMove()) % ('Z' - 'A' + 1) + 'A';
+				if (i - getMove() >= 'A')
+				    result = result + (char) ((i - getMove() - 'A') % ('Z' - 'A' + 1) + 'A');
+				else
+					result = result + (char) (i - getMove() + 'Z' - 'A' + 1);
 			} else {
-				result += i;
+				result = result + i;
 			}
 		}
+		result += '\n';
 		return result;
 	}
 
