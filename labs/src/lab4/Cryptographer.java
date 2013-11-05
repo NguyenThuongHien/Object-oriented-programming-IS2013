@@ -48,6 +48,6 @@ public class Cryptographer {
 			Algorythm doDecrypt) throws IOException {
 		String temp;
 		while ((temp = in.readLine()) != null)
-			out.write(doDecrypt.decrypt(temp));
+			out.write(doDecrypt.decrypt(temp) + "\n");
 	}
 }
