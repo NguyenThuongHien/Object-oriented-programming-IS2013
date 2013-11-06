@@ -31,14 +31,17 @@ public class Polibiusz implements Algorithm {
 			for (int i = 0; i < alphabet.length && !flag; i++) {
 				for (int j = 0; j < alphabet[0].length && !flag; j++) {
 					if (k.equals(alphabet[i][j])) {
-						result += i;
-						result += j;
+						result += i + 1;
+						result += j + 1;
+						result += ' ';
 						flag = true;
 					}
 				}
 			}
 			if (!flag) {
 				result += k;
+				if (k != ' ')
+					result += ' ';
 			}
 		}
 		result += '\n';
@@ -60,17 +63,19 @@ public class Polibiusz implements Algorithm {
 			if (toDecryptArray[i] - '0' >= 0
 					&& toDecryptArray[i] - '0' < alphabet.length) {
 				step = 2;
-				if ((toDecryptArray[i + 1] - '0' >= 0 && toDecryptArray[i + 1] - '0' < alphabet[0].length)
+				if ((toDecryptArray[i + 1] - 1 - '0' >= 0 && toDecryptArray[i + 1] - 1 - '0' < alphabet[0].length)
 						&& i + 1 < toDecryptArray.length) {
 					result = result
-							+ alphabet[toDecryptArray[i] - '0'][toDecryptArray[i + 1] - '0'];
+							+ alphabet[toDecryptArray[i] - 1 - '0'][toDecryptArray[i + 1] - 1 - '0'];
 				} else {
 					result = result + toDecryptArray[i];
 					if (i + 1 < toDecrypt.length())
 						result = result + toDecryptArray[i + 1];
 				}
 			} else {
-				result = result + toDecryptArray[i];
+				if (i + 1 < toDecrypt.length())
+					if (toDecrypt.charAt(i + 1) == ' ')
+						result = result + toDecryptArray[i];
 			}
 		}
 		result += '\n';

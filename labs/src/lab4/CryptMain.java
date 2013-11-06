@@ -39,7 +39,7 @@ public class CryptMain {
 					;
 				switch (input2) {
 				case 1:
-					Cryptographer.cryptfile(input, output, new ROT11(11));
+					Cryptographer.cryptfile(input, output, new ROT11());
 					break;
 				case 2:
 					Cryptographer.cryptfile(input, output, new Polibiusz());
@@ -55,7 +55,7 @@ public class CryptMain {
 					;
 				switch (input3) {
 				case 1:
-					Cryptographer.decryptfile(input, output, new ROT11(11));
+					Cryptographer.decryptfile(input, output, new ROT11());
 					break;
 				case 2:
 					Cryptographer.decryptfile(input, output, new Polibiusz());

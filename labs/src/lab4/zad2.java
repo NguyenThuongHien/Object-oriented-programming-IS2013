@@ -24,6 +24,9 @@ public class zad2 {
 		
 		zespol.posortujPoWynagrodzeniu();
 		zespol.wyswietlWysztkich();
+		
+		System.out.println(zespol.getWynagrodzenieBrutto(new Pesel("93070301513")));
+		System.out.print(zespol.getWynagrodzenieNetto(new Pesel("93070301513")));
 	}
 
 }

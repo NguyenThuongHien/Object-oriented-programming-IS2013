@@ -13,11 +13,11 @@ import lab1.Pesel;
 
 /**
  * @author wukat
- *
+ * 
  */
 public class Kadry {
 	LinkedList<Pracownik> pracownicy = new LinkedList<Pracownik>();
-	
+
 	/**
 	 * 
 	 * @param silaRobocza
@@ -25,7 +25,7 @@ public class Kadry {
 	public void dodajPracownika(Pracownik silaRobocza) {
 		pracownicy.add(silaRobocza);
 	}
-	
+
 	/**
 	 * 
 	 * @param pesel
@@ -40,6 +40,7 @@ public class Kadry {
 		}
 		return null;
 	}
+
 	/**
 	 * 
 	 * @param pesel
@@ -47,25 +48,28 @@ public class Kadry {
 	public void usunPracownika(Pesel pesel) {
 		pracownicy.remove(znajdz(pesel));
 	}
-	
+
 	/**
 	 * get
+	 * 
 	 * @param pesel
 	 * @return
 	 */
 	public double getWynagrodzenieBrutto(Pesel pesel) {
-		return znajdz(pesel).getWynagrodzenieBrutto();
+		double temp = znajdz(pesel).getWynagrodzenieBrutto() * 100;
+		temp = Math.round(temp);
+		return temp / 100;
 	}
-	
+
 	/**
 	 * set
+	 * 
 	 * @param pesel
 	 * @param kwota
 	 */
 	public void setWynagrodzenieBrutto(Pesel pesel, double kwota) {
 		znajdz(pesel).setWynagrodzenieBrutto(kwota);
 	}
-	
 
 	/**
 	 * 
@@ -73,15 +77,18 @@ public class Kadry {
 	 * @return
 	 */
 	public double getWynagrodzenieNetto(Pesel pesel) {
-		return znajdz(pesel).liczNetto();
+		double temp = znajdz(pesel).liczNetto() * 100;
+		temp = Math.round(temp);
+		return temp / 100;
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void posortujPoWynagrodzeniu() {
 		Collections.sort(pracownicy, new PracownikComparator());
 	}
+
 	/**
 	 * 
 	 */
@@ -91,5 +98,5 @@ public class Kadry {
 			System.out.println(iter.next());
 		}
 	}
-	
+
 }
