@@ -70,7 +70,14 @@ public class Polibiusz implements Algorithm {
 				} else {
 					result = result + toDecryptArray[i];
 					if (i + 1 < toDecrypt.length())
-						result = result + toDecryptArray[i + 1];
+						if (toDecrypt.charAt(i + 1) != ' ') 
+							result = result + toDecryptArray[i + 1];
+						else {
+							if (i + 2 < toDecrypt.length()) {
+								if (toDecrypt.charAt(i + 2) == ' ')
+									result = result + toDecryptArray[i + 1];
+							}
+						}
 				}
 			} else {
 				if (i + 1 < toDecrypt.length())
