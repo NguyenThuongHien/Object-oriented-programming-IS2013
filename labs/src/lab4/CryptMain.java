@@ -18,6 +18,10 @@ import javaIn.JIn;
  * 
  */
 public class CryptMain {
+	/**
+	 * Main program
+	 * @param arg
+	 */
 	public static void main(String[] arg) {
 		try {
 			BufferedReader input = new BufferedReader(new FileReader(new File(
