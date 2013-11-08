@@ -5,16 +5,16 @@
  */
 package browser;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ListIterator;
-import java.util.Vector;
-
 import Exceptions.FailedToGenerateCrosswordException;
 import Exceptions.WrongDimensionInBoardAsked;
 import board.Crossword;
 import board.Strategy;
 import dictionary.InteliCwDB;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ListIterator;
+import java.util.Vector;
 
 /**
  * @author wukat
@@ -35,13 +35,14 @@ public class CwBrowser {
 	 * @throws IOException
 	 */
 	public CwBrowser(String cwDBpath) throws IOException {
+        if (cwDBpath == null)
+            cwDBpath = "cwdb.txt";
 		defaultCwDB = new InteliCwDB(cwDBpath);
 		crosswords = new Vector<Crossword>();
 		iter = crosswords.listIterator();
 		actual = null;
 	}
 
-	// generowanie
 	/**
 	 * Generates crossword (actual)
 	 * 
@@ -57,6 +58,7 @@ public class CwBrowser {
 	public void generateCw(int width, int height, Strategy str)
 			throws WrongDimensionInBoardAsked,
 			FailedToGenerateCrosswordException {
+        System.out.println(width);
 		Crossword actual = new Crossword(width, height, defaultCwDB);
 		actual.generate(str);
 		crosswords.add(actual);
@@ -64,12 +66,15 @@ public class CwBrowser {
 			iter.next();
 	}
 
-	// przegladanie
 	public void next() {
 		if (iter.hasNext())
 			actual = iter.next();
 		// show();
 	}
+
+    public boolean hasNext() {
+        return iter.hasNext();
+    }
 
 	public void previous() {
 		if (iter.hasPrevious())
@@ -77,12 +82,17 @@ public class CwBrowser {
 		// show();
 	}
 
-	// zapisywanie
-	public void saveActual(String folderPath) throws IOException {
-		new CwWriter(folderPath).write(actual);
+    public boolean hasPrevious() {
+        return iter.hasPrevious();
+    }
+
+	public void saveActual(String folderPath) throws IOException, NullPointerException {
+        if (actual != null)
+		    new CwWriter(folderPath).write(actual);
+        else
+            throw new NullPointerException("No actual crossword");
 	}
 
-	// wczytywanie
 	public void loadFromFiles(String folderPath) throws IOException,
 			WrongDimensionInBoardAsked, FileNotFoundException {
 		CwReader reader = new CwReader(folderPath);
