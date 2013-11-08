@@ -27,15 +27,15 @@ public class Program {
     private JPanel Strategy;
     private JButton FileChoose;
     private JPanel MainPanel;
+    private JPanel DB;
+    private JButton InputCrossword;
+    private JPanel Cw;
 
     public Program() {
         FileChoose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String newline = "\n";
-                JTextArea log = new JTextArea(5, 20);
-                log.setMargin(new Insets(5, 5, 5, 5));
-                log.setEditable(false);
                 JFileChooser fc = new JFileChooser();
                 if (e.getSource() == FileChoose) {
                     int returnVal = fc.showOpenDialog(FileChoose);
@@ -43,14 +43,28 @@ public class Program {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = fc.getSelectedFile();
                         //This is where a real application would open the file.
-                        log.append("Opening: " + file.getName() + "." + newline);
-                    } else {
-                        log.append("Open command cancelled by user." + newline);
                     }
-                    log.setCaretPosition(log.getDocument().getLength());
                 }
             }
 
+            ;
+        });
+        InputCrossword.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newline = "\n";
+                JFileChooser fc = new JFileChooser();
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                if (e.getSource() == InputCrossword) {
+                    int returnVal = fc.showOpenDialog(InputCrossword);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = fc.getSelectedFile();
+
+                        //This is where a real application would open the file.
+                    }
+                }
+            }
             ;
         });
     }
@@ -79,7 +93,7 @@ public class Program {
      */
     private void $$$setupUI$$$() {
         MainPanel = new JPanel();
-        MainPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        MainPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         Strategy = new JPanel();
         Strategy.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         MainPanel.add(Strategy, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -106,9 +120,20 @@ public class Program {
         RowsLabel = new JLabel();
         RowsLabel.setText("Rows");
         Size.add(RowsLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        DB = new JPanel();
+        DB.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        MainPanel.add(DB, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        DB.setBorder(BorderFactory.createTitledBorder("Import DB"));
         FileChoose = new JButton();
         FileChoose.setText("Choose file");
-        MainPanel.add(FileChoose, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        DB.add(FileChoose, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Cw = new JPanel();
+        Cw.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        MainPanel.add(Cw, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Cw.setBorder(BorderFactory.createTitledBorder("Load crosswords"));
+        InputCrossword = new JButton();
+        InputCrossword.setText("Choose folder");
+        Cw.add(InputCrossword, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(Easy);
