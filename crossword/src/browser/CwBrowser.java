@@ -6,7 +6,6 @@
 package browser;
 
 import Exceptions.FailedToGenerateCrosswordException;
-import Exceptions.WrongDimensionInBoardAsked;
 import board.Crossword;
 import board.Strategy;
 import dictionary.InteliCwDB;
@@ -21,10 +20,17 @@ import java.util.Vector;
  */
 public class CwBrowser {
 	private Vector<Crossword> crosswords; // vector of read crosswords
-	private ListIterator<Crossword> iter; // vector iterator
+    private ListIterator<Crossword> iter; // vector iterator
 	private Crossword actual; // actual crossword
 	private InteliCwDB defaultCwDB;
 
+    public void setDefaultCwDB(InteliCwDB defaultCwDB) {
+        this.defaultCwDB = defaultCwDB;
+    }
+
+    public Crossword getActual() {
+        return actual;
+    }
 	/**
 	 * 
 	 * Constructor
@@ -51,34 +57,43 @@ public class CwBrowser {
 	 *            - board's height
 	 * @param str
 	 *            - strategy
-	 * @throws WrongDimensionInBoardAsked
 	 * @throws FailedToGenerateCrosswordException
 	 */
 	public void generateCw(int width, int height, Strategy str)
-			throws WrongDimensionInBoardAsked,
-			FailedToGenerateCrosswordException {
+			throws FailedToGenerateCrosswordException {
         actual = new Crossword(width, height, defaultCwDB);
         actual.generate(str);
         crosswords.add(actual);
         iter = crosswords.listIterator();
         while (iter.hasNext())
-            actual = iter.next();
+            iter.next();
 	}
 
-	public void next() {
-		if (iter.hasNext())
-			actual = iter.next();
-		// show();
+	public void next(boolean lastUsedNext) {
+        if (lastUsedNext)
+        {    if (iter.hasNext())
+			    actual = iter.next();}
+        else {
+            actual = iter.next();
+            actual = iter.next();
+        }
 	}
 
     public boolean hasNext() {
         return iter.hasNext();
     }
 
-	public void previous() {
+	public void previous(boolean lastUsedNext) {
+        if (lastUsedNext)
+        {
+
+                actual = iter.previous();
+                actual = iter.previous();
+
+        }
+        else
 		if (iter.hasPrevious())
 			actual = iter.previous();
-		// show();
 	}
 
     public boolean hasPrevious() {
@@ -89,8 +104,20 @@ public class CwBrowser {
         return actual != null;
     }
 
-    public boolean hasOnlyActualOrNone() {
-        return crosswords.size() <= 1;
+    public int getIndexOfIterator() {
+        return iter.nextIndex();
+    }
+
+    public int nextIndex() {
+        return iter.nextIndex();
+    }
+
+    public int previousIndex() {
+        return iter.previousIndex();
+    }
+
+    public int getAmountOfCrosswords() {
+        return crosswords.size();
     }
 
 	public void saveActual(String folderPath) throws IOException, NullPointerException {
@@ -100,10 +127,11 @@ public class CwBrowser {
             throw new NullPointerException("No actual crossword");
 	}
 
-	public void loadFromFiles(String folderPath) throws IOException,
-			WrongDimensionInBoardAsked {
+	public void loadFromFiles(String folderPath) throws IOException {
 		CwReader reader = new CwReader(folderPath);
 		crosswords.addAll(reader.getAllCws());
         iter = crosswords.listIterator();
+        while (iter.hasNext())
+            actual = iter.next();
 	}
 }

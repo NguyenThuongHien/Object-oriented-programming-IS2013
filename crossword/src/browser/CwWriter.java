@@ -5,14 +5,14 @@
  */
 package browser;
 
+import board.Crossword;
+import dictionary.CwEntry;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
-
-import dictionary.CwEntry;
-import board.Crossword;
 
 /**
  * @author wukat
@@ -33,14 +33,6 @@ public class CwWriter implements Writer {
 		file.mkdirs();
 		if (!file.isDirectory() || !file.canWrite())
 			throw new IOException();
-//		boolean flag = false;
-//		String[] contentList = file.list();
-//		for (String i : contentList) {
-//			if (i.equals("Databases"))
-//				flag = true;
-//		}
-//		if (!flag)
-//			new File(path + "/Databases").mkdir();
 	}
 
 	/*
@@ -56,10 +48,6 @@ public class CwWriter implements Writer {
 		try {
 			cwFile.write(crossword.getBoardWidth() + " "
 					+ crossword.getBoardHeight() + "\n");
-//			cwFile.write(file.getAbsolutePath() + "/Databases/"
-//					+ Long.toString(ID) + "\n");
-//			crossword.getCwdb().saveDB(
-//					file.getAbsolutePath() + "/Databases/" + Long.toString(ID));
 			Iterator<CwEntry> iter = crossword.getROEntryIter();
 			while (iter.hasNext()) {
 				cwFile.write(iter.next().toString());

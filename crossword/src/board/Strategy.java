@@ -6,7 +6,6 @@
 package board;
 
 import Exceptions.FailedToGenerateCrosswordException;
-import Exceptions.WrongDimensionInBoardAsked;
 import dictionary.CwEntry;
 
 /**
@@ -30,7 +29,6 @@ public abstract class Strategy {
 	 *            - board to update
 	 * @param entry
 	 *            - value to insert
-	 * @throws WrongDimensionInBoardAsked 
 	 */
-	public abstract void updateBoard(Board board, CwEntry entry) throws WrongDimensionInBoardAsked;
+	public abstract void updateBoard(Board board, CwEntry entry);
 }

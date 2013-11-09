@@ -8,8 +8,6 @@ package board;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
-import Exceptions.WrongDimensionInBoardAsked;
-
 /**
  * @author wukat
  * 
@@ -25,11 +23,8 @@ public class Board {
 	 *            - board's width
 	 * @param height
 	 *            - board's height
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Board(int width, int height) throws WrongDimensionInBoardAsked {
-		if (width <= 0 || height <= 0)
-			throw new WrongDimensionInBoardAsked();
+	public Board(int width, int height) {
 		board = new BoardCell[width][height];
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
@@ -62,11 +57,8 @@ public class Board {
 	 * @param y
 	 *            - vertical position
 	 * @return certain x,y board cell
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public BoardCell getCell(int x, int y) throws WrongDimensionInBoardAsked {
-		if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight())
-			throw new WrongDimensionInBoardAsked();
+	public BoardCell getCell(int x, int y){
 		return board[x][y];
 	}
 
@@ -79,12 +71,8 @@ public class Board {
 	 *            - vertical position
 	 * @param c
 	 *            - cell to set
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public void setCell(int x, int y, BoardCell c)
-			throws WrongDimensionInBoardAsked {
-		if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight())
-			throw new WrongDimensionInBoardAsked();
+	public void setCell(int x, int y, BoardCell c) {
 		board[x][y] = c;
 	}
 
@@ -92,10 +80,8 @@ public class Board {
 	 * Gets cells in which word can start
 	 * 
 	 * @return list of cells
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public LinkedList<BoardCell> getStartCells()
-			throws WrongDimensionInBoardAsked {
+	public LinkedList<BoardCell> getStartCells() {
 		LinkedList<BoardCell> startCells = new LinkedList<BoardCell>();
 		for (int i = 0; i < getWidth(); i++)
 			for (int j = 0; j < getHeight(); j++)
@@ -110,9 +96,8 @@ public class Board {
 	 * Copying function
 	 * 
 	 * @return board copy
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Board copy() throws WrongDimensionInBoardAsked {
+	public Board copy() {
 		Board boardCopy = new Board(getWidth(), getHeight());
 		for (int i = 0; i < getWidth(); i++)
 			for (int j = 0; j < getHeight(); j++)
@@ -131,10 +116,8 @@ public class Board {
 	 *            - end in x axe
 	 * @param toy
 	 *            - end in y axe
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Pattern createPattern(int fromx, int fromy, int tox, int toy)
-			throws WrongDimensionInBoardAsked {
+	public Pattern createPattern(int fromx, int fromy, int tox, int toy) {
 		String pattern = "";
 		if (fromx == tox) {
 			for (int i = fromy; i < toy; i++) {

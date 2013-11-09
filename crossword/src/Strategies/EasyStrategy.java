@@ -5,18 +5,14 @@
  */
 package Strategies;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
-
 import Exceptions.FailedToGenerateCrosswordException;
-import Exceptions.WrongDimensionInBoardAsked;
 import board.Board;
 import board.Crossword;
 import board.Strategy;
 import dictionary.CwEntry;
 import dictionary.Entry;
+
+import java.util.*;
 
 /**
  * @author wukat
@@ -72,7 +68,6 @@ public class EasyStrategy extends Strategy {
 
 	/**
 	 * Generates proper password
-	 * @throws FailedGeneratingCrossword
 	 * @param crossword
 	 *            - input crossword
 	 * @return password 
@@ -80,6 +75,7 @@ public class EasyStrategy extends Strategy {
 	 */
 	private CwEntry generatePassword(Crossword crossword) throws FailedToGenerateCrosswordException {
 		Random random = new Random();
+        i = 0;
 		LinkedList<Entry> list = crossword.getCwdb().findAll(
 				crossword.getBoardHeight());
 		if (list.isEmpty())
@@ -128,7 +124,7 @@ public class EasyStrategy extends Strategy {
 	 * @see board.Strategy#updateBoard(board.Board, dictionary.CwEntry)
 	 */
 	@Override
-	public void updateBoard(Board board, CwEntry entry) throws WrongDimensionInBoardAsked {
+	public void updateBoard(Board board, CwEntry entry){
 		if (entry.getDir() == CwEntry.Direction.VERT) {
 			for (int i = entry.getY(); i < entry.getWord().length(); i++) {
 				board.getCell(entry.getX(), i).setContent(
@@ -141,4 +137,18 @@ public class EasyStrategy extends Strategy {
 			}
 		}
 	}
+
+    public String printAllEntries(Crossword crossword) {
+        String resultHor = "Horizontally: \n";
+        Iterator<CwEntry> iter = crossword.getROEntryIter();
+        int k = 1;
+        while (iter.hasNext()) {
+            CwEntry temp = iter.next();
+            if (temp.getDir() == CwEntry.Direction.HORIZ)          {
+                resultHor = resultHor + k + ". " + temp.getClue() + "\n";
+                k++;
+            }
+        }
+        return resultHor;
+    }
 }

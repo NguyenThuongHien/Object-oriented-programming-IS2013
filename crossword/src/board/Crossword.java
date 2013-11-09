@@ -5,26 +5,21 @@
  */
 package board;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import Exceptions.FailedToGenerateCrosswordException;
+import dictionary.CwEntry;
+import dictionary.InteliCwDB;
+
+import java.io.*;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import Exceptions.FailedToGenerateCrosswordException;
-import Exceptions.WrongDimensionInBoardAsked;
-import dictionary.CwEntry;
-import dictionary.InteliCwDB;
 
 /**
  * @author wukat
  * 
  */
 public class Crossword {
-	private LinkedList<CwEntry> entries = new LinkedList<CwEntry>(); // list of
+	private LinkedList<CwEntry> entries; // list of
 																		// entries
 																		// in
 																		// crossword
@@ -42,10 +37,9 @@ public class Crossword {
 	 *            - height of board
 	 * @param cwDB
 	 *            - data base
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Crossword(int width, int height, InteliCwDB cwDB)
-			throws WrongDimensionInBoardAsked {
+	public Crossword(int width, int height, InteliCwDB cwDB) {
+        entries =  new LinkedList<CwEntry>();
 		board = new Board(width, height);
 		cwdb = cwDB;
 		this.ID = -1;
@@ -60,10 +54,9 @@ public class Crossword {
 	 * @param f
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Crossword(long ID, File f) throws FileNotFoundException,
-			IOException, WrongDimensionInBoardAsked {
+	public Crossword(long ID, File f) throws IOException {
+        entries = new LinkedList<CwEntry>();
 		this.ID = ID;
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		try {
@@ -71,8 +64,6 @@ public class Crossword {
 			String[] splited = temp.split(" ");
 			board = new Board(Integer.parseInt(splited[0]),
 					Integer.parseInt(splited[1]));
-//			temp = reader.readLine();
-//			cwdb = new InteliCwDB(temp);
 			while ((temp = reader.readLine()) != null) {
 				splited = temp.split(" ");
 				if (splited[2].equals("HORIZ"))
@@ -182,7 +173,7 @@ public class Crossword {
 	 * @return read-only iterator
 	 */
 	public Iterator<CwEntry> getROEntryIter() {
-		return Collections.unmodifiableList(getEntries()).iterator();
+        return Collections.unmodifiableList(getEntries()).iterator();
 	}
 
 	/**
@@ -198,9 +189,8 @@ public class Crossword {
 	 * Getter (copy)
 	 * 
 	 * @return copy of board
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public Board getBoardCopy() throws WrongDimensionInBoardAsked {
+	public Board getBoardCopy() {
 		return board.copy();
 	}
 
@@ -227,10 +217,8 @@ public class Crossword {
 	 * @param cwe
 	 *            - entry
 	 * @param strategy
-	 * @throws WrongDimensionInBoardAsked
 	 */
-	public final void addCwEntry(CwEntry cwe, Strategy strategy)
-			throws WrongDimensionInBoardAsked {
+	public final void addCwEntry(CwEntry cwe, Strategy strategy) {
 		entries.add(cwe);
 		strategy.updateBoard(getBoard(), cwe);
 	}
@@ -243,9 +231,7 @@ public class Crossword {
 	 *             , WrongDimensionInBoardAsked
 	 */
 	public final void generate(Strategy strategy)
-			throws FailedToGenerateCrosswordException,
-			FailedToGenerateCrosswordException, WrongDimensionInBoardAsked {
-//		if (cwdb == null) throw NODATABASE
+			throws FailedToGenerateCrosswordException {
 		CwEntry entry = null;
 		while ((entry = strategy.findEntry(this)) != null) {
 			addCwEntry(entry, strategy);

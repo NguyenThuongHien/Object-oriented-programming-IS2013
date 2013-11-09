@@ -5,15 +5,11 @@
  */
 package browser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Vector;
-
-import dictionary.CwEntry;
-import Exceptions.WrongDimensionInBoardAsked;
 import board.Crossword;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
 
 /**
  * @author wukat
@@ -41,7 +37,7 @@ public class CwReader implements Reader {
 	 * @see browser.Reader#getAllCws()
 	 */
 	@Override
-	public Vector<Crossword> getAllCws() throws IOException, FileNotFoundException, WrongDimensionInBoardAsked {
+	public Vector<Crossword> getAllCws() throws IOException {
 		Vector<Crossword> crosswords = new Vector<Crossword>();
 		for (File f : file.listFiles()) {
 			if (f.canRead() && f.isFile()) {

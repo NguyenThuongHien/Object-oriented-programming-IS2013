@@ -1,17 +1,16 @@
 package graphicalInterface;
 
 import Exceptions.FailedToGenerateCrosswordException;
-import Exceptions.WrongDimensionInBoardAsked;
 import Strategies.EasyStrategy;
 import browser.CwBrowser;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import dictionary.InteliCwDB;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -47,44 +46,48 @@ public class Program {
     private JTextField LogField;
     private JPanel LogPanel;
     private JPanel CrosswordPanel;
+    private JTable CwTable;
+    private JTextPane EntriesPanel;
+    private JPanel Box;
     private static CwBrowser browser;
     private static EasyStrategy easyStrategy = new EasyStrategy();
+    private boolean lastUsedNext;
 
     public Program() {
-
         FileChoose.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent actionEvent) {
                 JFileChooser fc = new JFileChooser();
-                if (e.getSource() == FileChoose) {
+                if (actionEvent.getSource() == FileChoose) {
                     int returnVal = fc.showDialog(FileChoose, "Import");
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fc.getSelectedFile();
-                        //This is where a real application would open the file.
+                        try {
+                        browser.setDefaultCwDB(new InteliCwDB(fc.getSelectedFile().getPath())); }
+                        catch (IOException e) {
+                            LogField.setText("Failed to import database");
+                        }
                     }
                 }
             }
-
             ;
         });
 
         InputCrossword.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent actionEvent) {
                 JFileChooser fc = new JFileChooser();
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                if (e.getSource() == InputCrossword) {
+                if (actionEvent.getSource() == InputCrossword) {
                     int returnVal = fc.showDialog(InputCrossword, "Open directory");
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         try {
                             browser.loadFromFiles(fc.getSelectedFile().getPath());
                             actualizeButtons();
-                        } catch (Exception exc) {
+                        } catch (IOException e) {
+                            LogField.setText("Failed to load crosswords.");
                         }
-                    } else {
-                        LogField.setText("Failed to generate crossword from this database.");
                     }
                 }
             }
@@ -106,8 +109,6 @@ public class Program {
                         try {
                             browser.generateCw(Integer.parseInt(Columns.getValue().toString()), Integer.parseInt(Rows.getValue().toString()), easyStrategy);
                             actualizeButtons();
-                        } catch (WrongDimensionInBoardAsked e) {
-                            LogField.setText("Wrong dimensions");
                         } catch (FailedToGenerateCrosswordException a) {
                             LogField.setText("Failed to generate crossword from this database.");
                         }
@@ -128,8 +129,7 @@ public class Program {
                         try {
                             browser.saveActual(fc.getSelectedFile().getPath());
                         } catch (IOException e) {
-                        } catch (NullPointerException e) {
-                            System.out.println(e.getMessage());
+                            LogField.setText("Failed to save crossword.");
                         }
                     }
                 }
@@ -140,7 +140,8 @@ public class Program {
         Next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                browser.next();
+                browser.next(lastUsedNext);
+                lastUsedNext = true;
                 actualizeButtons();
             }
         });
@@ -148,22 +149,47 @@ public class Program {
         Previous.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                browser.previous();
+                browser.previous(lastUsedNext);
+                lastUsedNext = false;
                 actualizeButtons();
             }
         });
 
-        actualizeButtons();
         setLimitsWidthAndHeight();
+        lastUsedNext = true;
+        actualizeButtons();
+
+        Print.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                try {
+                    EntriesPanel.print();
+                } catch (Exception e) {
+                }
+
+            }
+        });
     }
 
     public void actualizeButtons() {
-        Previous.setEnabled(browser.hasOnlyActualOrNone() && browser.hasPrevious());
-        Next.setEnabled(browser.hasOnlyActualOrNone() && browser.hasNext());
+        if (lastUsedNext) {
+            Next.setEnabled(browser.hasNext());
+            Previous.setEnabled(browser.previousIndex() > 0);
+        }
+        else {
+            Previous.setEnabled(browser.hasPrevious());
+            Next.setEnabled(browser.nextIndex() < browser.getAmountOfCrosswords());
+        }
         Save.setEnabled(browser.hasActual());
         Solve.setEnabled(browser.hasActual());
         Print.setEnabled(browser.hasActual());
         LogField.setText("");
+        if (browser.hasActual()) show();
+    }
+
+    public void show() {
+        EntriesPanel.setText(easyStrategy.printAllEntries(browser.getActual()));
     }
 
     public void setLimitsWidthAndHeight() {
@@ -244,103 +270,218 @@ public class Program {
      */
     private void $$$setupUI$$$() {
         MainPanel = new JPanel();
-        MainPanel.setLayout(new GridLayoutManager(4, 8, new Insets(0, 0, 0, 0), -1, -1));
+        MainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        MainPanel.setMinimumSize(new Dimension(-1, -1));
+        MainPanel.setOpaque(true);
+        MainPanel.setPreferredSize(new Dimension(970, 600));
         Menu = new JPanel();
-        Menu.setLayout(new GridLayoutManager(2, 8, new Insets(0, 0, 0, 0), -1, -1));
-        MainPanel.add(Menu, new GridConstraints(0, 0, 2, 8, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Menu.setLayout(new GridLayoutManager(1, 6, new Insets(0, 0, 0, 0), -1, -1));
+        Menu.setAutoscrolls(false);
+        Menu.setVerifyInputWhenFocusTarget(true);
+        MainPanel.add(Menu);
         Strategy = new JPanel();
-        Strategy.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        Menu.add(Strategy, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Strategy.setLayout(new GridBagLayout());
+        Menu.add(Strategy, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         Strategy.setBorder(BorderFactory.createTitledBorder("Strategy"));
         Hard = new JRadioButton();
+        Hard.setMinimumSize(new Dimension(-1, -1));
         Hard.setText("Hard");
-        Strategy.add(Hard, new GridConstraints(1, 0, 2, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridheight = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        Strategy.add(Hard, gbc);
         Easy = new JRadioButton();
         Easy.setSelected(true);
         Easy.setText("Easy");
-        Strategy.add(Easy, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        Strategy.add(Easy, gbc);
         Size = new JPanel();
-        Size.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        Menu.add(Size, new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Size.setLayout(new GridBagLayout());
+        Menu.add(Size, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         Size.setBorder(BorderFactory.createTitledBorder("Size"));
         Columns = new JSpinner();
         Columns.setEnabled(true);
         Columns.setFocusTraversalPolicyProvider(false);
         Columns.putClientProperty("html.disable", Boolean.FALSE);
-        Size.add(Columns, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Size.add(Columns, gbc);
         Rows = new JSpinner();
         Rows.setBackground(new Color(-2697514));
-        Size.add(Rows, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Size.add(Rows, gbc);
         ColumnsLabel = new JLabel();
         ColumnsLabel.setText("Columns");
-        Size.add(ColumnsLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        Size.add(ColumnsLabel, gbc);
         RowsLabel = new JLabel();
         RowsLabel.setText("Rows");
-        Size.add(RowsLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        Size.add(RowsLabel, gbc);
         DB = new JPanel();
-        DB.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        Menu.add(DB, new GridConstraints(0, 2, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        DB.setLayout(new GridBagLayout());
+        Menu.add(DB, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         DB.setBorder(BorderFactory.createTitledBorder("Import DB"));
         FileChoose = new JButton();
         FileChoose.setText("Choose file");
-        DB.add(FileChoose, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        DB.add(FileChoose, gbc);
         Cw = new JPanel();
-        Cw.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        Menu.add(Cw, new GridConstraints(0, 3, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Cw.setLayout(new GridBagLayout());
+        Menu.add(Cw, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         Cw.setBorder(BorderFactory.createTitledBorder("Load crosswords"));
         InputCrossword = new JButton();
         InputCrossword.setText("Choose folder");
-        Cw.add(InputCrossword, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Cw.add(InputCrossword, gbc);
         Options = new JPanel();
-        Options.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
-        Menu.add(Options, new GridConstraints(0, 4, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Options.setLayout(new GridBagLayout());
+        Menu.add(Options, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         Options.setBorder(BorderFactory.createTitledBorder("Options"));
         Save = new JButton();
         Save.setText("Save");
         Save.putClientProperty("html.disable", Boolean.TRUE);
-        Options.add(Save, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Options.add(Save, gbc);
         Print = new JButton();
         Print.setText("Print");
-        Options.add(Print, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Options.add(Print, gbc);
         Generate = new JButton();
         Generate.setText("Generate");
-        Options.add(Generate, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Options.add(Generate, gbc);
         Solve = new JButton();
         Solve.setText("Solve");
-        Options.add(Solve, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Options.add(Solve, gbc);
         Browse = new JPanel();
-        Browse.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        Menu.add(Browse, new GridConstraints(0, 6, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Browse.setLayout(new GridBagLayout());
+        Menu.add(Browse, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         Browse.setBorder(BorderFactory.createTitledBorder("Browse"));
         Previous = new JButton();
         Previous.setEnabled(true);
         Previous.setText("Prev");
         Previous.putClientProperty("html.disable", Boolean.FALSE);
-        Browse.add(Previous, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Browse.add(Previous, gbc);
         Next = new JButton();
         Next.setText("Next");
-        Browse.add(Next, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        Browse.add(Next, gbc);
         LogPanel = new JPanel();
-        LogPanel.setLayout(new BorderLayout(0, 0));
+        LogPanel.setLayout(new GridBagLayout());
         LogPanel.setEnabled(true);
         LogPanel.setFocusCycleRoot(false);
         LogPanel.setFocusTraversalPolicyProvider(false);
-        MainPanel.add(LogPanel, new GridConstraints(2, 0, 1, 8, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        LogPanel.setMaximumSize(new Dimension(310, 310));
+        LogPanel.setPreferredSize(new Dimension(950, 44));
+        MainPanel.add(LogPanel);
         LogPanel.setBorder(BorderFactory.createTitledBorder("Error logs"));
         LogField = new JTextField();
         LogField.setCaretColor(new Color(-2697514));
         LogField.setDisabledTextColor(new Color(-65536));
         LogField.setEditable(false);
+        LogField.setEnabled(false);
         LogField.setFont(new Font(LogField.getFont().getName(), Font.BOLD, 12));
-        LogField.setForeground(new Color(-65536));
+        LogField.setForeground(new Color(-2697514));
+        LogField.setMinimumSize(new Dimension(950, 23));
+        LogField.setPreferredSize(new Dimension(950, 23));
         LogField.setText("");
         LogField.setVisible(true);
-        LogPanel.add(LogField, BorderLayout.CENTER);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        LogPanel.add(LogField, gbc);
         CrosswordPanel = new JPanel();
-        CrosswordPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        CrosswordPanel.setLayout(new GridBagLayout());
         CrosswordPanel.setEnabled(true);
-        MainPanel.add(CrosswordPanel, new GridConstraints(3, 0, 1, 8, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        CrosswordPanel.setPreferredSize(new Dimension(970, 470));
+        MainPanel.add(CrosswordPanel);
         CrosswordPanel.setBorder(BorderFactory.createTitledBorder("Crossword"));
+        EntriesPanel = new JTextPane();
+        EntriesPanel.setDisabledTextColor(new Color(-16777216));
+        EntriesPanel.setEditable(false);
+        EntriesPanel.setEnabled(false);
+        EntriesPanel.putClientProperty("charset", "");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        CrosswordPanel.add(EntriesPanel, gbc);
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(Easy);
