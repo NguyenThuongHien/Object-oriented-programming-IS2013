@@ -11,7 +11,6 @@ import board.Crossword;
 import board.Strategy;
 import dictionary.InteliCwDB;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
 import java.util.Vector;
@@ -58,12 +57,12 @@ public class CwBrowser {
 	public void generateCw(int width, int height, Strategy str)
 			throws WrongDimensionInBoardAsked,
 			FailedToGenerateCrosswordException {
-        System.out.println(width);
-		Crossword actual = new Crossword(width, height, defaultCwDB);
-		actual.generate(str);
-		crosswords.add(actual);
-		while (iter.hasNext())
-			iter.next();
+        actual = new Crossword(width, height, defaultCwDB);
+        actual.generate(str);
+        crosswords.add(actual);
+        iter = crosswords.listIterator();
+        while (iter.hasNext())
+            actual = iter.next();
 	}
 
 	public void next() {
@@ -86,6 +85,14 @@ public class CwBrowser {
         return iter.hasPrevious();
     }
 
+    public boolean hasActual() {
+        return actual != null;
+    }
+
+    public boolean hasOnlyActualOrNone() {
+        return crosswords.size() <= 1;
+    }
+
 	public void saveActual(String folderPath) throws IOException, NullPointerException {
         if (actual != null)
 		    new CwWriter(folderPath).write(actual);
@@ -94,9 +101,9 @@ public class CwBrowser {
 	}
 
 	public void loadFromFiles(String folderPath) throws IOException,
-			WrongDimensionInBoardAsked, FileNotFoundException {
+			WrongDimensionInBoardAsked {
 		CwReader reader = new CwReader(folderPath);
-		reader.getAllCws();
 		crosswords.addAll(reader.getAllCws());
+        iter = crosswords.listIterator();
 	}
 }
