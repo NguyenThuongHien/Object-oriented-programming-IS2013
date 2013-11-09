@@ -53,7 +53,6 @@ public class BoardCell {
 	 *            - boolean - true if enable
 	 */
 	public void setAbility(int dir, int pos, Boolean ability) {
-		// TODO exception
 		abilities[dir][pos] = ability;
 	}
 
@@ -67,7 +66,6 @@ public class BoardCell {
 	 * @return ability - boolean - true if enable
 	 */
 	public Boolean getAbility(int dir, int pos) {
-		// TODO exception
 		return abilities[dir][pos];
 	}
 

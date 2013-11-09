@@ -27,11 +27,10 @@ public class CwDB {
 	 * Constructor
 	 * 
 	 * @param filename
-	 *            - name of file with data
-	 * @throws FileNotFoundException
+	 *            - name of file with date
 	 * @throw IOException
 	 */
-	public CwDB(String filename) throws FileNotFoundException, IOException {
+	public CwDB(String filename) throws IOException {
 		createDB(filename);
 	}
 
@@ -114,10 +113,8 @@ public class CwDB {
 	 * @param filename
 	 *            - file name
 	 * @throws IOException
-	 * @throws FileNotFoundException
 	 */
-	protected void createDB(String filename) throws IOException,
-			FileNotFoundException {
+	protected void createDB(String filename) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		try {
 			String line1 = null;

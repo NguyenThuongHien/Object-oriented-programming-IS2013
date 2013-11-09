@@ -15,9 +15,11 @@ import java.util.Vector;
  * 
  */
 interface Reader {
+
 	/**
 	 * Loads all crosswords into one data base.
-	 * @return 
+	 * 
+	 * @return vector of loaded crosswords
 	 * @throws IOException
 	 */
 	public Vector<Crossword> getAllCws() throws IOException;

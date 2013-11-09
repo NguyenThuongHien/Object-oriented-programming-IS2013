@@ -18,6 +18,7 @@ public abstract class Strategy {
 	 * 
 	 * @param cw
 	 *            - crossword class
+	 * @throws FailedToGenerateCrosswordException
 	 * @return crossword entry
 	 */
 	public abstract CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException;

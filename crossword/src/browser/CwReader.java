@@ -24,6 +24,7 @@ public class CwReader implements Reader {
 	 * 
 	 * @param path
 	 *            - folder with crosswords
+	 * @throws IOException
 	 */
 	public CwReader(String path) throws IOException {
 		file = new File(path);

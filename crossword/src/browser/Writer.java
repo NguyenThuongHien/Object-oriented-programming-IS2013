@@ -14,16 +14,18 @@ import board.Crossword;
  * 
  */
 public interface Writer {
+
 	/**
 	 * Saves crossword in file
 	 * 
 	 * @param crossword
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void write(Crossword crossword) throws IOException;
 
-	/** 
+	/**
 	 * Gets unique ID for saving crossword, time in milliseconds
+	 * 
 	 * @return unique ID
 	 */
 	public long getUniqueID();

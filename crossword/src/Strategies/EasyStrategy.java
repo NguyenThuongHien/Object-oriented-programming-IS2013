@@ -138,6 +138,11 @@ public class EasyStrategy extends Strategy {
 		}
 	}
 
+	/**
+	 * Function prints all entries except password
+	 * @param crossword
+	 * @return string with output 
+	 */
     public String printAllEntries(Crossword crossword) {
         String resultHor = "Horizontally: \n";
         Iterator<CwEntry> iter = crossword.getROEntryIter();

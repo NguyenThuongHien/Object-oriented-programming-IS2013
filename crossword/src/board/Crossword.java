@@ -7,7 +7,7 @@ package board;
 
 import Exceptions.FailedToGenerateCrosswordException;
 import dictionary.CwEntry;
-import dictionary.InteliCwDB;
+import dictionary.IntelLiCwDB;
 
 import java.io.*;
 import java.util.Collections;
@@ -20,11 +20,11 @@ import java.util.LinkedList;
  */
 public class Crossword {
 	private LinkedList<CwEntry> entries; // list of
-																		// entries
-																		// in
-																		// crossword
+											// entries
+											// in
+											// crossword
 	private Board board; // crossword's board
-	private InteliCwDB cwdb = null; // crossword's intelligent database
+	private IntelLiCwDB cwdb = null; // crossword's intelligent database
 	private final long ID; // ID, default set to -1
 
 	/**
@@ -38,8 +38,8 @@ public class Crossword {
 	 * @param cwDB
 	 *            - data base
 	 */
-	public Crossword(int width, int height, InteliCwDB cwDB) {
-        entries =  new LinkedList<CwEntry>();
+	public Crossword(int width, int height, IntelLiCwDB cwDB) {
+		entries = new LinkedList<CwEntry>();
 		board = new Board(width, height);
 		cwdb = cwDB;
 		this.ID = -1;
@@ -52,11 +52,10 @@ public class Crossword {
 	 * 
 	 * @param ID
 	 * @param f
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
 	public Crossword(long ID, File f) throws IOException {
-        entries = new LinkedList<CwEntry>();
+		entries = new LinkedList<CwEntry>();
 		this.ID = ID;
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		try {
@@ -144,7 +143,7 @@ public class Crossword {
 	 * 
 	 * @return the cwdb
 	 */
-	public InteliCwDB getCwdb() {
+	public IntelLiCwDB getCwdb() {
 		return cwdb;
 	}
 
@@ -154,7 +153,7 @@ public class Crossword {
 	 * @param cwdb
 	 *            the cwdb to set
 	 */
-	public void setCwdb(InteliCwDB cwdb) {
+	public void setCwdb(IntelLiCwDB cwdb) {
 		this.cwdb = cwdb;
 	}
 
@@ -173,7 +172,7 @@ public class Crossword {
 	 * @return read-only iterator
 	 */
 	public Iterator<CwEntry> getROEntryIter() {
-        return Collections.unmodifiableList(getEntries()).iterator();
+		return Collections.unmodifiableList(getEntries()).iterator();
 	}
 
 	/**
@@ -228,7 +227,6 @@ public class Crossword {
 	 * 
 	 * @param strategy
 	 * @throws FailedToGenerateCrosswordException
-	 *             , WrongDimensionInBoardAsked
 	 */
 	public final void generate(Strategy strategy)
 			throws FailedToGenerateCrosswordException {

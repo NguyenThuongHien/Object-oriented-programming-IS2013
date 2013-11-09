@@ -17,16 +17,15 @@ import java.util.Random;
  * @author wukat
  * 
  */
-public class InteliCwDB extends CwDB {
+public class IntelLiCwDB extends CwDB {
 
 	/**
 	 * Constructor
 	 * 
 	 * @param filename
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public InteliCwDB(String filename) throws FileNotFoundException, IOException {
+	public IntelLiCwDB(String filename) throws IOException {
 		super(filename);
 		Collections.sort(dict, new EntriesComparator());
 	}
@@ -68,41 +67,46 @@ public class InteliCwDB extends CwDB {
 
 	/**
 	 * Gets random entry
+	 * 
 	 * @return entry or null if dict is empty
 	 */
 	public Entry getRandom() {
 		Random rand = new Random();
-		if (dict.isEmpty()) 
+		if (dict.isEmpty())
 			return null;
 		return dict.get(rand.nextInt(dict.size()));
 	}
 
 	/**
 	 * Gets random entry with word's length equal to parameter
-	 * @param length - integer length
+	 * 
+	 * @param length
+	 *            - integer length
 	 * @return entry or null if none match
 	 */
 	public Entry getRandom(int length) {
 		Random rand = new Random();
 		LinkedList<Entry> lenDict = findAll(length);
-		if (lenDict.isEmpty()) 
+		if (lenDict.isEmpty())
 			return null;
 		else
-		    return lenDict.get(rand.nextInt(lenDict.size()));
+			return lenDict.get(rand.nextInt(lenDict.size()));
 	}
 
 	/**
 	 * Gets random entry with word matching pattern
-	 * @param pattern - regular expression
+	 * 
+	 * @param pattern
+	 *            - regular expression
 	 * @return entry or null if none match
 	 */
 	public Entry getRandom(String pattern) {
 		Random rand = new Random();
 		LinkedList<Entry> patDict = findAll(pattern);
-		if (patDict.isEmpty()) 
+		if (patDict.isEmpty())
 			return null;
 		else
-		    return patDict.get(rand.nextInt(patDict.size()));
+			return patDict.get(rand.nextInt(patDict.size()));
 	}
 
 	/**
