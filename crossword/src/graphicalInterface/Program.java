@@ -8,6 +8,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import dictionary.InteliCwDB;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,18 +59,23 @@ public class Program {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 JFileChooser fc = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        ".txt", "txt");
+                fc.setAcceptAllFileFilterUsed(false);
+                fc.setFileFilter(filter);
                 if (actionEvent.getSource() == FileChoose) {
                     int returnVal = fc.showDialog(FileChoose, "Import");
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         try {
-                        browser.setDefaultCwDB(new InteliCwDB(fc.getSelectedFile().getPath())); }
-                        catch (IOException e) {
+                            browser.setDefaultCwDB(new InteliCwDB(fc.getSelectedFile().getPath()));
+                        } catch (IOException e) {
                             LogField.setText("Failed to import database");
                         }
                     }
                 }
             }
+
             ;
         });
 
@@ -167,7 +173,12 @@ public class Program {
                     EntriesPanel.print();
                 } catch (Exception e) {
                 }
-
+            }
+        });
+        Solve.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                //To change body of implemented methods use File | Settings | File Templates.
             }
         });
     }
@@ -176,8 +187,7 @@ public class Program {
         if (lastUsedNext) {
             Next.setEnabled(browser.hasNext());
             Previous.setEnabled(browser.previousIndex() > 0);
-        }
-        else {
+        } else {
             Previous.setEnabled(browser.hasPrevious());
             Next.setEnabled(browser.nextIndex() < browser.getAmountOfCrosswords());
         }
