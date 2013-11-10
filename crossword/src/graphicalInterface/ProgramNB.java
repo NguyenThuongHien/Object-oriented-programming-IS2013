@@ -14,13 +14,13 @@ import Exceptions.FailedToGenerateCrosswordException;
 import Strategies.EasyStrategy;
 import browser.CwBrowser;
 import dictionary.IntelLiCwDB;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.io.IOException;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.color.*;
 
 /**
  *
@@ -30,147 +30,27 @@ public class ProgramNB extends javax.swing.JFrame {
 
     /** Creates new form ProgramNB */
     public ProgramNB() {
-        importButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JFileChooser fc = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        ".txt", "txt");
-                fc.setAcceptAllFileFilterUsed(false);
-                fc.setFileFilter(filter);
-                if (actionEvent.getSource() == importButton) {
-                    int returnVal = fc.showDialog(importButton, "Import");
-
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            browser.setDefaultCwDB(new IntelLiCwDB(fc.getSelectedFile().getPath()));
-                        } catch (IOException e) {
-                            logTextField.setText("Failed to import database");
-                        }
-                    }
-                }
-            }
-        ;
-        });
-
-        loadButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JFileChooser fc = new JFileChooser();
-                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                if (actionEvent.getSource() == loadButton) {
-                    int returnVal = fc.showDialog(loadButton,
-                            "Open directory");
-
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            browser.loadFromFiles(fc.getSelectedFile().getPath());
-                            actualizeButtons();
-                        } catch (IOException e) {
-                            logTextField.setText("Failed to load crosswords.");
-                        }
-                    }
-                }
-            }
-        ;
-        });
-
-        generateButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (actionEvent.getSource() == generateButton) {
-                    if (hard.isSelected()) {
-                        try {
-                            browser.generateCw(Integer.parseInt(columns.getValue().toString()), Integer.parseInt(rows.getValue().toString()),
-                                    easyStrategy);
-                            actualizeButtons();
-                        } catch (FailedToGenerateCrosswordException a) {
-                            logTextField.setText("Failed to generate crossword from this database.");
-                        }
-                    } else {
-                        try {
-                            browser.generateCw(Integer.parseInt(columns.getValue().toString()), Integer.parseInt(rows.getValue().toString()),
-                                    easyStrategy);
-                            actualizeButtons();
-                        } catch (FailedToGenerateCrosswordException a) {
-                            logTextField.setText("Failed to generate crossword from this database.");
-                        }
-                    }
-                }
-            }
-        });
-
-        saveButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JFileChooser fc = new JFileChooser();
-                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                if (actionEvent.getSource() == saveButton) {
-                    int returnVal = fc.showDialog(saveButton, "Save in directory");
-
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            browser.saveActual(fc.getSelectedFile().getPath());
-                        } catch (IOException e) {
-                            logTextField.setText("Failed to save crossword.");
-                        }
-                    }
-                }
-
-            }
-        });
-
-        nextButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                browser.next(lastUsedNext);
-                lastUsedNext = true;
-                actualizeButtons();
-            }
-        });
-
-        prevButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                browser.previous(lastUsedNext);
-                lastUsedNext = false;
-                actualizeButtons();
-            }
-        });
+        initComponents();
 
         lastUsedNext = true;
         actualizeButtons();
-
-        printButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-//                try {
-//                    EntriesPanel.print();
-//                } catch (Exception e) {
-//                }
-            }
-        });
-        solveButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                // To change body of implemented methods use File | Settings |
-                // File Templates.
-            }
-        });
-        initComponents();
     }
 
-    public void actualizeButtons() {
+    public final void showCw() {
+        Graphics graphic = crosswordPanel.getGraphics();
+        graphic.clearRect(20, 20, 600, 600);
+        graphic.setColor(Color.WHITE);
+        int j = 0;
+        for (String i : easyStrategy.printAllEntries(browser.getActual()).split("\n")) {
+            graphic.drawString(i, 10, 30 + j*15);
+            j++;
+        }
+//        crosswordPanel.paint(graphic);
+    }
+
+    public final void actualizeButtons() {
         if (lastUsedNext) {
-            prevButton.setEnabled(browser.hasNext());
+            nextButton.setEnabled(browser.hasNext());
             prevButton.setEnabled(browser.previousIndex() > 0);
         } else {
             prevButton.setEnabled(browser.hasPrevious());
@@ -181,13 +61,8 @@ public class ProgramNB extends javax.swing.JFrame {
         printButton.setEnabled(browser.hasActual());
         logTextField.setText("");
         if (browser.hasActual()) {
-            show();
+            showCw();
         }
-        
-    }
-
-    public void show() {
-//        EntriesPanel.setText(easyStrategy.printAllEntries(browser.getActual()));
     }
 
     /** This method is called from within the constructor to
@@ -221,7 +96,6 @@ public class ProgramNB extends javax.swing.JFrame {
         nextButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         crosswordPanel = new javax.swing.JPanel();
-        canvasCrossword = new java.awt.Canvas();
         errorLogPanel = new javax.swing.JPanel();
         logTextField = new javax.swing.JTextField();
 
@@ -251,49 +125,53 @@ public class ProgramNB extends javax.swing.JFrame {
         rows.setModel(new javax.swing.SpinnerNumberModel(5, 3, 12, 1));
 
         generateButton.setText("Generate");
+        generateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
         generatePanel.setLayout(generatePanelLayout);
         generatePanelLayout.setHorizontalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generatePanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(easy)
-                .addGap(6, 6, 6)
-                .addComponent(hard))
-            .addGroup(generatePanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(columnsLabel)
-                .addGap(12, 12, 12)
-                .addComponent(columns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(generatePanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(rowsLabel)
-                .addGap(33, 33, 33)
-                .addComponent(rows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(generatePanelLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(generateButton))
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generatePanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(generatePanelLayout.createSequentialGroup()
+                                .addComponent(easy)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(hard))
+                            .addGroup(generatePanelLayout.createSequentialGroup()
+                                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(columnsLabel)
+                                    .addComponent(rowsLabel))
+                                .addGap(18, 18, 18)
+                                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(columns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(rows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(generatePanelLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(generateButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         generatePanelLayout.setVerticalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generatePanelLayout.createSequentialGroup()
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(easy)
                     .addComponent(hard))
-                .addGap(12, 12, 12)
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(generatePanelLayout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(columnsLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(columnsLabel)
                     .addComponent(columns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(generatePanelLayout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(rowsLabel))
+                .addGap(17, 17, 17)
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rowsLabel)
                     .addComponent(rows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(generateButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -303,76 +181,114 @@ public class ProgramNB extends javax.swing.JFrame {
         importLabel.setText("Import database");
 
         importButton.setText("Choose file");
+        importButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importButtonActionPerformed(evt);
+            }
+        });
 
         loadLabel.setText("Load crosswords");
 
         loadButton.setText("Choose folder");
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout fromFilePanelLayout = new javax.swing.GroupLayout(fromFilePanel);
         fromFilePanel.setLayout(fromFilePanelLayout);
         fromFilePanelLayout.setHorizontalGroup(
             fromFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fromFilePanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(importLabel))
-            .addGroup(fromFilePanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(loadLabel))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
-                .addContainerGap(77, Short.MAX_VALUE)
-                .addComponent(importButton)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(loadLabel)
+                .addContainerGap(53, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
                 .addContainerGap(59, Short.MAX_VALUE)
                 .addComponent(loadButton)
                 .addContainerGap())
+            .addGroup(fromFilePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(importLabel)
+                .addContainerGap(54, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
+                .addContainerGap(77, Short.MAX_VALUE)
+                .addComponent(importButton)
+                .addContainerGap())
         );
         fromFilePanelLayout.setVerticalGroup(
             fromFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(fromFilePanelLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(importLabel)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(24, 24, 24)
                 .addComponent(loadLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loadButton)
-                .addGap(21, 21, 21))
+                .addGap(18, 18, 18))
         );
 
         optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
 
         solveButton.setText("Solve");
+        solveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                solveButtonActionPerformed(evt);
+            }
+        });
 
         printButton.setText("Print");
+        printButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(solveButton)
-                .addGap(6, 6, 6)
-                .addComponent(printButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(printButton)
+                .addGap(13, 13, 13))
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(solveButton))
-            .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(printButton))
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(solveButton)
+                    .addComponent(printButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         browsePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Browse"));
 
         prevButton.setText("Prev");
+        prevButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prevButtonActionPerformed(evt);
+            }
+        });
 
         nextButton.setText("Next");
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
 
         saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout browsePanelLayout = new javax.swing.GroupLayout(browsePanel);
         browsePanel.setLayout(browsePanelLayout);
@@ -383,10 +299,10 @@ public class ProgramNB extends javax.swing.JFrame {
                     .addGroup(browsePanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(prevButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                         .addComponent(nextButton))
                     .addGroup(browsePanelLayout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(32, 32, 32)
                         .addComponent(saveButton)))
                 .addContainerGap())
         );
@@ -396,29 +312,21 @@ public class ProgramNB extends javax.swing.JFrame {
                 .addGroup(browsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prevButton)
                     .addComponent(nextButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveButton)
-                .addContainerGap())
+                .addGap(5, 5, 5)
+                .addComponent(saveButton))
         );
 
         crosswordPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Crossword"));
-
-        canvasCrossword.setBackground(new java.awt.Color(-1,true));
-        canvasCrossword.setName(""); // NOI18N
 
         javax.swing.GroupLayout crosswordPanelLayout = new javax.swing.GroupLayout(crosswordPanel);
         crosswordPanel.setLayout(crosswordPanelLayout);
         crosswordPanelLayout.setHorizontalGroup(
             crosswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(crosswordPanelLayout.createSequentialGroup()
-                .addComponent(canvasCrossword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(446, Short.MAX_VALUE))
+            .addGap(0, 471, Short.MAX_VALUE)
         );
         crosswordPanelLayout.setVerticalGroup(
             crosswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(crosswordPanelLayout.createSequentialGroup()
-                .addComponent(canvasCrossword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(201, Short.MAX_VALUE))
+            .addGap(0, 278, Short.MAX_VALUE)
         );
 
         errorLogPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Error log"));
@@ -431,56 +339,49 @@ public class ProgramNB extends javax.swing.JFrame {
         errorLogPanelLayout.setHorizontalGroup(
             errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(errorLogPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(logTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(logTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                .addContainerGap())
         );
         errorLogPanelLayout.setVerticalGroup(
             errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(errorLogPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(logTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(logTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(crosswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(errorLogPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fromFilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(browsePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(crosswordPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(errorLogPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(fromFilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(browsePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(optionsPanel, 0, 135, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(browsePanel, 0, 94, Short.MAX_VALUE))
-                    .addComponent(generatePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fromFilePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(generatePanel, 0, 150, Short.MAX_VALUE)
+                    .addComponent(fromFilePanel, 0, 150, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browsePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorLogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(crosswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(crosswordPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -488,8 +389,102 @@ public class ProgramNB extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void easyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_easyActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_easyActionPerformed
+
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (evt.getSource() == loadButton) {
+            int returnVal = fc.showDialog(loadButton,
+                    "Open directory");
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    browser.loadFromFiles(fc.getSelectedFile().getPath());
+                    actualizeButtons();
+                } catch (IOException e) {
+                    logTextField.setText("Failed to load crosswords.");
+                }
+            }
+        }
+    }//GEN-LAST:event_loadButtonActionPerformed
+
+    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                ".txt", "txt");
+        fc.setAcceptAllFileFilterUsed(false);
+        fc.setFileFilter(filter);
+        if (evt.getSource() == importButton) {
+            int returnVal = fc.showDialog(importButton, "Import");
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    browser.setDefaultCwDB(new IntelLiCwDB(fc.getSelectedFile().getPath()));
+                } catch (IOException e) {
+                    logTextField.setText("Failed to import database");
+                }
+            }
+        }
+    }//GEN-LAST:event_importButtonActionPerformed
+
+    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+        if (evt.getSource() == generateButton) {
+            if (hard.isSelected()) {
+                try {
+                    browser.generateCw(Integer.parseInt(columns.getValue().toString()), Integer.parseInt(rows.getValue().toString()),
+                            easyStrategy);
+                    actualizeButtons();
+                } catch (FailedToGenerateCrosswordException a) {
+                    logTextField.setText("Failed to generate crossword from this database.");
+                }
+            } else {
+                try {
+                    browser.generateCw(Integer.parseInt(columns.getValue().toString()), Integer.parseInt(rows.getValue().toString()),
+                            easyStrategy);
+                    actualizeButtons();
+                } catch (FailedToGenerateCrosswordException a) {
+                    logTextField.setText("Failed to generate crossword from this database.");
+                }
+            }
+        }
+    }//GEN-LAST:event_generateButtonActionPerformed
+
+    private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_solveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_solveButtonActionPerformed
+
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_printButtonActionPerformed
+
+    private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
+        browser.previous(lastUsedNext);
+        lastUsedNext = false;
+        actualizeButtons();
+    }//GEN-LAST:event_prevButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        browser.next(lastUsedNext);
+        lastUsedNext = true;
+        actualizeButtons();
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (evt.getSource() == saveButton) {
+            int returnVal = fc.showDialog(saveButton, "Save in directory");
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    browser.saveActual(fc.getSelectedFile().getPath());
+                } catch (IOException e) {
+                    logTextField.setText("Failed to save crossword.");
+                }
+            }
+        }
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -522,21 +517,16 @@ public class ProgramNB extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new ProgramNB().setVisible(true);
-                JFrame frame = new JFrame("Crosswords by wukat");
                 try {
                     browser = new CwBrowser(null);
+                    new ProgramNB().setVisible(true);
 
-                    frame.setContentPane(new ProgramNB());
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.pack();
-                    frame.setVisible(true);
                 } catch (IOException e) {
 
                     Object[] options = {"Yes", "No",};
 
                     int n = JOptionPane.showOptionDialog(
-                            frame,
+                            null,
                             "Failed to load default data base. Do you want to choose it manually?",
                             "Failed to start", JOptionPane.YES_NO_OPTION,
                             JOptionPane.ERROR_MESSAGE, null, options,
@@ -548,27 +538,24 @@ public class ProgramNB extends javax.swing.JFrame {
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
                             try {
                                 browser = new CwBrowser(fc.getSelectedFile().getAbsolutePath());
-                                frame.setContentPane(new Program());
-                                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                frame.pack();
-                                frame.setVisible(true);
+                                new ProgramNB().setVisible(true);
+
                             } catch (IOException a) {
-                                JOptionPane.showMessageDialog(frame,
+                                JOptionPane.showMessageDialog(null,
                                         "Failed to load data base.", "Failed to start",
                                         JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(frame,
+                            JOptionPane.showMessageDialog(null,
                                     "Operation canceled, program halts.",
                                     "Failed to start", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(frame,
+                        JOptionPane.showMessageDialog(null,
                                 "Operation canceled, program halts.",
                                 "Failed to start", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-
             }
         });
     }
@@ -578,7 +565,6 @@ public class ProgramNB extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel browsePanel;
     private javax.swing.ButtonGroup buttonStrategyGropu;
-    private java.awt.Canvas canvasCrossword;
     private javax.swing.JSpinner columns;
     private javax.swing.JLabel columnsLabel;
     private javax.swing.JPanel crosswordPanel;
