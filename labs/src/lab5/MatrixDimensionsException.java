@@ -10,7 +10,9 @@ package lab5;
  *
  */
 public class MatrixDimensionsException extends Exception {
-
+    DummyMatrix throwedMatrix;
+    
+    
 	/**
 	 * Constructor
 	 */
@@ -24,6 +26,16 @@ public class MatrixDimensionsException extends Exception {
 	 */
 	public MatrixDimensionsException(String message) {
 		super(message);
+		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * Constructor
+	 * @param message
+	 */
+	public MatrixDimensionsException(String message, DummyMatrix throwed) {
+		super(message);
+		throwedMatrix = throwed;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -57,6 +69,14 @@ public class MatrixDimensionsException extends Exception {
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Getter
+	 * @return the throwedMatrix
+	 */
+	public DummyMatrix getThrowedMatrix() {
+		return throwedMatrix;
 	}
 
 }

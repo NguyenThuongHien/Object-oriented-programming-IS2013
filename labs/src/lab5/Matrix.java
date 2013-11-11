@@ -11,8 +11,8 @@ import java.io.IOException;
  * 
  */
 public class Matrix {
-	private int[][] mat; // integer 2D array
-	private int n, m; // dimensions
+	protected int[][] mat; // integer 2D array
+	protected int n, m; // dimensions
 
 	/**
 	 * @brief Constructor
@@ -21,29 +21,29 @@ public class Matrix {
 	 * @param _m
 	 *            - number of columns
 	 */
-	public Matrix(int _n, int _m) throws MatrixDimensionsException {
+	public Matrix(int _n, int _m) {
 		n = _n;
 		m = _m;
 		if ((n > 0) && (m > 0))
 			mat = new int[n][m];
-		else
-			throw new MatrixDimensionsException(
-					"Matrix dimensions must be natural!");
 	}
 
 	/**
 	 * 
 	 * Constructor from file
+	 * 
 	 * @param filePath
 	 * @throws IOException
 	 */
 	public Matrix(String filePath) throws IOException {
-		try (BufferedReader buffer = new BufferedReader(new FileReader(new File(filePath)))) {
-		    String[] temp = buffer.readLine().split(" ");
-		    mat = new int[Integer.parseInt(temp[0])][Integer.parseInt(temp[1])];
+		try (BufferedReader buffer = new BufferedReader(new FileReader(
+				new File(filePath)))) {
+			String[] temp = buffer.readLine().split(" ");
+			n = Integer.parseInt(temp[0]);
+			m = Integer.parseInt(temp[1]);
+			mat = new int[n][m];
 		}
 	}
-	
 
 	/**
 	 * @brief Simple n getter
@@ -69,11 +69,10 @@ public class Matrix {
 	 *            - column
 	 * @return value in place n,m or 0 if place out of range
 	 */
-	public int getValue(int _n, int _m) throws MatrixDimensionsException {
+	public int getValue(int _n, int _m){
 		if ((_n < n) && (_n >= 0) && (_m < m) && (_m >= 0))
 			return mat[_n][_m];
-		else
-			throw new MatrixDimensionsException("Wrong indexes given!");
+		return 0;
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class Matrix {
 	 * @brief Multiplication with -1 scalar
 	 * @return Opposite matrix
 	 */
-	public Matrix opposite() throws MatrixDimensionsException {
+	public Matrix opposite() {
 		Matrix result = new Matrix(n, m);
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < m; j++)
@@ -141,13 +140,13 @@ public class Matrix {
 	 *         fail
 	 */
 	public Matrix mul(Matrix other) throws MatrixDimensionsException {
-		if (n == other.getM()) {
-			Matrix result = new Matrix(other.getN(), m);
-			for (int i = 0; i < other.getN(); i++)
-				for (int j = 0; j < m; j++)
-					for (int k = 0; k < n; k++)
-						result.setValue(i, j, result.getValue(i, j) + mat[k][j]
-								* other.getValue(i, k));
+		if (m == other.getN()) {
+			DummyMatrix result = new DummyMatrix(n, other.getM());
+			for (int i = 0; i < n; i++)
+				for (int j = 0; j < other.getM(); j++)
+					for (int k = 0; k < m; k++)
+						result.setValue(i, j, result.getValue(i, j) + mat[i][k]
+								* other.getValue(k, j));
 			return result;
 		} else
 			throw new MatrixDimensionsException("Dimensions not match.");
@@ -156,7 +155,7 @@ public class Matrix {
 	/**
 	 * @brief Simple function to print matrix
 	 */
-	public void printMatrix() throws MatrixDimensionsException {
+	public void printMatrix() {
 		for (int j = 0; j < m; j++) {
 			System.out.print('\n');
 			for (int i = 0; i < n; i++) {
