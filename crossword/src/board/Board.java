@@ -82,7 +82,7 @@ public class Board {
 	 * @return list of cells
 	 */
 	public LinkedList<BoardCell> getStartCells() {
-		LinkedList<BoardCell> startCells = new LinkedList<BoardCell>();
+		LinkedList<BoardCell> startCells = new LinkedList<>();
 		for (int i = 0; i < getWidth(); i++)
 			for (int j = 0; j < getHeight(); j++)
 				if ((getCell(i, j).getAbility(BoardCell.hor, BoardCell.beg))

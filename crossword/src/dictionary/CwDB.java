@@ -6,7 +6,6 @@
 package dictionary;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.LinkedList;
  * 
  */
 public class CwDB {
-	protected LinkedList<Entry> dict = new LinkedList<Entry>(); // dictionary -
+	protected LinkedList<Entry> dict = new LinkedList<>(); // dictionary -
 																// list of
 																// entries
 
@@ -84,17 +83,12 @@ public class CwDB {
 	 * @throws IOException
 	 */
 	public void saveDB(String filename) throws IOException {
-		FileWriter outputDB = null;
-		try {
-			outputDB = new FileWriter(filename);
+		try (FileWriter outputDB = new FileWriter(filename)) {
 			java.util.ListIterator<Entry> iter = dict.listIterator(0);
 			while (iter.hasNext()) {
 				Entry temp = iter.next();
 				outputDB.write(temp.toString());
 			}
-		} finally {
-			if (outputDB != null)
-				outputDB.close();
 		}
 	}
 
@@ -114,17 +108,14 @@ public class CwDB {
 	 *            - file name
 	 * @throws IOException
 	 */
-	protected void createDB(String filename) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(filename));
-		try {
+	protected final void createDB(String filename) throws IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line1 = null;
 			String line2 = null;
 			while (((line1 = br.readLine()) != null)
 					&& ((line2 = br.readLine()) != null)) {
 				add(line1.toUpperCase(), line2);
 			}
-		} finally {
-			br.close();
 		}
 	}
 }

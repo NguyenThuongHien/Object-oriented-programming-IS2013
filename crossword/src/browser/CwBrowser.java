@@ -11,178 +11,190 @@ import board.Strategy;
 import dictionary.IntelLiCwDB;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Vector;
 
 /**
  * @author wukat
  * 
  */
 public class CwBrowser {
-	private Vector<Crossword> crosswords; // vector of read crosswords
-	private ListIterator<Crossword> iter; // vector iterator
-	private Crossword actual; // actual crossword
-	private IntelLiCwDB defaultCwDB;
 
-	/**
-	 * Setter
-	 * 
-	 * @param defaultCwDB
-	 */
-	public void setDefaultCwDB(IntelLiCwDB defaultCwDB) {
-		this.defaultCwDB = defaultCwDB;
-	}
+    private LinkedList<Crossword> crosswords; // vector of read crosswords
+    private ListIterator<Crossword> iter; // vector iterator
+    private Crossword actual; // actual crossword
+    private IntelLiCwDB defaultCwDB;
 
-	/**
-	 * getter
-	 * 
-	 * @return actual crossword
-	 */
-	public Crossword getActual() {
-		return actual;
-	}
+    /**
+     * Setter
+     * 
+     * @param defaultCwDB
+     */
+    public void setDefaultCwDB(IntelLiCwDB defaultCwDB) {
+        this.defaultCwDB = defaultCwDB;
+    }
 
-	/**
-	 * 
-	 * Constructor
-	 * 
-	 * @param cwDBpath
-	 *            - path to database
-	 * @throws IOException
-	 */
-	public CwBrowser(String cwDBpath) throws IOException {
-		if (cwDBpath == null)
-			cwDBpath = "cwdb.txt";
-		defaultCwDB = new IntelLiCwDB(cwDBpath);
-		crosswords = new Vector<Crossword>();
-		iter = crosswords.listIterator();
-		actual = null;
-	}
+    /**
+     * getter
+     * 
+     * @return actual crossword
+     */
+    public Crossword getActual() {
+        return actual;
+    }
 
-	/**
-	 * Generates crossword (actual)
-	 * 
-	 * @param width
-	 *            - board's width
-	 * @param height
-	 *            - board's height
-	 * @param str
-	 *            - strategy
-	 * @throws FailedToGenerateCrosswordException
-	 */
-	public void generateCw(int width, int height, Strategy str)
-			throws FailedToGenerateCrosswordException {
-		actual = new Crossword(width, height, defaultCwDB);
-		actual.generate(str);
-		crosswords.add(actual);
-		iter = crosswords.listIterator();
-		while (iter.hasNext())
-			iter.next();
-	}
+    /**
+     * 
+     * Constructor
+     * 
+     * @param cwDBpath
+     *            - path to database
+     * @throws IOException
+     */
+    public CwBrowser(String cwDBpath) throws IOException {
+        if (cwDBpath == null) {
+            cwDBpath = "cwdb.txt";
+        }
+        defaultCwDB = new IntelLiCwDB(cwDBpath);
+        crosswords = new LinkedList<>();
+        iter = crosswords.listIterator();
+        actual = null;
+    }
 
-	/**
-	 * Next crossword
-	 * 
-	 * @param lastUsedNext
-	 *            - if before was used NEXTBUTTON
-	 */
-	public void next(boolean lastUsedNext) {
-		if (lastUsedNext) {
-			if (iter.hasNext())
-				actual = iter.next();
-		} else {
-			actual = iter.next();
-			actual = iter.next();
-		}
-	}
+    /**
+     * Generates crossword (actual)
+     * 
+     * @param width
+     *            - board's width
+     * @param height
+     *            - board's height
+     * @param str
+     *            - strategy
+     * @throws FailedToGenerateCrosswordException
+     */
+    public void generateCw(int width, int height, Strategy str)
+            throws FailedToGenerateCrosswordException {
+        actual = new Crossword(width, height, defaultCwDB);
+        actual.generate(str);
+        crosswords.add(actual);
+        iter = crosswords.listIterator();
+        while (iter.hasNext()) {
+            iter.next();
+        }
+    }
 
-	/**
-	 * Iter.hasNext()
-	 * 
-	 * @return
-	 */
-	public boolean hasNext() {
-		return iter.hasNext();
-	}
+    /**
+     * Next crossword
+     * 
+     * @param lastUsedNext
+     *            - if before was used NEXTBUTTON
+     */
+    public void next(boolean lastUsedNext) {
+        if (lastUsedNext) {
+            if (iter.hasNext()) {
+                actual = iter.next();
+            }
+        } else {
+            actual = iter.next();
+            actual = iter.next();
+        }
+    }
 
-	/**
-	 * Previous crossword
-	 * 
-	 * @param lastUsedNext
-	 *            - if before was used NEXTBUTTON
-	 */
-	public void previous(boolean lastUsedNext) {
-		if (lastUsedNext) {
-			actual = iter.previous();
-			actual = iter.previous();
-		} else if (iter.hasPrevious())
-			actual = iter.previous();
-	}
+    /**
+     * Iter.hasNext()
+     * 
+     * @return
+     */
+    public boolean hasNext() {
+        return iter.hasNext();
+    }
 
-	/**
-	 * iter.hasPrevious()
-	 * @return
-	 */
-	public boolean hasPrevious() {
-		return iter.hasPrevious();
-	}
+    /**
+     * Previous crossword
+     * 
+     * @param lastUsedNext
+     *            - if before was used NEXTBUTTON
+     */
+    public void previous(boolean lastUsedNext) {
+        if (lastUsedNext) {
+            actual = iter.previous();
+            actual = iter.previous();
+        } else if (iter.hasPrevious()) {
+            actual = iter.previous();
+        }
+    }
 
-	/**
-	 * Checks if browser has actual crossword
-	 * return logical value
-	 */
-	public boolean hasActual() {
-		return actual != null;
-	}
+    /**
+     * iter.hasPrevious()
+     * @return
+     */
+    public boolean hasPrevious() {
+        return iter.hasPrevious();
+    }
 
-	/**
-	 * Index
-	 * @return
-	 */
-	public int getIndexOfIterator() {
-		return iter.nextIndex();
-	}
+    /**
+     * Checks if browser has actual crossword
+     * return logical value
+     */
+    public boolean hasActual() {
+        return actual != null;
+    }
 
-	/**
-	 * Next index iterator
-	 * @return
-	 */
-	public int nextIndex() {
-		return iter.nextIndex();
-	}
+    /**
+     * Index
+     * @return
+     */
+    public int getIndexOfIterator() {
+        return iter.nextIndex();
+    }
 
-	/**
-	 * Previous element index
-	 * @return
-	 */
-	public int previousIndex() {
-		return iter.previousIndex();
-	}
+    /**
+     * Next index iterator
+     * @return
+     */
+    public int nextIndex() {
+        return iter.nextIndex();
+    }
 
-	/**
-	 * Amount of crossword
-	 * @return
-	 */
-	public int getAmountOfCrosswords() {
-		return crosswords.size();
-	}
+    /**
+     * Previous element index
+     * @return
+     */
+    public int previousIndex() {
+        return iter.previousIndex();
+    }
 
-	/**
-	 * Saves actual crossword in file
-	 * @param folderPath
-	 * @throws IOException
-	 */
-	public void saveActual(String folderPath) throws IOException,
-			NullPointerException {
-		if (actual != null)
-			new CwWriter(folderPath).write(actual);
-	}
+    /**
+     * Amount of crossword
+     * @return
+     */
+    public int getAmountOfCrosswords() {
+        return crosswords.size();
+    }
 
-	public void loadFromFiles(String folderPath) throws IOException {
-		CwReader reader = new CwReader(folderPath);
-		crosswords.addAll(reader.getAllCws());
-		iter = crosswords.listIterator();
-		while (iter.hasNext())
-			actual = iter.next();
-	}
+    /**
+     * Saves actual crossword in file
+     * @param folderPath
+     * @throws IOException
+     */
+    public void saveActual(String folderPath) throws IOException,
+            NullPointerException {
+        if (actual != null) {
+            new CwWriter(folderPath).write(actual);
+        }
+    }
+
+    /**
+     * Loads crosswords from given folder
+     * @param folderPath
+     * @throws IOException 
+     */
+    public void loadFromFiles(String folderPath, Strategy easyStrategy, Strategy hardStrategy) throws IOException, NullPointerException {
+        CwReader reader = new CwReader(folderPath);
+        crosswords.addAll(reader.getAllCws(easyStrategy, hardStrategy));
+        iter = crosswords.listIterator();
+        while (iter.hasNext()) {
+            actual = iter.next();
+        }
+    }
 }

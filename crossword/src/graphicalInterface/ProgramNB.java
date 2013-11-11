@@ -15,12 +15,17 @@ import Strategies.EasyStrategy;
 import browser.CwBrowser;
 import dictionary.IntelLiCwDB;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.color.*;
 
 /**
  *
@@ -28,24 +33,81 @@ import java.awt.color.*;
  */
 public class ProgramNB extends javax.swing.JFrame {
 
+    public final void showCw() {
+        drawingPane.paint(drawingPane.getGraphics());
+        drawingPane.revalidate();
+        drawingPane.paint(drawingPane.getGraphics());
+    }
+
+    public class DrawingPane extends JPanel implements Printable {
+
+        protected void paintComponent(Graphics graphic) {
+            super.paintComponent(graphic);
+            if (browser.hasActual()) {
+                graphic.setColor(Color.BLACK);
+                for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
+                    for (Integer j = 1; j <= browser.getActual().getBoardHeight(); j++) {
+                        graphic.drawString(j.toString() + ". ", 10, 30 + (j - 1) * 30);
+                        if (browser.getActual().checkBoardCell(i, j - 1)) {
+                            graphic.drawRect(35 + i * 30, 10 + (j - 1) * 30, 30, 30);
+                        }
+                    }
+                }
+                int maxWidth = browser.getActual().getBoardWidth() * 30 + 45;
+                int j = 0;
+                for (String entry : easyStrategy.printAllEntries(browser.getActual()).split("\n")) {
+                    graphic.drawString(entry, 10, browser.getActual().getBoardHeight() * 30 + 30 + j * 15);
+                    if (maxWidth < entry.length() * 7) {
+                        maxWidth = entry.length() * 7;
+                    }
+                    j++;
+                }
+                if (this.getSize().width != maxWidth || this.getSize().height != j * 16 + browser.getActual().getBoardHeight() * 30 + 18) {
+                    this.setPreferredSize(new Dimension(maxWidth, j * 16 + browser.getActual().getBoardHeight() * 30 + 18));
+                }
+            }
+        }
+
+        public int print(Graphics g, PageFormat pf, int page)
+                throws PrinterException {
+
+            // We have only one page, and 'page'
+            // is zero-based
+            if (page > 0) {
+                return NO_SUCH_PAGE;
+            }
+
+            int constX = 90;
+            int constY = 90;
+            // Now we perform our rendering
+            g.drawString("Crossword", constX, constY);
+            for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
+                for (Integer j = 1; j <= browser.getActual().getBoardHeight(); j++) {
+                    g.drawString(j.toString() + ". ", 10 + constX, 30 + (j - 1) * 30 + constY);
+                    if (browser.getActual().checkBoardCell(i, j - 1)) {
+                        g.drawRect(25 + i * 30 + constX, 10 + (j - 1) * 30 + constY, 30, 30);
+                    }
+                }
+            }
+            int j = 0;
+            for (String entry : easyStrategy.printAllEntries(browser.getActual()).split("\n")) {
+                g.drawString(entry, 10 + constX, browser.getActual().getBoardHeight() * 30 + 30 + j * 15 + constY);
+                j++;
+            }
+
+            // tell the caller that this page is part
+            // of the printed document
+            return PAGE_EXISTS;
+        }
+    }
+
     /** Creates new form ProgramNB */
     public ProgramNB() {
         initComponents();
 
         lastUsedNext = true;
         actualizeButtons();
-    }
-
-    public final void showCw() {
-        Graphics graphic = crosswordPanel.getGraphics();
-        graphic.clearRect(20, 20, 600, 600);
-        graphic.setColor(Color.WHITE);
-        int j = 0;
-        for (String i : easyStrategy.printAllEntries(browser.getActual()).split("\n")) {
-            graphic.drawString(i, 10, 30 + j*15);
-            j++;
-        }
-//        crosswordPanel.paint(graphic);
+        drawingPane.setPreferredSize(new Dimension(0, 0));
     }
 
     public final void actualizeButtons() {
@@ -59,7 +121,6 @@ public class ProgramNB extends javax.swing.JFrame {
         saveButton.setEnabled(browser.hasActual());
         solveButton.setEnabled(browser.hasActual());
         printButton.setEnabled(browser.hasActual());
-        logTextField.setText("");
         if (browser.hasActual()) {
             showCw();
         }
@@ -91,13 +152,14 @@ public class ProgramNB extends javax.swing.JFrame {
         optionsPanel = new javax.swing.JPanel();
         solveButton = new javax.swing.JButton();
         printButton = new javax.swing.JButton();
+        toPDFButton = new javax.swing.JButton();
         browsePanel = new javax.swing.JPanel();
         prevButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         crosswordPanel = new javax.swing.JPanel();
-        errorLogPanel = new javax.swing.JPanel();
-        logTextField = new javax.swing.JTextField();
+        crosswordSPanel = new javax.swing.JScrollPane();
+        drawingPane = new DrawingPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Crosswords by wukat");
@@ -153,7 +215,7 @@ public class ProgramNB extends javax.swing.JFrame {
                                     .addComponent(columns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(rows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(generatePanelLayout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(29, 29, 29)
                         .addComponent(generateButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -167,13 +229,12 @@ public class ProgramNB extends javax.swing.JFrame {
                 .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(columnsLabel)
                     .addComponent(columns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rowsLabel)
-                    .addComponent(rows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(generateButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(rows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rowsLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(generateButton))
         );
 
         fromFilePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("From file"));
@@ -202,33 +263,32 @@ public class ProgramNB extends javax.swing.JFrame {
             fromFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fromFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loadLabel)
-                .addContainerGap(53, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
-                .addContainerGap(59, Short.MAX_VALUE)
-                .addComponent(loadButton)
-                .addContainerGap())
-            .addGroup(fromFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(importLabel)
                 .addContainerGap(54, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
                 .addContainerGap(77, Short.MAX_VALUE)
                 .addComponent(importButton)
                 .addContainerGap())
+            .addGroup(fromFilePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(loadLabel)
+                .addContainerGap(53, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addComponent(loadButton)
+                .addContainerGap())
         );
         fromFilePanelLayout.setVerticalGroup(
             fromFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fromFilePanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(fromFilePanelLayout.createSequentialGroup()
                 .addComponent(importLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton)
-                .addGap(24, 24, 24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(loadLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(loadButton)
-                .addGap(18, 18, 18))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
@@ -247,23 +307,33 @@ public class ProgramNB extends javax.swing.JFrame {
             }
         });
 
+        toPDFButton.setText("toPDF");
+        toPDFButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toPDFButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addComponent(solveButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(printButton)
-                .addGap(13, 13, 13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(toPDFButton)
+                .addContainerGap())
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(solveButton)
-                    .addComponent(printButton))
+                    .addComponent(printButton)
+                    .addComponent(toPDFButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -295,15 +365,12 @@ public class ProgramNB extends javax.swing.JFrame {
         browsePanelLayout.setHorizontalGroup(
             browsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(browsePanelLayout.createSequentialGroup()
-                .addGroup(browsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(browsePanelLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(prevButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                        .addComponent(nextButton))
-                    .addGroup(browsePanelLayout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(saveButton)))
+                .addContainerGap()
+                .addComponent(prevButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(nextButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(saveButton)
                 .addContainerGap())
         );
         browsePanelLayout.setVerticalGroup(
@@ -311,60 +378,60 @@ public class ProgramNB extends javax.swing.JFrame {
             .addGroup(browsePanelLayout.createSequentialGroup()
                 .addGroup(browsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prevButton)
+                    .addComponent(saveButton)
                     .addComponent(nextButton))
-                .addGap(5, 5, 5)
-                .addComponent(saveButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         crosswordPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Crossword"));
+
+        crosswordSPanel.setBackground(new java.awt.Color(-1,true));
+        crosswordSPanel.setAutoscrolls(true);
+
+        drawingPane.setBackground(new java.awt.Color(-1,true));
+        drawingPane.setAutoscrolls(true);
+        drawingPane.setDoubleBuffered(false);
+
+        javax.swing.GroupLayout drawingPaneLayout = new javax.swing.GroupLayout(drawingPane);
+        drawingPane.setLayout(drawingPaneLayout);
+        drawingPaneLayout.setHorizontalGroup(
+            drawingPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 841, Short.MAX_VALUE)
+        );
+        drawingPaneLayout.setVerticalGroup(
+            drawingPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 451, Short.MAX_VALUE)
+        );
+
+        crosswordSPanel.setViewportView(drawingPane);
 
         javax.swing.GroupLayout crosswordPanelLayout = new javax.swing.GroupLayout(crosswordPanel);
         crosswordPanel.setLayout(crosswordPanelLayout);
         crosswordPanelLayout.setHorizontalGroup(
             crosswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 471, Short.MAX_VALUE)
+            .addComponent(crosswordSPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
         );
         crosswordPanelLayout.setVerticalGroup(
             crosswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 278, Short.MAX_VALUE)
-        );
-
-        errorLogPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Error log"));
-
-        logTextField.setEditable(false);
-        logTextField.setDisabledTextColor(new java.awt.Color(-65536,true));
-
-        javax.swing.GroupLayout errorLogPanelLayout = new javax.swing.GroupLayout(errorLogPanel);
-        errorLogPanel.setLayout(errorLogPanelLayout);
-        errorLogPanelLayout.setHorizontalGroup(
-            errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(errorLogPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(logTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        errorLogPanelLayout.setVerticalGroup(
-            errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(logTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(crosswordSPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(crosswordPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(errorLogPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(crosswordPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addComponent(fromFilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(browsePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(optionsPanel, 0, 135, Short.MAX_VALUE))))
+                            .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -372,16 +439,14 @@ public class ProgramNB extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(generatePanel, 0, 150, Short.MAX_VALUE)
-                    .addComponent(fromFilePanel, 0, 150, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browsePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(browsePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(generatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fromFilePanel, 0, 144, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(errorLogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(crosswordPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(crosswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -400,10 +465,26 @@ public class ProgramNB extends javax.swing.JFrame {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
-                    browser.loadFromFiles(fc.getSelectedFile().getPath());
+                    browser.loadFromFiles(fc.getSelectedFile().getPath(), easyStrategy, easyStrategy);
+                    if (fc.getSelectedFile().listFiles().length == 0)
+                        JOptionPane.showMessageDialog(null,
+                            "Directory is empty.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
                     actualizeButtons();
                 } catch (IOException e) {
-                    logTextField.setText("Failed to load crosswords.");
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to load crosswords from file.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                catch (NullPointerException e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Wrong file format", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Wrong type file found in directory.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -422,7 +503,9 @@ public class ProgramNB extends javax.swing.JFrame {
                 try {
                     browser.setDefaultCwDB(new IntelLiCwDB(fc.getSelectedFile().getPath()));
                 } catch (IOException e) {
-                    logTextField.setText("Failed to import database");
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to import database from file.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -436,7 +519,9 @@ public class ProgramNB extends javax.swing.JFrame {
                             easyStrategy);
                     actualizeButtons();
                 } catch (FailedToGenerateCrosswordException a) {
-                    logTextField.setText("Failed to generate crossword from this database.");
+                     JOptionPane.showMessageDialog(null,
+                            "Failed to generate crossword from this database.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 try {
@@ -444,7 +529,9 @@ public class ProgramNB extends javax.swing.JFrame {
                             easyStrategy);
                     actualizeButtons();
                 } catch (FailedToGenerateCrosswordException a) {
-                    logTextField.setText("Failed to generate crossword from this database.");
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to generate crossword from this database.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -455,7 +542,17 @@ public class ProgramNB extends javax.swing.JFrame {
     }//GEN-LAST:event_solveButtonActionPerformed
 
     private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
-        // TODO add your handling code here:
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable((Printable) drawingPane);
+        if (job.printDialog()) {
+            try {
+                job.print();
+            } catch (PrinterException ex) {
+                JOptionPane.showMessageDialog(null,
+                            "Failed to print crossword.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_printButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
@@ -480,11 +577,32 @@ public class ProgramNB extends javax.swing.JFrame {
                 try {
                     browser.saveActual(fc.getSelectedFile().getPath());
                 } catch (IOException e) {
-                    logTextField.setText("Failed to save crossword.");
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to save crossword.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void toPDFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toPDFButtonActionPerformed
+        //TODO print to PDF
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (evt.getSource() == saveButton) {
+            int returnVal = fc.showDialog(saveButton, "Save in directory");
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    browser.saveActual(fc.getSelectedFile().getPath());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to save crossword.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_toPDFButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -500,6 +618,8 @@ public class ProgramNB extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
+
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -520,7 +640,6 @@ public class ProgramNB extends javax.swing.JFrame {
                 try {
                     browser = new CwBrowser(null);
                     new ProgramNB().setVisible(true);
-
                 } catch (IOException e) {
 
                     Object[] options = {"Yes", "No",};
@@ -568,8 +687,9 @@ public class ProgramNB extends javax.swing.JFrame {
     private javax.swing.JSpinner columns;
     private javax.swing.JLabel columnsLabel;
     private javax.swing.JPanel crosswordPanel;
+    private javax.swing.JScrollPane crosswordSPanel;
+    private javax.swing.JPanel drawingPane;
     private javax.swing.JRadioButton easy;
-    private javax.swing.JPanel errorLogPanel;
     private javax.swing.JPanel fromFilePanel;
     private javax.swing.JButton generateButton;
     private javax.swing.JPanel generatePanel;
@@ -578,7 +698,6 @@ public class ProgramNB extends javax.swing.JFrame {
     private javax.swing.JLabel importLabel;
     private javax.swing.JButton loadButton;
     private javax.swing.JLabel loadLabel;
-    private javax.swing.JTextField logTextField;
     private javax.swing.JButton nextButton;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JButton prevButton;
@@ -587,5 +706,6 @@ public class ProgramNB extends javax.swing.JFrame {
     private javax.swing.JLabel rowsLabel;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton solveButton;
+    private javax.swing.JButton toPDFButton;
     // End of variables declaration//GEN-END:variables
 }

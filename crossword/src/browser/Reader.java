@@ -7,8 +7,9 @@ package browser;
 
 import board.Crossword;
 
+import board.Strategy;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.LinkedList;
 
 /**
  * @author wukat
@@ -16,11 +17,14 @@ import java.util.Vector;
  */
 interface Reader {
 
-	/**
-	 * Loads all crosswords into one data base.
-	 * 
-	 * @return vector of loaded crosswords
-	 * @throws IOException
-	 */
-	public Vector<Crossword> getAllCws() throws IOException;
+    /**
+     * Loads all crosswords into one data base.
+     * 
+     * @param easyStrategy
+     * @param hardStrategy 
+     * @return vector of loaded crosswords
+     * @throws IOException
+     * @throws NullPointerException
+     */
+    public LinkedList<Crossword> getAllCws(Strategy easyStrategy, Strategy hardStrategy) throws IOException, NullPointerException;
 }

@@ -32,34 +32,34 @@ public class EasyStrategy extends Strategy {
 	 */
 	private boolean checkPassword(Crossword crossword) {
 		char lettersOfPassword[] = password.toCharArray();
-		Map<Character, Integer> numberOfCharUse = new HashMap<Character, Integer>();
-		for (char i : lettersOfPassword) {
-			if (!numberOfCharUse.containsKey(i))
-				numberOfCharUse.put(i, 1);
+		Map<Character, Integer> numberOfCharUse = new HashMap<>();
+		for (char letter : lettersOfPassword) {
+			if (!numberOfCharUse.containsKey(letter))
+				numberOfCharUse.put(letter, 1);
 			else
-				numberOfCharUse.put(i, numberOfCharUse.get(i) + 1);
+				numberOfCharUse.put(letter, numberOfCharUse.get(letter) + 1);
 		}
-		for (char i : numberOfCharUse.keySet()) {
-			if (i == password.charAt(0)) {
+		for (char key : numberOfCharUse.keySet()) {
+			if (key == password.charAt(0)) {
 			if (crossword
 					.getCwdb()
 					.findAll(
-							i
+							key
 									+ ".{1,"
 									+ Integer.toString(crossword
 											.getBoardWidth() - 1) + "}").size() <= numberOfCharUse
-					.get(i))
+					.get(key))
 				return false;
 			}
 			else {
 				if (crossword
 						.getCwdb()
 						.findAll(
-								i
+								key
 										+ ".{1,"
 										+ Integer.toString(crossword
 												.getBoardWidth() - 1) + "}").size() < numberOfCharUse
-						.get(i))
+						.get(key))
 					return false;
 				}
 			}
@@ -126,14 +126,14 @@ public class EasyStrategy extends Strategy {
 	@Override
 	public void updateBoard(Board board, CwEntry entry){
 		if (entry.getDir() == CwEntry.Direction.VERT) {
-			for (int i = entry.getY(); i < entry.getWord().length(); i++) {
-				board.getCell(entry.getX(), i).setContent(
-						entry.getWord().charAt(i));
+			for (int y = entry.getY(); y < entry.getWord().length(); y++) {
+				board.getCell(entry.getX(), y).setContent(
+						entry.getWord().charAt(y));
 			}
 		} else {
-			for (int i = entry.getX(); i < entry.getWord().length(); i++) {
-				board.getCell(i, entry.getY()).setContent(
-						entry.getWord().charAt(i));
+			for (int x = entry.getX(); x < entry.getWord().length(); x++) {
+				board.getCell(x, entry.getY()).setContent(
+						entry.getWord().charAt(x));
 			}
 		}
 	}

@@ -5,7 +5,6 @@
  */
 package dictionary;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -38,7 +37,7 @@ public class IntelLiCwDB extends CwDB {
 	 * @return list of matching entries
 	 */
 	public LinkedList<Entry> findAll(String pattern) {
-		LinkedList<Entry> matched = new LinkedList<Entry>();
+		LinkedList<Entry> matched = new LinkedList<>();
 		java.util.ListIterator<Entry> iter = dict.listIterator();
 		while (iter.hasNext()) {
 			Entry temp = iter.next();
@@ -55,7 +54,7 @@ public class IntelLiCwDB extends CwDB {
 	 * @return list of matching entries
 	 */
 	public LinkedList<Entry> findAll(int length) {
-		LinkedList<Entry> matched = new LinkedList<Entry>();
+		LinkedList<Entry> matched = new LinkedList<>();
 		java.util.ListIterator<Entry> iter = dict.listIterator();
 		while (iter.hasNext()) {
 			Entry temp = iter.next();

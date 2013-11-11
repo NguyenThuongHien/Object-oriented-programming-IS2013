@@ -43,17 +43,14 @@ public class CwWriter implements Writer {
 	@Override
 	public void write(Crossword crossword) throws IOException {
 		long ID = getUniqueID();
-		FileWriter cwFile = new FileWriter(file.getAbsolutePath() + "/"
-				+ Long.toString(ID));
-		try {
+		try (FileWriter cwFile = new FileWriter(file.getAbsolutePath() + "/"
+                                     + Long.toString(ID))) {
 			cwFile.write(crossword.getBoardWidth() + " "
 					+ crossword.getBoardHeight() + "\n");
 			Iterator<CwEntry> iter = crossword.getROEntryIter();
 			while (iter.hasNext()) {
 				cwFile.write(iter.next().toString());
 			}
-		} finally {
-			cwFile.close();
 		}
 	}
 
