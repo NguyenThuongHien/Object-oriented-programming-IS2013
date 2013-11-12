@@ -13,15 +13,25 @@ package graphicalInterface;
 import Exceptions.FailedToGenerateCrosswordException;
 import Strategies.EasyStrategy;
 import browser.CwBrowser;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
+import com.sun.pdfview.PDFRenderer;
 import dictionary.IntelLiCwDB;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.print.Book;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -121,6 +131,7 @@ public class ProgramNB extends javax.swing.JFrame {
         saveButton.setEnabled(browser.hasActual());
         solveButton.setEnabled(browser.hasActual());
         printButton.setEnabled(browser.hasActual());
+        toPDFButton.setEnabled(browser.hasActual());
         if (browser.hasActual()) {
             showCw();
         }
@@ -466,22 +477,21 @@ public class ProgramNB extends javax.swing.JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     browser.loadFromFiles(fc.getSelectedFile().getPath(), easyStrategy, easyStrategy);
-                    if (fc.getSelectedFile().listFiles().length == 0)
+                    if (fc.getSelectedFile().listFiles().length == 0) {
                         JOptionPane.showMessageDialog(null,
-                            "Directory is empty.", "Operation failed",
-                            JOptionPane.ERROR_MESSAGE);
+                                "Directory is empty.", "Operation failed",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                     actualizeButtons();
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(null,
                             "Failed to load crosswords from file.", "Operation failed",
                             JOptionPane.ERROR_MESSAGE);
-                }
-                catch (NullPointerException e) {
+                } catch (NullPointerException e) {
                     JOptionPane.showMessageDialog(null,
-                            "Wrong file format", "Operation failed",
+                            "Wrong file format.", "Operation failed",
                             JOptionPane.ERROR_MESSAGE);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null,
                             "Wrong type file found in directory.", "Operation failed",
                             JOptionPane.ERROR_MESSAGE);
@@ -519,7 +529,7 @@ public class ProgramNB extends javax.swing.JFrame {
                             easyStrategy);
                     actualizeButtons();
                 } catch (FailedToGenerateCrosswordException a) {
-                     JOptionPane.showMessageDialog(null,
+                    JOptionPane.showMessageDialog(null,
                             "Failed to generate crossword from this database.", "Operation failed",
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -549,8 +559,8 @@ public class ProgramNB extends javax.swing.JFrame {
                 job.print();
             } catch (PrinterException ex) {
                 JOptionPane.showMessageDialog(null,
-                            "Failed to print crossword.", "Operation failed",
-                            JOptionPane.ERROR_MESSAGE);
+                        "Failed to print crossword.", "Operation failed",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_printButtonActionPerformed
@@ -585,23 +595,104 @@ public class ProgramNB extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void toPDFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toPDFButtonActionPerformed
-        //TODO print to PDF
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (evt.getSource() == saveButton) {
-            int returnVal = fc.showDialog(saveButton, "Save in directory");
+    class PDFPrintPage implements Printable {
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                try {
-                    browser.saveActual(fc.getSelectedFile().getPath());
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(null,
-                            "Failed to save crossword.", "Operation failed",
-                            JOptionPane.ERROR_MESSAGE);
+        private PDFFile file;
+
+        PDFPrintPage(PDFFile file) {
+            this.file = file;
+        }
+
+        public int print(Graphics g, PageFormat format, int index)
+                throws PrinterException {
+            int pagenum = index + 1;
+
+            // don't bother if the page number is out of range.
+            if ((pagenum >= 1) && (pagenum <= file.getNumPages())) {
+                // fit the PDFPage into the printing area
+                Graphics2D g2 = (Graphics2D) g;
+                PDFPage page = file.getPage(pagenum);
+                double pwidth = format.getImageableWidth();
+                double pheight = format.getImageableHeight();
+
+                double aspect = page.getAspectRatio();
+                double paperaspect = pwidth / pheight;
+
+                Rectangle imgbounds;
+
+                if (aspect > paperaspect) {
+                    // paper is too tall / pdfpage is too wide
+                    int height = (int) (pwidth / aspect);
+                    imgbounds = new Rectangle(
+                            (int) format.getImageableX(),
+                            (int) (format.getImageableY() + ((pheight - height) / 2)),
+                            (int) pwidth,
+                            height);
+                } else {
+                    // paper is too wide / pdfpage is too tall
+                    int width = (int) (pheight * aspect);
+                    imgbounds = new Rectangle(
+                            (int) (format.getImageableX() + ((pwidth - width) / 2)),
+                            (int) format.getImageableY(),
+                            width,
+                            (int) pheight);
                 }
+
+                // render the page
+                PDFRenderer pgs = new PDFRenderer(page, g2, imgbounds, null, null);
+                try {
+                    page.waitForFinish();
+                    pgs.run();
+                } catch (InterruptedException ie) {
+                }
+
+                return PAGE_EXISTS;
+            } else {
+                return NO_SUCH_PAGE;
             }
         }
+    }
+    
+    private void toPDFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toPDFButtonActionPerformed
+        //TODO print to PDF
+
+        // Create a PDFFile from a File reference
+//        try {
+//            File f = new File("haa.pdf");
+//            FileInputStream fis = new FileInputStream(f);
+//            FileChannel fc = fis.getChannel();
+//            ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+//            PDFFile pdfFile = new PDFFile(bb); // Create PDF Print Page
+//            PDFPrintPage pages = new PDFPrintPage(pdfFile);
+//
+//// Create Print Job
+//            PrinterJob pjob = PrinterJob.getPrinterJob();
+//            PageFormat pf = PrinterJob.getPrinterJob().defaultPage();
+//            pjob.setJobName(f.getName());
+//            Book book = new Book();
+//            book.append(pages, pf, pdfFile.getNumPages());
+//            pjob.setPageable(book);
+//
+//// Send print job to default printer
+//            pjob.print();
+//        } catch (Exception e) {
+//            e.printStackTrace(System.out);
+//        }
+//        JFileChooser fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//        if (evt.getSource() == saveButton) {
+//            int returnVal = fc.showDialog(saveButton, "Save in directory");
+//
+//            if (returnVal == JFileChooser.APPROVE_OPTION) {
+//                try {
+//                    browser.saveActual(fc.getSelectedFile().getPath());
+//                } catch (IOException e) {
+//                    JOptionPane.showMessageDialog(null,
+//                            "Failed to save crossword.", "Operation failed",
+//                            JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//        }
     }//GEN-LAST:event_toPDFButtonActionPerformed
 
     /**
