@@ -57,8 +57,8 @@ public class MicroDVDDelayer {
 	public static String delay(String in, int delay, int fps) throws UnproperDataException {
 		String[] temp = in.split("}");
 		Integer begin, end;
-		if ((Pattern.matches(".[[0-9]]*", temp[0]))
-				&& (Pattern.matches(".[[0-9]]*", temp[1]))) {
+		if ((Pattern.matches("\\{[[0-9]]*", temp[0]))
+				&& (Pattern.matches("\\{[[0-9]]*", temp[1]))) {
 			temp[0] = temp[0].substring(1);
 			temp[1] = temp[1].substring(1);
 			begin = Integer.parseInt(temp[0]);
