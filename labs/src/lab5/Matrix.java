@@ -163,6 +163,5 @@ public class Matrix {
 				System.out.print(' ');
 			}
 		}
-		System.out.print('\n');
 	}
 }

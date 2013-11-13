@@ -18,11 +18,6 @@ import java.util.regex.*;
  */
 public class MicroDVDDelayer {
 
-	private BufferedReader input;
-	private FileWriter output;
-	private Integer delay;
-	private Integer fps;
-
 	/**
 	 * Constructor
 	 * 
@@ -33,32 +28,33 @@ public class MicroDVDDelayer {
 	 * @throws IOException
 	 * @throws UnproperDataException
 	 */
-	public MicroDVDDelayer(String inputFilePath, String outputFilePath,
+	public static void microDVDDelayer(String inputFilePath, String outputFilePath,
 			int delay, int fps) throws IOException, UnproperDataException {
-		try (BufferedReader inputBuf = new BufferedReader(new FileReader(
-				new File(inputFilePath)))) {
-			this.input = inputBuf;
-			try (FileWriter outputWriter = new FileWriter(new File(
-					outputFilePath))) {
-				this.output = outputWriter;
-				this.delay = delay;
-				this.fps = fps;
-				String temp;
-				while ((temp = input.readLine()) != null) {
-					output.write(delay(temp));
-				}
+		BufferedReader input;
+		FileWriter output;
+		try (BufferedReader inputR = new BufferedReader(new FileReader(
+				new File(inputFilePath)));
+				FileWriter outputW = new FileWriter(new File(
+						outputFilePath))) {
+			input = inputR;
+			output = outputW;
+			String temp;
+			while ((temp = input.readLine()) != null) {
+				output.write(delay(temp, delay, fps));
 			}
 		}
 	}
 
 	/**
 	 * Delay function
-	 * @param in - string
+	 * 
+	 * @param in
+	 *            - string
 	 * @throws UnproperDataException
 	 * @return delayed string
 	 * 
 	 */
-	public String delay(String in) throws UnproperDataException {
+	public static String delay(String in, int delay, int fps) throws UnproperDataException {
 		String[] temp = in.split("}");
 		Integer begin, end;
 		if ((Pattern.matches(".[[0-9]]*", temp[0]))
@@ -74,8 +70,7 @@ public class MicroDVDDelayer {
 			end += fps * delay / 1000;
 			return "{" + begin.toString() + "}{" + end.toString() + "}"
 					+ temp[2] + "\n";
-		}
-        else
-		    throw new UnproperDataException();
+		} else
+			throw new UnproperDataException();
 	}
 }
