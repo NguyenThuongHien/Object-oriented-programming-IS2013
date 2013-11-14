@@ -6,6 +6,7 @@
 package board;
 
 import Exceptions.FailedToGenerateCrosswordException;
+import Strategies.EasyStrategy;
 import dictionary.CwEntry;
 import dictionary.IntelLiCwDB;
 
@@ -26,6 +27,15 @@ public class Crossword {
     // crossword
     private Board board; // crossword's board
     private IntelLiCwDB cwdb = null; // crossword's intelligent database
+    private int strategyID = 0;
+
+    public int getStrategyID() {
+        return strategyID;
+    }
+
+    public void setStrategyID(int strategyID) {
+        this.strategyID = strategyID;
+    }
     private final long ID; // ID, default set to -1
 
     /**
@@ -67,10 +77,12 @@ public class Crossword {
             String temp = reader.readLine();
             switch (temp) {
                 case "EASY":
+                    this.strategyID = 0;
                     strategy = easyStrategy;
                     break;
                 case "HARD":
                     strategy = hardStraategy;
+                    this.strategyID = 1;
                     break;
                 default:
                     throw new NullPointerException();
@@ -256,6 +268,10 @@ public class Crossword {
     public final void generate(Strategy strategy)
             throws FailedToGenerateCrosswordException {
         CwEntry entry = null;
+        if (strategy instanceof EasyStrategy)
+            setStrategyID(0);
+        else
+            setStrategyID(1);
         while ((entry = strategy.findEntry(this)) != null) {
             addCwEntry(entry, strategy);
         }

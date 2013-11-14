@@ -45,6 +45,10 @@ public class CwWriter implements Writer {
 		long ID = getUniqueID();
 		try (FileWriter cwFile = new FileWriter(file.getAbsolutePath() + "/"
                                      + Long.toString(ID))) {
+                        if (crossword.getStrategyID() == 0)
+                            cwFile.write("EASY\n");
+                        else
+                            cwFile.write("HARD\n");
 			cwFile.write(crossword.getBoardWidth() + " "
 					+ crossword.getBoardHeight() + "\n");
 			Iterator<CwEntry> iter = crossword.getROEntryIter();
