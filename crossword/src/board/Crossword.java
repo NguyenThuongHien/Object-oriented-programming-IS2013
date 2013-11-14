@@ -36,7 +36,7 @@ public class Crossword {
     public void setStrategyID(int strategyID) {
         this.strategyID = strategyID;
     }
-    private final long ID; // ID, default set to -1
+    private final Long ID; // ID, default set to -1
 
     /**
      * 
@@ -53,7 +53,7 @@ public class Crossword {
         entries = new LinkedList<>();
         board = new Board(width, height);
         cwdb = cwDB;
-        this.ID = -1;
+        this.ID = new Long(-1);
     }
 
     /**
@@ -69,7 +69,7 @@ public class Crossword {
      * @throws IOException
      * @throws NullPointerException
      */
-    public Crossword(long ID, File f, Strategy easyStrategy, Strategy hardStraategy) throws IOException, NullPointerException {
+    public Crossword(Long ID, File f, Strategy easyStrategy, Strategy hardStraategy) throws IOException, NullPointerException {
         entries = new LinkedList<>();
         this.ID = ID;
         Strategy strategy = null;
@@ -188,7 +188,7 @@ public class Crossword {
      * 
      * @return the iD
      */
-    private long getID() {
+    public Long getID() {
         return ID;
     }
 

@@ -42,7 +42,7 @@ public class CwWriter implements Writer {
 	 */
 	@Override
 	public void write(Crossword crossword) throws IOException {
-		long ID = getUniqueID();
+		Long ID = getUniqueID();
 		try (FileWriter cwFile = new FileWriter(file.getAbsolutePath() + "/"
                                      + Long.toString(ID))) {
                         if (crossword.getStrategyID() == 0)
@@ -64,8 +64,8 @@ public class CwWriter implements Writer {
 	 * @see browser.Writer#getUniqueID()
 	 */
 	@Override
-	public long getUniqueID() {
-		return new Date().getTime();
+	public Long getUniqueID() {
+		return new Long(new Date().getTime());
 	}
 
 }

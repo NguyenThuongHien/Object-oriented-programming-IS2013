@@ -43,9 +43,15 @@ public class CwReader implements Reader {
     @Override
     public LinkedList<Crossword> getAllCws(Strategy easyStrategy, Strategy hardStrategy) throws IOException, NullPointerException {
         LinkedList<Crossword> crosswords = new LinkedList<>();
-        for (File f : file.listFiles()) {
-            if (f.canRead() && f.isFile()) {
-                crosswords.add(new Crossword(Long.parseLong(f.getName()), f, easyStrategy, hardStrategy));
+        if (file.listFiles().length == 0) {
+            throw new IOException("Directory is empty!");
+        } else {
+            for (File f : file.listFiles()) {
+                if (f.isHidden() || !f.canRead() || f.isDirectory()) {
+                    throw new IOException("Cannot reaed all the files in directory, some are directory, hidden or unreadable.");
+                } else {
+                    crosswords.add(new Crossword(Long.parseLong(f.getName()), f, easyStrategy, hardStrategy));
+                }
             }
         }
         return crosswords;

@@ -74,8 +74,9 @@ public class CwBrowser {
      */
     public void generateCw(int width, int height, Strategy str)
             throws FailedToGenerateCrosswordException {
-        actual = new Crossword(width, height, defaultCwDB);
-        actual.generate(str);
+        Crossword temp = new Crossword(width, height, defaultCwDB);
+        temp.generate(str);
+        actual = temp;
         crosswords.add(actual);
         iter = crosswords.listIterator();
         while (iter.hasNext()) {

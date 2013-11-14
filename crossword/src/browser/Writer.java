@@ -28,5 +28,5 @@ public interface Writer {
 	 * 
 	 * @return unique ID
 	 */
-	public long getUniqueID();
+	public Long getUniqueID();
 }
