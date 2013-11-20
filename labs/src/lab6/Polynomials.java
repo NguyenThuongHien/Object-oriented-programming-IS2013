@@ -5,9 +5,13 @@
  */
 package lab6;
 
+import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
@@ -58,9 +62,11 @@ public class Polynomials extends javax.swing.JFrame {
         rangeBegLabel = new javax.swing.JLabel();
         rangeEndLabel = new javax.swing.JLabel();
         samplingLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        graphPanelOut = new javax.swing.JPanel();
+        graphPanelIn = new GraphPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Polynomial graph");
 
         optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
 
@@ -71,7 +77,7 @@ public class Polynomials extends javax.swing.JFrame {
             }
         });
 
-        factorsField.setText("0");
+        factorsField.setText("1");
         factorsField.setInputVerifier(new StrictInputVerifier("[-?[0-9]*//.?[0-9]*,]*"));
         factorsField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,30 +160,49 @@ public class Polynomials extends javax.swing.JFrame {
                     .addComponent(drawButton)))
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        graphPanelOut.setBorder(javax.swing.BorderFactory.createTitledBorder("Graph"));
+
+        graphPanelIn.setBackground(new java.awt.Color(254, 254, 254));
+
+        javax.swing.GroupLayout graphPanelInLayout = new javax.swing.GroupLayout(graphPanelIn);
+        graphPanelIn.setLayout(graphPanelInLayout);
+        graphPanelInLayout.setHorizontalGroup(
+            graphPanelInLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 218, Short.MAX_VALUE)
+        graphPanelInLayout.setVerticalGroup(
+            graphPanelInLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 226, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout graphPanelOutLayout = new javax.swing.GroupLayout(graphPanelOut);
+        graphPanelOut.setLayout(graphPanelOutLayout);
+        graphPanelOutLayout.setHorizontalGroup(
+            graphPanelOutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(graphPanelIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        graphPanelOutLayout.setVerticalGroup(
+            graphPanelOutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(graphPanelIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(optionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(graphPanelOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(graphPanelOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -192,7 +217,8 @@ public class Polynomials extends javax.swing.JFrame {
     }//GEN-LAST:event_samplingFieldActionPerformed
 
     private void drawButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawButtonActionPerformed
-        String errorLog = "";
+        errorLog = null;
+        Double temp;
 
         InputVerifier doubleVerifier = samplingField.getInputVerifier();
 
@@ -204,15 +230,89 @@ public class Polynomials extends javax.swing.JFrame {
             errorLog = "Błędnie wpisany koniec zakresu (liczba rzeczywista)!";
         } else if (!doubleVerifier.verify(samplingField)) {
             errorLog = "Błędnie wpisane próbkowanie (liczba rzeczywista)!";
+        } else if (Double.parseDouble(rangeBegField.getText()) == Double.parseDouble(rangeEndField.getText())) {
+            errorLog = "Błędne dane wejściowe - początek równy końcowi zakresu!";
         } else {
             beginning = Double.parseDouble(rangeBegField.getText());
             end = Double.parseDouble(rangeEndField.getText());
             sampling = Double.parseDouble(samplingField.getText());
-            for (String temp : factorsField.getText().split(",")) {
-                factors.add(Double.parseDouble(temp));
+            factors = new LinkedList<>();
+            for (String factor : factorsField.getText().split(",")) {
+                factors.add(Double.parseDouble(factor));
+            }
+            if (beginning > end) {
+                temp = beginning;
+                beginning = end;
+                end = temp;
+            }
+            points = new HashMap<>();
+            for (Double i = beginning; i <= end; i += sampling) {
+                points.put(i, fPoly(i));
             }
         }
+        graphPanelIn.paint(graphPanelIn.getGraphics());
     }//GEN-LAST:event_drawButtonActionPerformed
+
+    private Double fPoly(Double x) {
+        Double result = 0.0;
+        for (Double factor : factors) {
+            result += result * x + factor;
+        }
+        return result;
+    }
+
+    private class GraphPanel extends JPanel {
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            Integer width = this.getWidth() - 15;
+            Integer height = this.getHeight() - 15;
+            if (errorLog != null) {
+                g.drawString(errorLog, 10, 15);
+            } else if (beginning != null) {
+                g.drawLine(15, 0, 15, height);
+                g.drawLine(15, height, width + 15, height);
+                g.drawString(beginning.toString(), 10, height + 15);
+                g.drawString(end.toString(), width - 20, height + 15);
+                Double scaleX = width / Math.abs(beginning - end);
+
+                Double minY = points.get(beginning);
+                Double maxY = minY;
+                for (Entry<Double, Double> point : points.entrySet()) {
+                    if (point.getValue() < minY) {
+                        minY = point.getValue();
+                    } else if (point.getValue() > maxY) {
+                        maxY = point.getValue();
+                    }
+                }
+
+                if (maxY != minY) {
+                    g.drawString(maxY.toString(), 0, 15);
+                    g.drawString(minY.toString(), 0, height);
+                    Double scaleY = height / Math.abs(maxY - minY);
+                    Double prevX = null, prevY = null;
+                    for (Double i = beginning; i <= end; i += sampling) {
+                        if (prevY == null) {
+                            prevY = points.get(i);
+                            prevX = i;
+                        } else {
+                            g.drawLine((int) ((prevX - beginning) * scaleX) + 15, 
+                                    (int) (height - (prevY - minY) * scaleY), (int) 
+                                            ((i - beginning) * scaleX) + 15, (int) 
+                                                    (height - (points.get(i) - minY) * scaleY));
+                            prevY = points.get(i);
+                            prevX = i;
+                        }
+                    }
+                } else {
+                    g.drawLine(15, (int) height/2, width + 15, (int) height/2);
+                    g.drawString(maxY.toString(), 0, (int) height/2 + 5);                    
+                }
+
+            }
+        }
+    }
 
     private void rangeBegFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rangeBegFieldActionPerformed
         // TODO add your handling code here:
@@ -251,12 +351,15 @@ public class Polynomials extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Polynomials().setVisible(true);
             }
         });
     }
 
+    private String errorLog = null;
+    private HashMap<Double, Double> points;
     private Double sampling;
     private LinkedList<Double> factors;
     private Double beginning;
@@ -265,7 +368,8 @@ public class Polynomials extends javax.swing.JFrame {
     private javax.swing.JButton drawButton;
     private javax.swing.JTextField factorsField;
     private javax.swing.JLabel factorsLabel;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel graphPanelIn;
+    private javax.swing.JPanel graphPanelOut;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JTextField rangeBegField;
     private javax.swing.JLabel rangeBegLabel;
