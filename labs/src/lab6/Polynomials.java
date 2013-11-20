@@ -20,10 +20,17 @@ import javax.swing.JTextField;
  */
 public class Polynomials extends javax.swing.JFrame {
 
+    /**
+     * Text file input verifier
+     */
     private class StrictInputVerifier extends InputVerifier {
 
         private final String validString;
 
+        /**
+         * Constructor
+         * @param validString 
+         */
         public StrictInputVerifier(String validString) {
             this.validString = validString;
         }
@@ -216,6 +223,10 @@ public class Polynomials extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_samplingFieldActionPerformed
 
+    /**
+     * Action for draw button
+     * @param evt 
+     */
     private void drawButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawButtonActionPerformed
         errorLog = null;
         Double temp;
@@ -253,10 +264,15 @@ public class Polynomials extends javax.swing.JFrame {
         graphPanelIn.paint(graphPanelIn.getGraphics());
     }//GEN-LAST:event_drawButtonActionPerformed
 
+    /**
+     * Function counts value of polynomial in point x
+     * @param x - argument
+     * @return value f(x)
+     */
     private Double fPoly(Double x) {
         Double result = 0.0;
         for (Double factor : factors) {
-            result += result * x + factor;
+            result = result * x + factor;
         }
         return result;
     }
@@ -268,13 +284,16 @@ public class Polynomials extends javax.swing.JFrame {
             super.paint(g);
             Integer width = this.getWidth() - 15;
             Integer height = this.getHeight() - 15;
+            Long temp;
             if (errorLog != null) {
                 g.drawString(errorLog, 10, 15);
             } else if (beginning != null) {
                 g.drawLine(15, 0, 15, height);
                 g.drawLine(15, height, width + 15, height);
-                g.drawString(beginning.toString(), 10, height + 15);
-                g.drawString(end.toString(), width - 20, height + 15);
+                temp = Math.round(beginning);
+                g.drawString(temp.toString(), 10, height + 15);
+                temp = Math.round(end);
+                g.drawString(temp.toString(), width - 10, height + 15);
                 Double scaleX = width / Math.abs(beginning - end);
 
                 Double minY = points.get(beginning);
@@ -288,8 +307,10 @@ public class Polynomials extends javax.swing.JFrame {
                 }
 
                 if (maxY != minY) {
-                    g.drawString(maxY.toString(), 0, 15);
-                    g.drawString(minY.toString(), 0, height);
+                    temp = Math.round(maxY);
+                    g.drawString(temp.toString(), 0, 15);
+                    temp = Math.round(minY);
+                    g.drawString(temp.toString(), 0, height);
                     Double scaleY = height / Math.abs(maxY - minY);
                     Double prevX = null, prevY = null;
                     for (Double i = beginning; i <= end; i += sampling) {
@@ -305,11 +326,11 @@ public class Polynomials extends javax.swing.JFrame {
                             prevX = i;
                         }
                     }
-                } else {
+                } else if (minY != 0) {
                     g.drawLine(15, (int) height/2, width + 15, (int) height/2);
-                    g.drawString(maxY.toString(), 0, (int) height/2 + 5);                    
+                    temp = Math.round(maxY);
+                    g.drawString(temp.toString(), 0, (int) height/2 + 5);                    
                 }
-
             }
         }
     }
@@ -338,13 +359,7 @@ public class Polynomials extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Polynomials.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Polynomials.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Polynomials.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Polynomials.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
