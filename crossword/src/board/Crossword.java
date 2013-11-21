@@ -267,7 +267,7 @@ public class Crossword {
      */
     public final void generate(Strategy strategy)
             throws FailedToGenerateCrosswordException {
-        CwEntry entry = null;
+        CwEntry entry;
         if (strategy instanceof EasyStrategy)
             setStrategyID(0);
         else

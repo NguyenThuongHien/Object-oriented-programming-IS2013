@@ -108,12 +108,7 @@ public class IntelLiCwDB extends CwDB {
 			return patDict.get(rand.nextInt(patDict.size()));
 	}
 
-	/**
-	 * Overrides the add method from CwDB, inserts and sorts dictionary
-	 * 
-	 * @param word
-	 * @param clue
-	 */
+        @Override
 	public void add(String word, String clue) {
 		dict.addFirst(new Entry(word, clue));
 		Collections.sort(dict, new EntriesComparator());

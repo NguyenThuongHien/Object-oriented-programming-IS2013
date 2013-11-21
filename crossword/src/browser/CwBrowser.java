@@ -20,7 +20,7 @@ import java.util.ListIterator;
  */
 public class CwBrowser {
 
-    private LinkedList<Crossword> crosswords; // vector of read crosswords
+    private final LinkedList<Crossword> crosswords; // vector of read crosswords
     private ListIterator<Crossword> iter; // vector iterator
     private Crossword actual; // actual crossword
     private IntelLiCwDB defaultCwDB;
@@ -135,7 +135,7 @@ public class CwBrowser {
 
     /**
      * Checks if browser has actual crossword
-     * return logical value
+     * @return logical value
      */
     public boolean hasActual() {
         return actual != null;
@@ -188,6 +188,8 @@ public class CwBrowser {
     /**
      * Loads crosswords from given folder
      * @param folderPath
+     * @param easyStrategy
+     * @param hardStrategy
      * @throws IOException 
      */
     public void loadFromFiles(String folderPath, Strategy easyStrategy, Strategy hardStrategy) throws IOException, NullPointerException {

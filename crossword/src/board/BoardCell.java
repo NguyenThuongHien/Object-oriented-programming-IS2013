@@ -37,9 +37,7 @@ public class BoardCell {
 	 * @return true if it is
 	 */
 	public boolean checkContent() {
-		if (getContent().length() > 0)
-			return true;
-		return false;
+		return getContent().length() > 0;
 	}
 
 	/**

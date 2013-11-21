@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * 
  */
 public class Board {
-	private BoardCell[][] board; // crosword's board
+	private final BoardCell[][] board; // crosword's board
 
 	/**
 	 * 
@@ -116,6 +116,7 @@ public class Board {
 	 *            - end in x axe
 	 * @param toy
 	 *            - end in y axe
+         * @return pattern
 	 */
 	public Pattern createPattern(int fromx, int fromy, int tox, int toy) {
 		String pattern = "";

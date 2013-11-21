@@ -1,5 +1,6 @@
 /**
  * CwDB.java
+ *
  * @author - wukat
  * @data - 12 paź 2013
  */
@@ -13,109 +14,107 @@ import java.util.LinkedList;
 
 /**
  * Implementation of crossword database
- * 
+ *
  * @author wukat
- * 
+ *
  */
 public class CwDB {
-	protected LinkedList<Entry> dict = new LinkedList<>(); // dictionary -
-																// list of
-																// entries
 
-	/**
-	 * Constructor
-	 * 
-	 * @param filename
-	 *            - name of file with date
-	 * @throw IOException
-	 */
-	public CwDB(String filename) throws IOException {
-		createDB(filename);
-	}
+    protected LinkedList<Entry> dict = new LinkedList<>(); // dictionary -
+    // list of
+    // entries
 
-	/**
-	 * Adds new record
-	 * 
-	 * @param word
-	 * @param clue
-	 */
-	public void add(String word, String clue) {
-		dict.add(new Entry(word, clue));
-	}
+    /**
+     * Constructor
+     *
+     * @param filename - name of file with date
+     * @throws IOException
+     */
+    public CwDB(String filename) throws IOException {
+        createDB(filename);
+    }
 
-	/**
-	 * Getter
-	 * 
-	 * @param word
-	 *            - parameter to identify entry
-	 * @return entry in dictionary with field word
-	 */
-	public Entry get(String word) {
-		java.util.ListIterator<Entry> iter = dict.listIterator(0);
-		while (iter.hasNext()) {
-			Entry temp = iter.next();
-			if (temp.getWord().equals(word))
-				return temp;
-		}
-		return null;
-	}
+    /**
+     * Adds new record
+     *
+     * @param word
+     * @param clue
+     */
+    public void add(String word, String clue) {
+        dict.add(new Entry(word, clue));
+    }
 
-	/**
-	 * Removes specified entry from dictionary
-	 * 
-	 * @param word
-	 *            - parameter to identify entry
-	 */
-	public void remove(String word) {
-		java.util.ListIterator<Entry> iter = dict.listIterator(0);
-		while (iter.hasNext()) {
-			Entry temp = iter.next();
-			if (temp.getWord().equals(word))
-				iter.remove();
-		}
-	}
+    /**
+     * Getter
+     *
+     * @param word - parameter to identify entry
+     * @return entry in dictionary with field word
+     */
+    public Entry get(String word) {
+        java.util.ListIterator<Entry> iter = dict.listIterator(0);
+        while (iter.hasNext()) {
+            Entry temp = iter.next();
+            if (temp.getWord().equals(word)) {
+                return temp;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Saves database in file
-	 * 
-	 * @param filename
-	 *            - name of output file
-	 * @throws IOException
-	 */
-	public void saveDB(String filename) throws IOException {
-		try (FileWriter outputDB = new FileWriter(filename)) {
-			java.util.ListIterator<Entry> iter = dict.listIterator(0);
-			while (iter.hasNext()) {
-				Entry temp = iter.next();
-				outputDB.write(temp.toString());
-			}
-		}
-	}
+    /**
+     * Removes specified entry from dictionary
+     *
+     * @param word - parameter to identify entry
+     */
+    public void remove(String word) {
+        java.util.ListIterator<Entry> iter = dict.listIterator(0);
+        while (iter.hasNext()) {
+            Entry temp = iter.next();
+            if (temp.getWord().equals(word)) {
+                iter.remove();
+            }
+        }
+    }
 
-	/**
-	 * Getter
-	 * 
-	 * @return size of dictionary (number of elements)
-	 */
-	public int getSize() {
-		return dict.size();
-	}
+    /**
+     * Saves database in file
+     *
+     * @param filename - name of output file
+     * @throws IOException
+     */
+    public void saveDB(String filename) throws IOException {
+        try (FileWriter outputDB = new FileWriter(filename)) {
+            java.util.ListIterator<Entry> iter = dict.listIterator(0);
+            while (iter.hasNext()) {
+                Entry temp = iter.next();
+                outputDB.write(temp.toString());
+            }
+        }
+    }
 
-	/**
-	 * Creates database from file
-	 * 
-	 * @param filename
-	 *            - file name
-	 * @throws IOException
-	 */
-	protected final void createDB(String filename) throws IOException {
-		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-			String line1 = null;
-			String line2 = null;
-			while (((line1 = br.readLine()) != null)
-					&& ((line2 = br.readLine()) != null)) {
-				add(line1.toUpperCase(), line2);
-			}
-		}
-	}
+    /**
+     * Getter
+     *
+     * @return size of dictionary (number of elements)
+     */
+    public int getSize() {
+        return dict.size();
+    }
+
+    /**
+     * Creates database from file
+     *
+     * @param filename - file name
+     * @throws IOException
+     */
+    protected final void createDB(String filename) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line1;
+            String line2;
+            while (((line1 = br.readLine()) != null)
+                    && ((line2 = br.readLine()) != null)) {
+                add(line1.toUpperCase(), line2);
+            }
+        }
+    }
 }

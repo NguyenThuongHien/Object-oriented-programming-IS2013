@@ -18,7 +18,7 @@ import java.util.LinkedList;
  */
 public class CwReader implements Reader {
 
-    private File file; // folder
+    private final File file; // folder
 
     /**
      * 
