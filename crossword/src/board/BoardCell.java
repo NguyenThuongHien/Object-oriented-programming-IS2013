@@ -13,7 +13,7 @@ package board;
 public class BoardCell {
 
     private String content; // content of cell
-    private Boolean[][] abilities; // array of abilities - hor/ver beg/in/end
+    private final Boolean[][] abilities; // array of abilities - hor/ver beg/in/end
     // enable/disable
 
     public static final int beg = 0;
@@ -96,6 +96,32 @@ public class BoardCell {
         this.content = "" + content;
     }
 
+    /**
+     * Sets vertical abilities to false.
+     */
+    public void setVerFalse() {
+        abilities[beg][ver] = Boolean.FALSE;
+        abilities[in][ver] = Boolean.FALSE;
+        abilities[end][ver] = Boolean.FALSE;
+    }
+    
+    /**
+     * Sets horizontal abilities to false.
+     */
+    public void setHorFalse() {
+        abilities[beg][hor] = Boolean.FALSE;
+        abilities[in][hor] = Boolean.FALSE;
+        abilities[end][hor] = Boolean.FALSE;
+    }
+    
+    /**
+     * Sets all abilities to false.
+     */
+    public void setFalse() {
+        setHorFalse();
+        setVerFalse();
+    }
+    
     /**
      * Function copying boardCell
      *
