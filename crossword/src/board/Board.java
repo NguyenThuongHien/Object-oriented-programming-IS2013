@@ -77,7 +77,7 @@ public class Board {
     /**
      * Sets ability to false in places like corners and others.
      */
-    public void setAllAbilitiesAtTheBeginning() {
+    private void setAllAbilitiesAtTheBeginning() {
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 if (i == 0) {
