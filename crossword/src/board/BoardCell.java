@@ -55,7 +55,7 @@ public class BoardCell {
      * @param ability - boolean - true if enable
      */
     public void setAbility(int pos, int dir, Boolean ability) {
-        abilities[dir][pos] = ability;
+        abilities[pos][dir] = ability;
     }
 
     /**
