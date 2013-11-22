@@ -54,7 +54,7 @@ public class BoardCell {
      * @param pos - position
      * @param ability - boolean - true if enable
      */
-    public void setAbility(int dir, int pos, Boolean ability) {
+    public void setAbility(int pos, int dir, Boolean ability) {
         abilities[dir][pos] = ability;
     }
 
@@ -65,8 +65,8 @@ public class BoardCell {
      * @param pos - position
      * @return ability - boolean - true if enable
      */
-    public Boolean getAbility(int dir, int pos) {
-        return abilities[dir][pos];
+    public Boolean getAbility(int pos, int dir) {
+        return abilities[pos][dir];
     }
 
     /**
