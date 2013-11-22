@@ -12,6 +12,8 @@ import board.BoardCell;
 import board.Crossword;
 import board.Strategy;
 import dictionary.CwEntry;
+import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * @author wukat
@@ -32,7 +34,21 @@ public class HardStrategy extends Strategy {
     @Override
     public CwEntry findEntry(Crossword crossword)
             throws FailedToGenerateCrosswordException {
-        // TODO Auto-generated method stub
+        if (crossword.getCwdb().getSize() == 0)
+            throw new FailedToGenerateCrosswordException();
+        Random rand = new Random();
+        LinkedList<BoardCell> startingCells = crossword.getBoardCopy().getStartCells();
+        Boolean flag = Boolean.FALSE;
+        do {
+            BoardCell temp = startingCells.get(rand.nextInt(startingCells.size()));
+            if (temp.getAbility(BoardCell.beg, BoardCell.hor)) {
+                int size = crossword.getBoardHeight();
+                while (size > 1) {
+                    
+                }
+            }
+            
+        } while (startingCells.size() > 0 || flag);
         return null;
     }
 
