@@ -29,6 +29,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Exceptions.FailedToGenerateCrosswordException;
 import Strategies.EasyStrategy;
+import Strategies.HardStrategy;
 import browser.CwBrowser;
 import dictionary.IntelLiCwDB;
 
@@ -728,7 +729,7 @@ public class ProgramNB extends javax.swing.JFrame {
 				browser.generateCw(
 						Integer.parseInt(columns.getValue().toString()),
 						Integer.parseInt(rows.getValue().toString()),
-						easyStrategy);
+						hardStrategy);
 				actualizeButtons();
 			} catch (FailedToGenerateCrosswordException a) {
 				JOptionPane.showMessageDialog(null,
@@ -959,6 +960,7 @@ public class ProgramNB extends javax.swing.JFrame {
 
 	private static CwBrowser browser; // crosswords browser
 	private static final EasyStrategy easyStrategy = new EasyStrategy(); // strategy
+        private static final HardStrategy hardStrategy = new HardStrategy(); //strategy
 																			// instance
 	private boolean lastUsedNext = true; // which button last pressed - next or
 											// prev
