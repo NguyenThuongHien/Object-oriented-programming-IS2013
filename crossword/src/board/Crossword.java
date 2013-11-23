@@ -1,5 +1,6 @@
 /**
  * Crossword.java
+ *
  * @author - wukat
  * @data - 18 paź 2013
  */
@@ -17,7 +18,7 @@ import java.util.LinkedList;
 
 /**
  * @author wukat
- * 
+ *
  */
 public class Crossword {
 
@@ -36,18 +37,16 @@ public class Crossword {
     public void setStrategyID(int strategyID) {
         this.strategyID = strategyID;
     }
+
     private final Long ID; // ID, default set to -1
 
     /**
-     * 
+     *
      * Constructor
-     * 
-     * @param width
-     *            - width of board
-     * @param height
-     *            - height of board
-     * @param cwDB
-     *            - data base
+     *
+     * @param width - width of board
+     * @param height - height of board
+     * @param cwDB - data base
      */
     public Crossword(int width, int height, IntelLiCwDB cwDB) {
         entries = new LinkedList<>();
@@ -57,19 +56,20 @@ public class Crossword {
     }
 
     /**
-     * 
+     *
      * Constructor - crossword from file, format: width, height \n, filename of
      * cwDB \n, CwEntries;
-     * 
+     *
      * @param ID
      * @param f
-     * @param easyStrategy 
-     * @param hardStraategy 
-     * 
+     * @param easyStrategy
+     * @param hardStraategy
+     *
      * @throws IOException
      * @throws NullPointerException
      */
-    public Crossword(Long ID, File f, Strategy easyStrategy, Strategy hardStraategy) throws IOException, NullPointerException {
+    public Crossword(Long ID, File f, Strategy easyStrategy,
+            Strategy hardStraategy) throws IOException, NullPointerException {
         entries = new LinkedList<>();
         this.ID = ID;
         Strategy strategy = null;
@@ -95,11 +95,15 @@ public class Crossword {
                 splited = temp.split(" ");
                 switch (splited[2]) {
                     case "HORIZ":
-                        addCwEntry(new CwEntry(reader.readLine(), reader.readLine(), Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
+                        addCwEntry(new CwEntry(reader.readLine(),
+                                reader.readLine(), Integer.parseInt(splited[0]),
+                                Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.HORIZ), strategy);
                         break;
                     case "VERT":
-                        addCwEntry(new CwEntry(reader.readLine(), reader.readLine(), Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
+                        addCwEntry(new CwEntry(reader.readLine(),
+                                reader.readLine(), Integer.parseInt(splited[0]),
+                                Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.VERT), strategy);
                         break;
                 }
@@ -110,7 +114,7 @@ public class Crossword {
 
     /**
      * Getter
-     * 
+     *
      * @return the entries
      */
     private LinkedList<CwEntry> getEntries() {
@@ -119,9 +123,8 @@ public class Crossword {
 
     /**
      * entries setter
-     * 
-     * @param entries
-     *            the entries to set
+     *
+     * @param entries the entries to set
      */
     private void setEntries(LinkedList<CwEntry> entries) {
         this.entries = entries;
@@ -129,7 +132,7 @@ public class Crossword {
 
     /**
      * Getter
-     * 
+     *
      * @return the board
      */
     private Board getBoard() {
@@ -138,9 +141,8 @@ public class Crossword {
 
     /**
      * board setter
-     * 
-     * @param board
-     *            the board to set
+     *
+     * @param board the board to set
      */
     private void setBoard(Board board) {
         this.board = board;
@@ -148,7 +150,7 @@ public class Crossword {
 
     /**
      * Special getter
-     * 
+     *
      * @return board's height
      */
     public int getBoardHeight() {
@@ -157,7 +159,7 @@ public class Crossword {
 
     /**
      * Special getter
-     * 
+     *
      * @return board's width
      */
     public int getBoardWidth() {
@@ -166,7 +168,7 @@ public class Crossword {
 
     /**
      * Getter
-     * 
+     *
      * @return the cwdb
      */
     public IntelLiCwDB getCwdb() {
@@ -175,9 +177,8 @@ public class Crossword {
 
     /**
      * cwdb setter
-     * 
-     * @param cwdb
-     *            the cwdb to set
+     *
+     * @param cwdb the cwdb to set
      */
     public void setCwdb(IntelLiCwDB cwdb) {
         this.cwdb = cwdb;
@@ -185,7 +186,7 @@ public class Crossword {
 
     /**
      * Getter
-     * 
+     *
      * @return the iD
      */
     public Long getID() {
@@ -194,7 +195,7 @@ public class Crossword {
 
     /**
      * Getter
-     * 
+     *
      * @return read-only iterator
      */
     public Iterator<CwEntry> getROEntryIter() {
@@ -203,7 +204,7 @@ public class Crossword {
 
     /**
      * Checks if list of entries is empty
-     * 
+     *
      * @return true if empty
      */
     public boolean isEmpty() {
@@ -212,7 +213,7 @@ public class Crossword {
 
     /**
      * Getter (copy)
-     * 
+     *
      * @return copy of board
      */
     public Board getBoardCopy() {
@@ -221,6 +222,7 @@ public class Crossword {
 
     /**
      * Checks if board cell is not empty
+     *
      * @param i
      * @param j
      * @return logical value
@@ -231,9 +233,8 @@ public class Crossword {
 
     /**
      * Function checks if crossword contains given word
-     * 
-     * @param word
-     *            - word to find
+     *
+     * @param word - word to find
      * @return true if contains
      */
     public boolean contains(String word) {
@@ -249,9 +250,8 @@ public class Crossword {
 
     /**
      * Function adds crossword entry to list of entries and updates board
-     * 
-     * @param cwe
-     *            - entry
+     *
+     * @param cwe - entry
      * @param strategy
      */
     public final void addCwEntry(CwEntry cwe, Strategy strategy) {
@@ -261,17 +261,18 @@ public class Crossword {
 
     /**
      * Function generating crossword
-     * 
+     *
      * @param strategy
      * @throws FailedToGenerateCrosswordException
      */
     public final void generate(Strategy strategy)
             throws FailedToGenerateCrosswordException {
         CwEntry entry;
-        if (strategy instanceof EasyStrategy)
+        if (strategy instanceof EasyStrategy) {
             setStrategyID(0);
-        else
+        } else {
             setStrategyID(1);
+        }
         while ((entry = strategy.findEntry(this)) != null) {
             addCwEntry(entry, strategy);
         }

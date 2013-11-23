@@ -64,6 +64,38 @@ public class Board {
     }
 
     /**
+     * Gets vertiacl position of cell
+     * @param cell
+     * @return int - position
+     */
+    public int getVerPosition(BoardCell cell) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (board[i][j] == cell) {
+                    return j;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Gets vertiacl position of cell
+     * @param cell
+     * @return int - position
+     */
+    public int getHorPosition(BoardCell cell) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (board[i][j] == cell) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Setter
      *
      * @param x - horizontal position
@@ -81,20 +113,20 @@ public class Board {
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 if (i == 0) {
-                    getCell(i, j).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
-                    getCell(i, j).setAbility(BoardCell.in, BoardCell.ver, Boolean.FALSE);
-                }
-                if (i == getWidth() - 1) {
-                    getCell(i, j).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
-                    getCell(i, j).setAbility(BoardCell.in, BoardCell.ver, Boolean.FALSE);
-                }
-                if (j == 0) {
                     getCell(i, j).setAbility(BoardCell.end, BoardCell.hor, Boolean.FALSE);
                     getCell(i, j).setAbility(BoardCell.in, BoardCell.hor, Boolean.FALSE);
                 }
-                if (j == getHeight() - 1) {
+                if (i == getWidth() - 1) {
                     getCell(i, j).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
                     getCell(i, j).setAbility(BoardCell.in, BoardCell.hor, Boolean.FALSE);
+                }
+                if (j == 0) {
+                    getCell(i, j).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
+                    getCell(i, j).setAbility(BoardCell.in, BoardCell.ver, Boolean.FALSE);
+                }
+                if (j == getHeight() - 1) {
+                    getCell(i, j).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
+                    getCell(i, j).setAbility(BoardCell.in, BoardCell.ver, Boolean.FALSE);
                 }
             }
         }
@@ -109,9 +141,9 @@ public class Board {
         LinkedList<BoardCell> startCells = new LinkedList<>();
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
-                if ((getCell(i, j).getAbility(BoardCell.hor, BoardCell.beg))
-                        || (getCell(i, j).getAbility(BoardCell.ver,
-                                BoardCell.beg))) {
+                if ((getCell(i, j).getAbility(BoardCell.beg, BoardCell.hor))
+                        || (getCell(i, j).getAbility(BoardCell.beg,
+                                BoardCell.ver))) {
                     startCells.add(getCell(i, j));
                 }
             }
