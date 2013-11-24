@@ -13,6 +13,7 @@ import board.Crossword;
 import board.Strategy;
 import dictionary.CwEntry;
 import dictionary.Entry;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -29,39 +30,39 @@ public class HardStrategy extends Strategy {
         // TODO Auto-generated constructor stub
     }
 
-    private Boolean checkAbilities(int size, Board board, int dir, int position) {
+    private Boolean checkAbilities(int size, Board board, int dir, int positionVer, int positionHor) {
         if (dir == BoardCell.ver) {
-            for (int i = position; i < position + size - 1; i++) {
-                if (!board.getCell(position, i).getAbility(BoardCell.in, dir)) {
+            for (int i = positionVer + 1; i < positionVer + size - 1; i++) {
+                if (!board.getCell(positionHor, i).getAbility(BoardCell.in, dir)) {
                     return Boolean.FALSE;
                 }
             }
-            if (!board.getCell(position, position + size - 1).getAbility(BoardCell.end, dir)) {
+            if (!board.getCell(positionHor, positionVer + size - 1).getAbility(BoardCell.end, dir)) {
                 return Boolean.FALSE;
             }
         } else {
-            for (int i = position; i < position + size - 1; i++) {
-                if (!board.getCell(i, position).getAbility(BoardCell.in, dir)) {
+            for (int i = positionHor + 1; i < positionHor + size - 1; i++) {
+                if (!board.getCell(i, positionVer).getAbility(BoardCell.in, dir)) {
                     return Boolean.FALSE;
                 }
             }
-            if (!board.getCell(position + size - 1, position).getAbility(BoardCell.end, dir)) {
+            if (!board.getCell(positionHor + size - 1, positionVer).getAbility(BoardCell.end, dir)) {
                 return Boolean.FALSE;
             }
         }
         return Boolean.TRUE;
     }
 
-    private Boolean checkIfHaveAnyLetter(int size, Board board, int dir, int position) {
+    private Boolean checkIfHaveAnyLetter(int size, Board board, int dir, int positionVer, int positionHor) {
         if (dir == BoardCell.ver) {
-            for (int i = position; i < position + size; i++) {
-                if (board.getCell(i, position).checkContent()) {
+            for (int i = positionVer; i < positionVer + size; i++) {
+                if (board.getCell(positionHor, i).checkContent()) {
                     return Boolean.TRUE;
                 }
             }
         } else {
-            for (int i = position; i < position + size; i++) {
-                if (board.getCell(position, i).checkContent()) {
+            for (int i = positionHor; i < positionHor + size; i++) {
+                if (board.getCell(i, positionVer).checkContent()) {
                     return Boolean.TRUE;
                 }
             }
@@ -85,28 +86,38 @@ public class HardStrategy extends Strategy {
         CwEntry toReturn = null;
         while (startingCells.size() > 0 && !flag) {
             BoardCell temp;
-//            if (crossword.isEmpty())
-//                temp = board.getCell(0, 0);
-//            else
+            if (crossword.isEmpty()) {
+                temp = board.getCell(0, 0);
+            }
+            else
                 temp = startingCells.get(rand.nextInt(startingCells.size()));
+            System.out.println("Komorka");
+            System.out.println(board.getHorPosition(temp));
+            System.out.println(board.getVerPosition(temp));
             if (temp.getAbility(BoardCell.beg, BoardCell.ver)) {
-                int size = crossword.getBoardHeight() - board.getVerPosition(temp) - 1;
+                int size = crossword.getBoardHeight() - board.getVerPosition(temp);
                 while (size > 1 && !flag) {
-                    if (checkAbilities(size, board, BoardCell.ver, board.getVerPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.ver, board.getVerPosition(temp)) || crossword.isEmpty())) {
+                    System.out.println(size);
+                    System.out.println("ver");
+                    if (checkAbilities(size, board, BoardCell.ver, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.ver, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
                         Entry found = crossword.getCwdb().getRandom(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp), board.getVerPosition(temp) + size).toString());
                         if (found != null) {
-                            flag = Boolean.TRUE;
-                            toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.VERT);
+                            if (!crossword.contains(found.getWord())) {
+                                flag = Boolean.TRUE;
+                                toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.VERT);
+                            }
                         }
                     }
                     size--;
                 }
             }
             if (!flag && temp.getAbility(BoardCell.beg, BoardCell.hor)) {
-                int size = crossword.getBoardWidth()- board.getHorPosition(temp) - 1;
+                int size = crossword.getBoardWidth() - board.getHorPosition(temp);
                 while (size > 1 && !flag) {
-                    if (checkAbilities(size, board, BoardCell.hor, board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.hor, board.getHorPosition(temp)) || crossword.isEmpty())) {
-                        Entry found = crossword.getCwdb().getRandom(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp)  + size, board.getVerPosition(temp)).toString());
+                    System.out.println(size);
+                    System.out.println("hor");
+                    if (checkAbilities(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
+                        Entry found = crossword.getCwdb().getRandom(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp) + size, board.getVerPosition(temp)).toString());
                         if (found != null) {
                             flag = Boolean.TRUE;
                             toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.HORIZ);
@@ -117,8 +128,9 @@ public class HardStrategy extends Strategy {
             }
             startingCells.remove(temp);
         }
-        if (toReturn != null) 
+        if (toReturn != null) {
             System.out.println(toReturn.toString());
+        }
         return toReturn;
     }
 
@@ -166,7 +178,7 @@ public class HardStrategy extends Strategy {
             for (int x = entry.getX(); x < entry.getX() + entry.getWord().length(); x++) {
                 board.getCell(x, entry.getY()).setContent(
                         entry.getWord().charAt(x - entry.getX()));
-                board.getCell(x, entry.getY()).setVerFalse();
+                board.getCell(x, entry.getY()).setHorFalse();
             }
             if (entry.getY() > 0) {
                 board.getCell(entry.getX(), entry.getY() - 1).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
@@ -185,5 +197,35 @@ public class HardStrategy extends Strategy {
                 }
             }
         }
+    }
+    
+    /**
+     * Function prints all entries except password
+     *
+     * @param crossword
+     * @return string with output
+     */
+    public String printAllEntries(Crossword crossword) {
+        String result = "Horizontally: \n";
+        Iterator<CwEntry> iter = crossword.getROEntryIter();
+        int k = 1;
+        while (iter.hasNext()) {
+            CwEntry temp = iter.next();
+            if (temp.getDir() == CwEntry.Direction.HORIZ) {
+                result = result + k + ". " + temp.getClue() + "\n";
+                k++;
+            }
+        }
+        result = result + "Vertically: \n";
+        iter = crossword.getROEntryIter();
+        k = 1;
+        while (iter.hasNext()) {
+            CwEntry temp = iter.next();
+            if (temp.getDir() == CwEntry.Direction.VERT) {
+                result = result + k + ". " + temp.getClue() + "\n";
+                k++;
+            }
+        }
+        return result;
     }
 }
