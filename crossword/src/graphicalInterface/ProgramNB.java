@@ -34,141 +34,175 @@ import browser.CwBrowser;
 import dictionary.IntelLiCwDB;
 
 /**
- * 
+ *
  * @author wukat
  */
 public class ProgramNB extends javax.swing.JFrame {
 
-	/**
-	 * Function shows actual crossword on the screen.
-	 */
-	public final void showCw() {
-		drawingPane.paint(drawingPane.getGraphics());
-		drawingPane.revalidate();
-		drawingPane.repaint();
-	}
+    /**
+     * Function shows actual crossword on the screen.
+     */
+    public final void showCw() {
+        drawingPane.paint(drawingPane.getGraphics());
+        drawingPane.revalidate();
+        drawingPane.repaint();
+    }
 
-	/**
-	 * Printable class extending JPanel - used to draw crossword on it and print
-	 * it.
-	 */
-	public class DrawingPane extends JPanel implements Printable {
+    /**
+     * Printable class extending JPanel - used to draw crossword on it and print
+     * it.
+     */
+    public class DrawingPane extends JPanel implements Printable {
 
-		@Override
-		protected void paintComponent(Graphics graphic) {
-			super.paintComponent(graphic);
-			if (browser.hasActual()) {
-				graphic.setColor(Color.BLACK);
-				for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
-					for (Integer j = 1; j <= browser.getActual()
-							.getBoardHeight(); j++) {
-						graphic.drawString(j.toString() + ". ", 10,
-								30 + (j - 1) * 30);
-						if (browser.getActual().checkBoardCell(i, j - 1)) {
-							graphic.drawRect(35 + i * 30, 10 + (j - 1) * 30,
-									30, 30);
-						}
-					}
-				}
-				int maxWidth = browser.getActual().getBoardWidth() * 30 + 45;
-				int j = 0;
-				for (String entry : easyStrategy.printAllEntries(
-						browser.getActual()).split("\n")) {
-					graphic.drawString(entry, 10, browser.getActual()
-							.getBoardHeight() * 30 + 30 + j * 15);
-					if (maxWidth < entry.length() * 7) {
-						maxWidth = entry.length() * 7;
-					}
-					j++;
-				}
-				if (this.getSize().width != maxWidth
-						|| this.getSize().height != j * 16
-								+ browser.getActual().getBoardHeight() * 30
-								+ 18) {
-					this.setPreferredSize(new Dimension(maxWidth, j * 16
-							+ browser.getActual().getBoardHeight() * 30 + 18));
-				}
-			}
-		}
+        @Override
+        protected void paintComponent(Graphics graphic) {
+            super.paintComponent(graphic);
+            if (browser.hasActual()) {
+                graphic.setColor(Color.BLACK);
+                for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
+                    for (Integer j = 1; j <= browser.getActual()
+                            .getBoardHeight(); j++) {
+                        graphic.drawString(j.toString() + ". ", 10,
+                                30 + (j - 1) * 30);
+                        if (browser.getActual().checkBoardCell(i, j - 1)) {
+                            graphic.drawRect(35 + i * 30, 10 + (j - 1) * 30,
+                                    30, 30);
+                        }
+                    }
+                }
+                int maxWidth = browser.getActual().getBoardWidth() * 30 + 45;
+                int j = 0;
+                for (String entry : hardStrategy.printAllEntries(
+                        browser.getActual()).split("\n")) {
+                    graphic.drawString(entry, 10, browser.getActual()
+                            .getBoardHeight() * 30 + 30 + j * 15);
+                    if (maxWidth < entry.length() * 7) {
+                        maxWidth = entry.length() * 7;
+                    }
+                    j++;
+                }
+                if (this.getSize().width != maxWidth
+                        || this.getSize().height != j * 16
+                        + browser.getActual().getBoardHeight() * 30
+                        + 18) {
+                    this.setPreferredSize(new Dimension(maxWidth, j * 16
+                            + browser.getActual().getBoardHeight() * 30 + 18));
+                }
+            }
+        }
 
-		@Override
-		public int print(Graphics g, PageFormat pf, int page)
-				throws PrinterException {
+        @Override
+        public int print(Graphics g, PageFormat pf, int page)
+                throws PrinterException {
 
-			// We have only one page, and 'page'
-			// is zero-based
-			if (page > 0) {
-				return NO_SUCH_PAGE;
-			}
+            if (page > 0) {
+                return NO_SUCH_PAGE;
+            }
 
-			int constX = 90;
-			int constY = 90;
-			// Now we perform our rendering
-			g.drawString("Crossword", constX, constY);
-			for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
-				for (Integer j = 1; j <= browser.getActual().getBoardHeight(); j++) {
-					g.drawString(j.toString() + ". ", 10 + constX, 30 + (j - 1)
-							* 30 + constY);
-					if (browser.getActual().checkBoardCell(i, j - 1)) {
-						g.drawRect(25 + i * 30 + constX, 10 + (j - 1) * 30
-								+ constY, 30, 30);
-					}
-				}
-			}
-			int j = 0;
-			for (String entry : easyStrategy.printAllEntries(
-					browser.getActual()).split("\n")) {
-				g.drawString(entry, 10 + constX, browser.getActual()
-						.getBoardHeight() * 30 + 30 + j * 15 + constY);
-				j++;
-			}
+            int constX = 90;
+            int constY = 90;
+
+            g.drawString("Crossword", constX, constY);
+            for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
+                for (Integer j = 1; j <= browser.getActual().getBoardHeight(); j++) {
+                    g.drawString(j.toString() + ". ", 10 + constX, 30 + (j - 1)
+                            * 30 + constY);
+                    if (browser.getActual().checkBoardCell(i, j - 1)) {
+                        g.drawRect(25 + i * 30 + constX, 10 + (j - 1) * 30
+                                + constY, 30, 30);
+                    }
+                }
+            }
+            int j = 0;
+            for (String entry : easyStrategy.printAllEntries(
+                    browser.getActual()).split("\n")) {
+                g.drawString(entry, 10 + constX, browser.getActual()
+                        .getBoardHeight() * 30 + 30 + j * 15 + constY);
+                j++;
+            }
 
 			// tell the caller that this page is part
-			// of the printed document
-			return PAGE_EXISTS;
-		}
-	}
+            // of the printed document
+            return PAGE_EXISTS;
+        }
 
-	/**
-	 * Creates new form ProgramNB
-	 */
-	public ProgramNB() {
-		initComponents();
+        public void paintSolved(Graphics graphic) {
+            super.paintComponent(graphic);
+            if (browser.hasActual()) {
+                graphic.setColor(Color.BLACK);
+                for (int i = 0; i < browser.getActual().getBoardWidth(); i++) {
+                    for (Integer j = 1; j <= browser.getActual()
+                            .getBoardHeight(); j++) {
+                        graphic.drawString(j.toString() + ". ", 10,
+                                30 + (j - 1) * 30);
+                        if (browser.getActual().checkBoardCell(i, j - 1)) {
+                            graphic.drawRect(35 + i * 30, 10 + (j - 1) * 30,
+                                    30, 30);
+                            graphic.drawString(browser.getActual().getBoardCopy().getCell(i, j - 1).getContent(), i * 30 + 46, (j - 1) * 30 + 30
+                            );
+                        }
+                    }
+                }
+                int maxWidth = browser.getActual().getBoardWidth() * 30 + 45;
+                int j = 0;
+                for (String entry : hardStrategy.printAllEntries(
+                        browser.getActual()).split("\n")) {
+                    graphic.drawString(entry, 10, browser.getActual()
+                            .getBoardHeight() * 30 + 30 + j * 15);
+                    if (maxWidth < entry.length() * 7) {
+                        maxWidth = entry.length() * 7;
+                    }
+                    j++;
+                }
+                if (this.getSize().width != maxWidth
+                        || this.getSize().height != j * 16
+                        + browser.getActual().getBoardHeight() * 30
+                        + 18) {
+                    this.setPreferredSize(new Dimension(maxWidth, j * 16
+                            + browser.getActual().getBoardHeight() * 30 + 18));
+                }
+            }
+        }
+    }
 
-		lastUsedNext = true; // variable says wheather last time was used naext
-								// or not
-		actualizeButtons();
-		drawingPane.setPreferredSize(new Dimension(0, 0)); // TODO why is
-															// that????
-	}
+    /**
+     * Creates new form ProgramNB
+     */
+    public ProgramNB() {
+        initComponents();
 
-	/**
-	 * Function checks and sets buttons to enable or disable state
-	 */
-	public final void actualizeButtons() {
-		if (lastUsedNext) {
-			nextButton.setEnabled(browser.hasNext());
-			prevButton.setEnabled(browser.previousIndex() > 0);
-		} else {
-			prevButton.setEnabled(browser.hasPrevious());
-			nextButton.setEnabled(browser.nextIndex() < browser
-					.getAmountOfCrosswords());
-		}
-		saveButton.setEnabled(browser.hasActual());
-		solveButton.setEnabled(browser.hasActual());
-		printButton.setEnabled(browser.hasActual());
-		toPDFButton.setEnabled(browser.hasActual());
-		if (browser.hasActual()) {
-			showCw();
-		}
-	}
+        actualizeButtons();
+        drawingPane.setPreferredSize(new Dimension(0, 0)); // TODO why is
+        // that????
+    }
 
-	/**
-	 * This method is called from within the constructor to initialize the form.
-	 * WARNING: Do NOT modify this code. The content of this method is always
-	 * regenerated by the Form Editor.
-	 */
-	@SuppressWarnings("unchecked")
+    /**
+     * Function checks and sets buttons to enable or disable state
+     */
+    public final void actualizeButtons() {
+        if (lastUsedNext) {
+            nextButton.setEnabled(browser.hasNext());
+            prevButton.setEnabled(browser.previousIndex() > 0);
+        } else {
+            prevButton.setEnabled(browser.hasPrevious());
+            nextButton.setEnabled(browser.nextIndex() < browser
+                    .getAmountOfCrosswords());
+        }
+        saveButton.setEnabled(browser.hasActual());
+        solveButton.setEnabled(browser.hasActual());
+        printButton.setEnabled(browser.hasActual());
+        toPDFButton.setEnabled(browser.hasActual());
+        if (browser.hasActual()) {
+            showCw();
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
 	// desc="Generated Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
@@ -657,313 +691,303 @@ public class ProgramNB extends javax.swing.JFrame {
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
-	/**
-	 * Action when loadButton pressed - choosing folder with crosswords and
-	 * loading it, exceptions handling
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_loadButtonActionPerformed
-		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int returnVal = fc.showDialog(loadButton, "Open directory");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			try {
-				browser.loadFromFiles(fc.getSelectedFile().getPath(),
-						easyStrategy, easyStrategy);
-				actualizeButtons();
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage(),
-						"Operation failed", JOptionPane.ERROR_MESSAGE);
-			} catch (NullPointerException e) {
-				JOptionPane.showMessageDialog(null, "Wrong file format.",
-						"Operation failed", JOptionPane.ERROR_MESSAGE);
-			} catch (NumberFormatException e) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"Wrong type file found in directory or file name not proper.",
-								"Operation failed", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}// GEN-LAST:event_loadButtonActionPerformed
+    /**
+     * Action when loadButton pressed - choosing folder with crosswords and
+     * loading it, exceptions handling
+     *
+     * @param evt - event
+     */
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_loadButtonActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = fc.showDialog(loadButton, "Open directory");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                browser.loadFromFiles(fc.getSelectedFile().getPath(),
+                        easyStrategy, easyStrategy);
+                actualizeButtons();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Operation failed", JOptionPane.ERROR_MESSAGE);
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(null, "Wrong file format.",
+                        "Operation failed", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane
+                        .showMessageDialog(
+                                null,
+                                "Wrong type file found in directory or file name not proper.",
+                                "Operation failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }// GEN-LAST:event_loadButtonActionPerformed
 
-	/**
-	 * Action when the importButton pressed, choosing database file, handling
-	 * exceptions
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importButtonActionPerformed
-		JFileChooser fc = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt",
-				"txt");
-		fc.setAcceptAllFileFilterUsed(false);
-		fc.setFileFilter(filter);
-		int returnVal = fc.showDialog(importButton, "Import");
+    /**
+     * Action when the importButton pressed, choosing database file, handling
+     * exceptions
+     *
+     * @param evt - event
+     */
+    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importButtonActionPerformed
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt",
+                "txt");
+        fc.setAcceptAllFileFilterUsed(false);
+        fc.setFileFilter(filter);
+        int returnVal = fc.showDialog(importButton, "Import");
 
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			try {
-				browser.setDefaultCwDB(new IntelLiCwDB(fc.getSelectedFile()
-						.getPath()));
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null,
-						"Failed to import database from file.",
-						"Operation failed", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}// GEN-LAST:event_importButtonActionPerformed
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                browser.setDefaultCwDB(new IntelLiCwDB(fc.getSelectedFile()
+                        .getPath()));
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null,
+                        "Failed to import database from file.",
+                        "Operation failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }// GEN-LAST:event_importButtonActionPerformed
 
-	/**
-	 * Action when generateButton pressed, trying to generate crossword
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateButtonActionPerformed
+    /**
+     * Action when generateButton pressed, trying to generate crossword
+     *
+     * @param evt - event
+     */
+    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateButtonActionPerformed
 
-		if (hard.isSelected()) {
-			try {
-				browser.generateCw(
-						Integer.parseInt(columns.getValue().toString()),
-						Integer.parseInt(rows.getValue().toString()),
-						hardStrategy);
-				actualizeButtons();
-			} catch (FailedToGenerateCrosswordException a) {
-				JOptionPane.showMessageDialog(null,
-						"Failed to generate crossword from this database.",
-						"Operation failed", JOptionPane.ERROR_MESSAGE);
-			}
-		} else {
-			try {
-				browser.generateCw(
-						Integer.parseInt(columns.getValue().toString()),
-						Integer.parseInt(rows.getValue().toString()),
-						easyStrategy);
-				actualizeButtons();
-			} catch (FailedToGenerateCrosswordException a) {
-				JOptionPane.showMessageDialog(null,
-						"Failed to generate crossword from this database.",
-						"Operation failed", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}// GEN-LAST:event_generateButtonActionPerformed
+        if (hard.isSelected()) {
+            try {
+                browser.generateCw(
+                        Integer.parseInt(columns.getValue().toString()),
+                        Integer.parseInt(rows.getValue().toString()),
+                        hardStrategy);
+                actualizeButtons();
+            } catch (FailedToGenerateCrosswordException a) {
+                JOptionPane.showMessageDialog(null,
+                        "Failed to generate crossword from this database.",
+                        "Operation failed", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            try {
+                browser.generateCw(
+                        Integer.parseInt(columns.getValue().toString()),
+                        Integer.parseInt(rows.getValue().toString()),
+                        easyStrategy);
+                actualizeButtons();
+            } catch (FailedToGenerateCrosswordException a) {
+                JOptionPane.showMessageDialog(null,
+                        "Failed to generate crossword from this database.",
+                        "Operation failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }// GEN-LAST:event_generateButtonActionPerformed
 
-	/**
-	 * TODO
-	 * 
-	 * @param evt
-	 */
-	private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_solveButtonActionPerformed
-		// TODO add your handling code here:
-	}// GEN-LAST:event_solveButtonActionPerformed
+    /**
+     * TODO
+     *
+     * @param evt
+     */
+    private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_solveButtonActionPerformed
+        drawingPane.paintSolved(drawingPane.getGraphics());
+    }// GEN-LAST:event_solveButtonActionPerformed
 
-	/**
-	 * Action when print button pressed, printing
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_printButtonActionPerformed
-		PrinterJob job = PrinterJob.getPrinterJob();
-		job.setPrintable((Printable) drawingPane);
-		if (job.printDialog()) {
-			try {
-				job.print();
-			} catch (PrinterException ex) {
-				JOptionPane.showMessageDialog(null,
-						"Failed to print crossword.", "Operation failed",
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}// GEN-LAST:event_printButtonActionPerformed
+    /**
+     * Action when print button pressed, printing
+     *
+     * @param evt - event
+     */
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_printButtonActionPerformed
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable((Printable) drawingPane);
+        if (job.printDialog()) {
+            try {
+                job.print();
+            } catch (PrinterException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Failed to print crossword.", "Operation failed",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }// GEN-LAST:event_printButtonActionPerformed
 
-	/**
-	 * Action when prevButton pressed, setting actual crossword to previous
-	 * crossword in list of crosswords; pressing possible only if there's
-	 * previous element
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_prevButtonActionPerformed
-		browser.previous(lastUsedNext);
-		lastUsedNext = false;
-		actualizeButtons();
-	}// GEN-LAST:event_prevButtonActionPerformed
+    /**
+     * Action when prevButton pressed, setting actual crossword to previous
+     * crossword in list of crosswords; pressing possible only if there's
+     * previous element
+     *
+     * @param evt - event
+     */
+    private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_prevButtonActionPerformed
+        browser.previous(lastUsedNext);
+        lastUsedNext = false;
+        actualizeButtons();
+    }// GEN-LAST:event_prevButtonActionPerformed
 
-	/**
-	 * Action when nextButton pressed, setting actual crossword to next
-	 * crossword in list of crosswords; pressing possible only if there's next
-	 * element
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_nextButtonActionPerformed
-		browser.next(lastUsedNext);
-		lastUsedNext = true;
-		actualizeButtons();
-	}// GEN-LAST:event_nextButtonActionPerformed
+    /**
+     * Action when nextButton pressed, setting actual crossword to next
+     * crossword in list of crosswords; pressing possible only if there's next
+     * element
+     *
+     * @param evt - event
+     */
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_nextButtonActionPerformed
+        browser.next(lastUsedNext);
+        lastUsedNext = true;
+        actualizeButtons();
+    }// GEN-LAST:event_nextButtonActionPerformed
 
-	/**
-	 * Action when saveButton pressed, saves actual crossword in choosen
-	 * directory
-	 * 
-	 * @param evt
-	 *            - event
-	 */
-	private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveButtonActionPerformed
-		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		if (evt.getSource() == saveButton) {
-			int returnVal = fc.showDialog(saveButton, "Save in directory");
+    /**
+     * Action when saveButton pressed, saves actual crossword in choosen
+     * directory
+     *
+     * @param evt - event
+     */
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveButtonActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (evt.getSource() == saveButton) {
+            int returnVal = fc.showDialog(saveButton, "Save in directory");
 
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				try {
-					browser.saveActual(fc.getSelectedFile().getPath());
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null,
-							"Failed to save crossword.", "Operation failed",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		}
-	}// GEN-LAST:event_saveButtonActionPerformed
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    browser.saveActual(fc.getSelectedFile().getPath());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to save crossword.", "Operation failed",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }// GEN-LAST:event_saveButtonActionPerformed
 
-	/**
-	 * TODO
-	 * 
-	 * @param evt
-	 */
-	private void toPDFButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_toPDFButtonActionPerformed
+    /**
+     * TODO
+     *
+     * @param evt
+     */
+    private void toPDFButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_toPDFButtonActionPerformed
 
-		Document document = new Document();
-		try {
-			// krok 2
-			PdfWriter.getInstance(document, new FileOutputStream(browser
-					.getActual().getID().toString()
-					+ ".pdf"));
-			// krok 3
-			document.open();
-			// krok 4
-			document.add(null);
-			document.add(new Paragraph("Hello World"));
-		} catch (DocumentException de) {
-			System.err.println(de.getMessage());
-		} catch (IOException ioe) {
-			System.err.println(ioe.getMessage());
-		}
-		// krok 5
-		document.close();
+        Document document = new Document();
+        try {
+            // krok 2
+            PdfWriter.getInstance(document, new FileOutputStream(browser
+                    .getActual().getID().toString()
+                    + ".pdf"));
+            // krok 3
+            document.open();
+            // krok 4
+            document.add(null);
+            document.add(new Paragraph("Hello World"));
+        } catch (DocumentException de) {
+            System.err.println(de.getMessage());
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
+        // krok 5
+        document.close();
 		// JFileChooser fc = new JFileChooser();
-		// fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		// if (evt.getSource() == saveButton) {
-		// int returnVal = fc.showDialog(saveButton, "Save in directory");
-		//
-		// if (returnVal == JFileChooser.APPROVE_OPTION) {
-		// try {
-		// browser.saveActual(fc.getSelectedFile().getPath());
-		// } catch (IOException e) {
-		// JOptionPane.showMessageDialog(null,
-		// "Failed to save crossword.", "Operation failed",
-		// JOptionPane.ERROR_MESSAGE);
-		// }
-		// }
-		// }
-	}// GEN-LAST:event_toPDFButtonActionPerformed
+        // fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        // if (evt.getSource() == saveButton) {
+        // int returnVal = fc.showDialog(saveButton, "Save in directory");
+        //
+        // if (returnVal == JFileChooser.APPROVE_OPTION) {
+        // try {
+        // browser.saveActual(fc.getSelectedFile().getPath());
+        // } catch (IOException e) {
+        // JOptionPane.showMessageDialog(null,
+        // "Failed to save crossword.", "Operation failed",
+        // JOptionPane.ERROR_MESSAGE);
+        // }
+        // }
+        // }
+    }// GEN-LAST:event_toPDFButtonActionPerformed
 
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
-	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
 		// <editor-fold defaultstate="collapsed"
-		// desc=" Look and feel setting code (optional) ">
+        // desc=" Look and feel setting code (optional) ">
 		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the
-		 * default look and feel. For details see
-		 * http://download.oracle.com/javase
-		 * /tutorial/uiswing/lookandfeel/plaf.html
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
-					.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase
+         * /tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
+                    .getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
 
-				}
-			}
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException
-				| javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(ProgramNB.class.getName()).log(
-					java.util.logging.Level.SEVERE, null, ex);
-		}
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ProgramNB.class.getName()).log(
+                    java.util.logging.Level.SEVERE, null, ex);
+        }
 		// </editor-fold>
 
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
 
-			@Override
-			public void run() {
-				try {
-					browser = new CwBrowser(null);
-					new ProgramNB().setVisible(true);
-				} catch (IOException e) {
+            @Override
+            public void run() {
+                try {
+                    browser = new CwBrowser(null);
+                    new ProgramNB().setVisible(true);
+                } catch (IOException e) {
 
-					Object[] options = { "Yes", "No", };
+                    Object[] options = {"Yes", "No",};
 
-					int n = JOptionPane
-							.showOptionDialog(
-									null,
-									"Failed to load default data base. Do you want to choose it manually?",
-									"Failed to start",
-									JOptionPane.YES_NO_OPTION,
-									JOptionPane.ERROR_MESSAGE, null, options,
-									options[0]);
+                    int n = JOptionPane
+                            .showOptionDialog(
+                                    null,
+                                    "Failed to load default data base. Do you want to choose it manually?",
+                                    "Failed to start",
+                                    JOptionPane.YES_NO_OPTION,
+                                    JOptionPane.ERROR_MESSAGE, null, options,
+                                    options[0]);
 
-					if (n == 0) {
-						JFileChooser fc = new JFileChooser();
-						int returnVal = fc.showDialog(fc, "Import database");
-						if (returnVal == JFileChooser.APPROVE_OPTION) {
-							try {
-								browser = new CwBrowser(fc.getSelectedFile()
-										.getAbsolutePath());
-								new ProgramNB().setVisible(true);
+                    if (n == 0) {
+                        JFileChooser fc = new JFileChooser();
+                        int returnVal = fc.showDialog(fc, "Import database");
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            try {
+                                browser = new CwBrowser(fc.getSelectedFile()
+                                        .getAbsolutePath());
+                                new ProgramNB().setVisible(true);
 
-							} catch (IOException a) {
-								JOptionPane.showMessageDialog(null,
-										"Failed to load data base.",
-										"Failed to start",
-										JOptionPane.ERROR_MESSAGE);
-							}
-						} else {
-							JOptionPane.showMessageDialog(null,
-									"Operation canceled, program halts.",
-									"Failed to start",
-									JOptionPane.ERROR_MESSAGE);
-						}
-					} else {
-						JOptionPane.showMessageDialog(null,
-								"Operation canceled, program halts.",
-								"Failed to start", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-		});
-	}
+                            } catch (IOException a) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Failed to load data base.",
+                                        "Failed to start",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "Operation canceled, program halts.",
+                                    "Failed to start",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Operation canceled, program halts.",
+                                "Failed to start", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+    }
 
-	private static CwBrowser browser; // crosswords browser
-	private static final EasyStrategy easyStrategy = new EasyStrategy(); // strategy
-        private static final HardStrategy hardStrategy = new HardStrategy(); //strategy
-																			// instance
-	private boolean lastUsedNext = true; // which button last pressed - next or
-											// prev
+    private static CwBrowser browser; // crosswords browser
+    private static final EasyStrategy easyStrategy = new EasyStrategy(); // strategy
+    private static final HardStrategy hardStrategy = new HardStrategy(); //strategy
+    // instance
+    private boolean lastUsedNext = true; // which button last pressed - next or
+    // prev
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JPanel browsePanel;
 	private javax.swing.ButtonGroup buttonStrategyGropu;
@@ -971,7 +995,7 @@ public class ProgramNB extends javax.swing.JFrame {
 	private javax.swing.JLabel columnsLabel;
 	private javax.swing.JPanel crosswordPanel;
 	private javax.swing.JScrollPane crosswordSPanel;
-	private javax.swing.JPanel drawingPane;
+	private DrawingPane drawingPane;
 	private javax.swing.JRadioButton easy;
 	private javax.swing.JPanel fromFilePanel;
 	private javax.swing.JButton generateButton;
