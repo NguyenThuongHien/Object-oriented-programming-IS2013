@@ -113,7 +113,7 @@ public class Pesel {
 	 */
 	@Override
 	public String toString() {
-		return "Pesel [pesel=" + Arrays.toString(pesel) + "]";
+		return Arrays.toString(pesel);
 	}
 	
 	
