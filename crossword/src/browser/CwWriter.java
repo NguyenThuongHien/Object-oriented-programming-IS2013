@@ -53,8 +53,8 @@ public class CwWriter implements Writer {
             } else {
                 cwFile.write("HARD\n");
             }
-            cwFile.write(crossword.getBoardWidth() + " "
-                    + crossword.getBoardHeight() + "\n");
+            cwFile.write(crossword.getBoardCopy().getWidth() + " "
+                    + crossword.getBoardCopy().getHeight() + "\n");
             Iterator<CwEntry> iter = crossword.getROEntryIter();
             while (iter.hasNext()) {
                 cwFile.write(iter.next().toString());

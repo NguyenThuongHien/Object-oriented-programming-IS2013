@@ -7,7 +7,6 @@
 package board;
 
 import java.util.LinkedList;
-import java.util.regex.Pattern;
 
 /**
  * @author wukat

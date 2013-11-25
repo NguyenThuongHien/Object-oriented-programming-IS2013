@@ -31,7 +31,7 @@ public class EasyStrategy extends Strategy {
      * @param crossword - input crossword
      * @return true if password is OK
      */
-    private boolean checkPassword(Crossword crossword) {
+    private boolean checkPassword(Crossword crossword, Board board) {
         char lettersOfPassword[] = password.toCharArray();
         Map<Character, Integer> numberOfCharUse = new HashMap<>();
         for (char letter : lettersOfPassword) {
@@ -48,8 +48,7 @@ public class EasyStrategy extends Strategy {
                         .findAll(
                                 key
                                 + ".{1,"
-                                + Integer.toString(crossword
-                                        .getBoardWidth() - 1) + "}").size() <= numberOfCharUse
+                                + Integer.toString(board.getWidth() - 1) + "}").size() <= numberOfCharUse
                         .get(key)) {
                     return false;
                 }
@@ -59,8 +58,7 @@ public class EasyStrategy extends Strategy {
                         .findAll(
                                 key
                                 + ".{1,"
-                                + Integer.toString(crossword
-                                        .getBoardWidth() - 1) + "}").size() < numberOfCharUse
+                                + Integer.toString(board.getWidth() - 1) + "}").size() < numberOfCharUse
                         .get(key)) {
                     return false;
                 }
@@ -76,23 +74,23 @@ public class EasyStrategy extends Strategy {
      * @return password
      * @throws FailedToGenerateCrosswordException
      */
-    private CwEntry generatePassword(Crossword crossword) throws FailedToGenerateCrosswordException {
+    private CwEntry generatePassword(Crossword crossword, Board board) throws FailedToGenerateCrosswordException {
         Random random = new Random();
         actualIndex = 0;
         LinkedList<Entry> list = crossword.getCwdb().findAll(
-                crossword.getBoardHeight());
+                board.getHeight());
         if (list.isEmpty()) {
             throw new FailedToGenerateCrosswordException("No matching words");
         }
         Entry temp = list.get(random.nextInt(list.size()));
         list.remove(temp);
         password = temp.getWord();
-        while (!checkPassword(crossword) && list.size() > 0) {
+        while (!checkPassword(crossword, board) && list.size() > 0) {
             temp = list.get(random.nextInt(list.size()));
             list.remove(temp);
             password = temp.getWord();
         }
-        if (list.isEmpty() && !checkPassword(crossword)) {
+        if (list.isEmpty() && !checkPassword(crossword, board)) {
             throw new FailedToGenerateCrosswordException("No matching words");
         }
         return new CwEntry(temp, 0, 0, CwEntry.Direction.VERT);
@@ -108,17 +106,16 @@ public class EasyStrategy extends Strategy {
     public CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException {
         CwEntry rand = null;
         Random random = new Random();
+        Board board = crossword.getBoardCopy();
         if (crossword.isEmpty()) {
-            rand = generatePassword(crossword);
+            rand = generatePassword(crossword, board);
         } else if (actualIndex < password.length()) {
-            actualPattern = password.charAt(actualIndex) + ".{1,"
-                    + Integer.toString(crossword.getBoardWidth() - 1) + "}";
-            LinkedList<Entry> tempList = crossword.getCwdb().findAll(actualPattern);
+            LinkedList<Entry> tempList = crossword.getCwdb().findAll(password.charAt(actualIndex) + ".{1,"
+                    + Integer.toString(board.getWidth() - 1) + "}");
             Entry temp;
             do {
                 temp = tempList.get(random.nextInt(tempList.size()));
-            }
-            while (crossword.contains(temp.getWord()));
+            } while (crossword.contains(temp.getWord()));
             rand = new CwEntry(temp, 0,
                     actualIndex, CwEntry.Direction.HORIZ);
             actualIndex++;
@@ -144,25 +141,5 @@ public class EasyStrategy extends Strategy {
                         entry.getWord().charAt(x));
             }
         }
-    }
-
-    /**
-     * Function prints all entries except password
-     *
-     * @param crossword
-     * @return string with output
-     */
-    public String printAllEntries(Crossword crossword) {
-        String resultHor = "Horizontally: \n";
-        Iterator<CwEntry> iter = crossword.getROEntryIter();
-        int k = 1;
-        while (iter.hasNext()) {
-            CwEntry temp = iter.next();
-            if (temp.getDir() == CwEntry.Direction.HORIZ) {
-                resultHor = resultHor + k + ". " + temp.getClue() + "\n";
-                k++;
-            }
-        }
-        return resultHor;
     }
 }

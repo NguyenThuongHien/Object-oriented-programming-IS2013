@@ -1,5 +1,6 @@
 /**
  * Strategy.java
+ *
  * @author - wukat
  * @data - 18 paź 2013
  */
@@ -10,26 +11,26 @@ import dictionary.CwEntry;
 
 /**
  * @author wukat
- * 
+ *
  */
 public abstract class Strategy {
-	/**
-	 * Finds entry that can be put into the crossword
-	 * 
-	 * @param cw
-	 *            - crossword class
-	 * @throws FailedToGenerateCrosswordException
-	 * @return crossword entry
-	 */
-	public abstract CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException;
+    public static final int hardStrategyID = 1;
+    public static final int easyStrategyID = 0;
+    
+    /**
+     * Finds entry that can be put into the crossword
+     *
+     * @param crossword - input crossword
+     * @throws FailedToGenerateCrosswordException
+     * @return crossword entry
+     */
+    public abstract CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException;
 
-	/**
-	 * Updates board, inserts crossword entry to board
-	 * 
-	 * @param board
-	 *            - board to update
-	 * @param entry
-	 *            - value to insert
-	 */
-	public abstract void updateBoard(Board board, CwEntry entry);
+    /**
+     * Updates board, inserts crossword entry to board
+     *
+     * @param board - board to update
+     * @param entry - value to insert
+     */
+    public abstract void updateBoard(Board board, CwEntry entry);
 }

@@ -13,7 +13,6 @@ import board.Crossword;
 import board.Strategy;
 import dictionary.CwEntry;
 import dictionary.Entry;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -89,7 +88,7 @@ public class HardStrategy extends Strategy {
                 temp = startingCells.get(rand.nextInt(startingCells.size()));
             }
             if (temp.getAbility(BoardCell.beg, BoardCell.ver)) {
-                int size = crossword.getBoardHeight() - board.getVerPosition(temp);
+                int size = board.getHeight() - board.getVerPosition(temp);
                 while (size > 1 && !flag) {
                     if (checkAbilities(size, board, BoardCell.ver, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.ver, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
                         LinkedList<Entry> matched = crossword.getCwdb().findAll(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp), board.getVerPosition(temp) + size));
@@ -100,13 +99,13 @@ public class HardStrategy extends Strategy {
                                 toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.VERT);
                             }
                             matched.remove(found);
-                        }
+                        } 
                     }
                     size--;
                 }
             }
             if (!flag && temp.getAbility(BoardCell.beg, BoardCell.hor)) {
-                int size = crossword.getBoardWidth() - board.getHorPosition(temp);
+                int size = board.getWidth() - board.getHorPosition(temp);
                 while (size > 1 && !flag) {
                     if (checkAbilities(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
                         LinkedList<Entry> matched =  crossword.getCwdb().findAll(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp) + size, board.getVerPosition(temp)));
@@ -117,7 +116,7 @@ public class HardStrategy extends Strategy {
                                 toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.HORIZ);
                             }
                             matched.remove(found);
-                        }
+                        } 
                     }
                     size--;
                 }
@@ -134,6 +133,9 @@ public class HardStrategy extends Strategy {
     public void updateBoard(Board board, CwEntry entry
     ) {
         if (entry.getDir() == CwEntry.Direction.VERT) {
+            if (entry.getY() > 0 && entry.getX() < board.getWidth() - 1) {
+                board.getCell(entry.getX() + 1, entry.getY() - 1).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
+            }
             if (entry.getY() > 0) {
                 board.getCell(entry.getX(), entry.getY() - 1).setFalse();
             }
@@ -162,6 +164,9 @@ public class HardStrategy extends Strategy {
                 }
             }
         } else {
+            if (entry.getY() < board.getHeight() - 1 && entry.getX() > 0) {
+                board.getCell(entry.getX() - 1, entry.getY() + 1).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
+            }
             if (entry.getX() > 0) {
                 board.getCell(entry.getX() - 1, entry.getY()).setFalse();
             }
@@ -190,35 +195,5 @@ public class HardStrategy extends Strategy {
                 }
             }
         }
-    }
-
-    /**
-     * Function prints all entries
-     *
-     * @param crossword
-     * @return string with output
-     */
-    public String printAllEntries(Crossword crossword) {
-        String result = "Horizontally: \n";
-        Iterator<CwEntry> iter = crossword.getROEntryIter();
-        int k = 1;
-        while (iter.hasNext()) {
-            CwEntry temp = iter.next();
-            if (temp.getDir() == CwEntry.Direction.HORIZ) {
-                result = result + k + ". " + temp.getClue() + "\n";
-                k++;
-            }
-        }
-        result = result + "Vertically: \n";
-        iter = crossword.getROEntryIter();
-        k = 1;
-        while (iter.hasNext()) {
-            CwEntry temp = iter.next();
-            if (temp.getDir() == CwEntry.Direction.VERT) {
-                result = result + k + ". " + temp.getClue() + "\n";
-                k++;
-            }
-        }
-        return result;
     }
 }

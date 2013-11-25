@@ -77,12 +77,12 @@ public class Crossword {
             String temp = reader.readLine();
             switch (temp) {
                 case "EASY":
-                    this.strategyID = 0;
+                    this.strategyID = Strategy.easyStrategyID;
                     strategy = easyStrategy;
                     break;
                 case "HARD":
                     strategy = hardStraategy;
-                    this.strategyID = 1;
+                    this.strategyID = Strategy.hardStrategyID;
                     break;
                 default:
                     throw new NullPointerException();
@@ -122,30 +122,12 @@ public class Crossword {
     }
 
     /**
-     * entries setter
-     *
-     * @param entries the entries to set
-     */
-    private void setEntries(LinkedList<CwEntry> entries) {
-        this.entries = entries;
-    }
-
-    /**
      * Getter
      *
      * @return the board
      */
     private Board getBoard() {
         return board;
-    }
-
-    /**
-     * board setter
-     *
-     * @param board the board to set
-     */
-    private void setBoard(Board board) {
-        this.board = board;
     }
 
     /**
@@ -269,9 +251,9 @@ public class Crossword {
             throws FailedToGenerateCrosswordException {
         CwEntry entry;
         if (strategy instanceof EasyStrategy) {
-            setStrategyID(0);
+            setStrategyID(Strategy.easyStrategyID);
         } else {
-            setStrategyID(1);
+            setStrategyID(Strategy.hardStrategyID);
         }
         while ((entry = strategy.findEntry(this)) != null) {
             addCwEntry(entry, strategy);

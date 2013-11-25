@@ -1,22 +1,27 @@
 /**
  * CwBrower.java
+ *
  * @author - wukat
  * @data - 2 lis 2013
  */
 package browser;
 
 import Exceptions.FailedToGenerateCrosswordException;
+import Strategies.EasyStrategy;
+import Strategies.HardStrategy;
 import board.Crossword;
 import board.Strategy;
+import dictionary.CwEntry;
 import dictionary.IntelLiCwDB;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 /**
  * @author wukat
- * 
+ *
  */
 public class CwBrowser {
 
@@ -24,10 +29,20 @@ public class CwBrowser {
     private ListIterator<Crossword> iter; // vector iterator
     private Crossword actual; // actual crossword
     private IntelLiCwDB defaultCwDB;
+    private final EasyStrategy easyStrategy;
+    private final HardStrategy hardStrategy;
+
+    public EasyStrategy getEasyStrategy() {
+        return easyStrategy;
+    }
+
+    public HardStrategy getHardStrategy() {
+        return hardStrategy;
+    }
 
     /**
      * Setter
-     * 
+     *
      * @param defaultCwDB
      */
     public void setDefaultCwDB(IntelLiCwDB defaultCwDB) {
@@ -36,7 +51,7 @@ public class CwBrowser {
 
     /**
      * getter
-     * 
+     *
      * @return actual crossword
      */
     public Crossword getActual() {
@@ -44,11 +59,10 @@ public class CwBrowser {
     }
 
     /**
-     * 
+     *
      * Constructor
-     * 
-     * @param cwDBpath
-     *            - path to database
+     *
+     * @param cwDBpath - path to database
      * @throws IOException
      */
     public CwBrowser(String cwDBpath) throws IOException {
@@ -59,23 +73,27 @@ public class CwBrowser {
         crosswords = new LinkedList<>();
         iter = crosswords.listIterator();
         actual = null;
+        easyStrategy = new EasyStrategy();
+        hardStrategy = new HardStrategy();
     }
 
     /**
      * Generates crossword (actual)
-     * 
-     * @param width
-     *            - board's width
-     * @param height
-     *            - board's height
-     * @param str
-     *            - strategy
+     *
+     * @param width - board's width
+     * @param height - board's height
+     * @param strategyID
      * @throws FailedToGenerateCrosswordException
      */
-    public void generateCw(int width, int height, Strategy str)
+    public void generateCw(int width, int height, int strategyID)
             throws FailedToGenerateCrosswordException {
         Crossword temp = new Crossword(width, height, defaultCwDB);
-        temp.generate(str);
+        temp.setStrategyID(strategyID);
+        if (temp.getStrategyID() == Strategy.easyStrategyID) {
+            temp.generate(easyStrategy);
+        } else {
+            temp.generate(hardStrategy);
+        }
         actual = temp;
         crosswords.add(actual);
         iter = crosswords.listIterator();
@@ -86,9 +104,8 @@ public class CwBrowser {
 
     /**
      * Next crossword
-     * 
-     * @param lastUsedNext
-     *            - if before was used NEXTBUTTON
+     *
+     * @param lastUsedNext - if before was used NEXTBUTTON
      */
     public void next(boolean lastUsedNext) {
         if (lastUsedNext) {
@@ -103,7 +120,7 @@ public class CwBrowser {
 
     /**
      * Iter.hasNext()
-     * 
+     *
      * @return
      */
     public boolean hasNext() {
@@ -112,9 +129,8 @@ public class CwBrowser {
 
     /**
      * Previous crossword
-     * 
-     * @param lastUsedNext
-     *            - if before was used NEXTBUTTON
+     *
+     * @param lastUsedNext - if before was used NEXTBUTTON
      */
     public void previous(boolean lastUsedNext) {
         if (lastUsedNext) {
@@ -127,6 +143,7 @@ public class CwBrowser {
 
     /**
      * iter.hasPrevious()
+     *
      * @return
      */
     public boolean hasPrevious() {
@@ -135,6 +152,7 @@ public class CwBrowser {
 
     /**
      * Checks if browser has actual crossword
+     *
      * @return logical value
      */
     public boolean hasActual() {
@@ -143,6 +161,7 @@ public class CwBrowser {
 
     /**
      * Index
+     *
      * @return
      */
     public int getIndexOfIterator() {
@@ -151,6 +170,7 @@ public class CwBrowser {
 
     /**
      * Next index iterator
+     *
      * @return
      */
     public int nextIndex() {
@@ -159,6 +179,7 @@ public class CwBrowser {
 
     /**
      * Previous element index
+     *
      * @return
      */
     public int previousIndex() {
@@ -167,6 +188,7 @@ public class CwBrowser {
 
     /**
      * Amount of crossword
+     *
      * @return
      */
     public int getAmountOfCrosswords() {
@@ -175,6 +197,7 @@ public class CwBrowser {
 
     /**
      * Saves actual crossword in file
+     *
      * @param folderPath
      * @throws IOException
      */
@@ -187,17 +210,47 @@ public class CwBrowser {
 
     /**
      * Loads crosswords from given folder
+     *
      * @param folderPath
-     * @param easyStrategy
-     * @param hardStrategy
-     * @throws IOException 
+     * @throws IOException
      */
-    public void loadFromFiles(String folderPath, Strategy easyStrategy, Strategy hardStrategy) throws IOException, NullPointerException {
+    public void loadFromFiles(String folderPath) throws IOException, NullPointerException {
         CwReader reader = new CwReader(folderPath);
         crosswords.addAll(reader.getAllCws(easyStrategy, hardStrategy));
         iter = crosswords.listIterator();
         while (iter.hasNext()) {
             actual = iter.next();
         }
+    }
+
+    /**
+     * Function prints all entries
+     *
+     * @return string with output
+     */
+    public String printAllEntries() {
+        String result = "Horizontally: \n";
+        Iterator<CwEntry> itera = getActual().getROEntryIter();
+        int k = 1;
+        while (itera.hasNext()) {
+            CwEntry temp = itera.next();
+            if (temp.getDir() == CwEntry.Direction.HORIZ) {
+                result = result + k + ". " + temp.getClue() + "\n";
+                k++;
+            }
+        }
+        if (getActual().getStrategyID() == Strategy.hardStrategyID) {
+            result = result + "Vertically: \n";
+            itera = getActual().getROEntryIter();
+            k = 1;
+            while (itera.hasNext()) {
+                CwEntry temp = itera.next();
+                if (temp.getDir() == CwEntry.Direction.VERT) {
+                    result = result + k + ". " + temp.getClue() + "\n";
+                    k++;
+                }
+            }
+        }
+        return result;
     }
 }
