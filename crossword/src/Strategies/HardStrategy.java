@@ -23,13 +23,6 @@ import java.util.Random;
  */
 public class HardStrategy extends Strategy {
 
-    /**
-     * Constructor
-     */
-    public HardStrategy() {
-        // TODO Auto-generated constructor stub
-    }
-
     private Boolean checkAbilities(int size, Board board, int dir, int positionVer, int positionHor) {
         if (dir == BoardCell.ver) {
             for (int i = positionVer + 1; i < positionVer + size - 1; i++) {
@@ -87,25 +80,26 @@ public class HardStrategy extends Strategy {
         while (startingCells.size() > 0 && !flag) {
             BoardCell temp;
             if (crossword.isEmpty()) {
-                temp = board.getCell(0, 0);
-            }
-            else
+                if (rand.nextBoolean()) {
+                    temp = board.getCell(0, rand.nextInt(board.getHeight()));
+                } else {
+                    temp = board.getCell(rand.nextInt(board.getWidth()), 0);
+                }
+            } else {
                 temp = startingCells.get(rand.nextInt(startingCells.size()));
-            System.out.println("Komorka");
-            System.out.println(board.getHorPosition(temp));
-            System.out.println(board.getVerPosition(temp));
+            }
             if (temp.getAbility(BoardCell.beg, BoardCell.ver)) {
                 int size = crossword.getBoardHeight() - board.getVerPosition(temp);
                 while (size > 1 && !flag) {
-                    System.out.println(size);
-                    System.out.println("ver");
                     if (checkAbilities(size, board, BoardCell.ver, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.ver, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
-                        Entry found = crossword.getCwdb().getRandom(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp), board.getVerPosition(temp) + size).toString());
-                        if (found != null) {
+                        LinkedList<Entry> matched = crossword.getCwdb().findAll(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp), board.getVerPosition(temp) + size));
+                        while (matched.size() > 0 && !flag) {
+                            Entry found = matched.get(rand.nextInt(matched.size()));
                             if (!crossword.contains(found.getWord())) {
                                 flag = Boolean.TRUE;
                                 toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.VERT);
                             }
+                            matched.remove(found);
                         }
                     }
                     size--;
@@ -114,22 +108,21 @@ public class HardStrategy extends Strategy {
             if (!flag && temp.getAbility(BoardCell.beg, BoardCell.hor)) {
                 int size = crossword.getBoardWidth() - board.getHorPosition(temp);
                 while (size > 1 && !flag) {
-                    System.out.println(size);
-                    System.out.println("hor");
                     if (checkAbilities(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
-                        Entry found = crossword.getCwdb().getRandom(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp) + size, board.getVerPosition(temp)).toString());
-                        if (found != null) {
-                            flag = Boolean.TRUE;
-                            toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.HORIZ);
+                        LinkedList<Entry> matched =  crossword.getCwdb().findAll(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp) + size, board.getVerPosition(temp)));
+                        while (matched.size() > 0 && !flag) {
+                            Entry found = matched.get(rand.nextInt(matched.size()));
+                            if (!crossword.contains(found.getWord())) {
+                                flag = Boolean.TRUE;
+                                toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.HORIZ);
+                            }
+                            matched.remove(found);
                         }
                     }
                     size--;
                 }
             }
             startingCells.remove(temp);
-        }
-        if (toReturn != null) {
-            System.out.println(toReturn.toString());
         }
         return toReturn;
     }
@@ -198,9 +191,9 @@ public class HardStrategy extends Strategy {
             }
         }
     }
-    
+
     /**
-     * Function prints all entries except password
+     * Function prints all entries
      *
      * @param crossword
      * @return string with output
