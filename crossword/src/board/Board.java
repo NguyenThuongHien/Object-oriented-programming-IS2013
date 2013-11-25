@@ -175,7 +175,7 @@ public class Board {
      * @param toy - end in y axe
      * @return pattern
      */
-    public Pattern createPattern(int fromx, int fromy, int tox, int toy) {
+    public String createPattern(int fromx, int fromy, int tox, int toy) {
         String pattern = "";
         if (fromx == tox) {
             for (int i = fromy; i < toy; i++) {
@@ -194,6 +194,6 @@ public class Board {
                 }
             }
         }
-        return Pattern.compile(pattern);
+        return pattern;
     }
 }
