@@ -22,12 +22,12 @@ public abstract class Strategy {
      *
      * @param crossword - input crossword
      * @throws FailedToGenerateCrosswordException
-     * @return crossword entry
+     * @return crossword entry or null if there's no matching
      */
     public abstract CwEntry findEntry(Crossword crossword) throws FailedToGenerateCrosswordException;
 
     /**
-     * Updates board, inserts crossword entry to board
+     * Updates board, inserts crossword entry to board and changes abilities of cells
      *
      * @param board - board to update
      * @param entry - value to insert
