@@ -31,10 +31,9 @@ import java.util.Iterator;
  */
 public class CwWriter implements Writer {
 
-    private final File file; // folder
+    private final File file; // directory
 
     /**
-     *
      * Constructor
      *
      * @param path - path to destination folder
@@ -82,6 +81,13 @@ public class CwWriter implements Writer {
         return new Long(new Date().getTime());
     }
 
+    /**
+     * Creates PDF with given crossword
+     * 
+     * @param crossword
+     * @throws DocumentException
+     * @throws IOException 
+     */
     public void createCrossowrdPDF(Crossword crossword) throws DocumentException, IOException {
         Document document = new Document();
 

@@ -1,8 +1,3 @@
-/**
- * CwReader.java
- * @author - wukat
- * @data - 31 paź 2013
- */
 package browser;
 
 import board.Crossword;
