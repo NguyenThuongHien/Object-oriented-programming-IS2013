@@ -22,51 +22,39 @@ import java.util.LinkedList;
  */
 public class Crossword {
 
-    private LinkedList<CwEntry> entries; // list of
-    // entries
-    // in
-    // crossword
+    private LinkedList<CwEntry> entries; // list of entries in crossword
     private Board board; // crossword's board
     private IntelLiCwDB cwdb = null; // crossword's intelligent database
-    private int strategyID = 0;
-
-    public int getStrategyID() {
-        return strategyID;
-    }
-
-    public void setStrategyID(int strategyID) {
-        this.strategyID = strategyID;
-    }
-
+    private int strategyID = 0; // id of strategy
     private final Long ID; // ID, default set to -1
 
     /**
-     *
      * Constructor
      *
      * @param width - width of board
      * @param height - height of board
-     * @param cwDB - data base
+     * @param cwDB - database
+     * @param strategyID - strategy ID (0 or 1)
      */
-    public Crossword(int width, int height, IntelLiCwDB cwDB) {
+    public Crossword(int width, int height, IntelLiCwDB cwDB, int strategyID) {
         entries = new LinkedList<>();
         board = new Board(width, height);
         cwdb = cwDB;
         this.ID = new Long(-1);
+        this.strategyID = strategyID;
     }
 
     /**
-     *
-     * Constructor - crossword from file, format: width, height \n, filename of
+     * Constructor - crossword from file, format: strategy (EASY/HARD) \n, width, height \n, filename of
      * cwDB \n, CwEntries;
      *
-     * @param ID
-     * @param f
+     * @param ID - name of file (should be parsed to long number)
+     * @param f - file with crossword
      * @param easyStrategy
      * @param hardStraategy
      *
-     * @throws IOException
-     * @throws NullPointerException
+     * @throws IOException if file is wrong
+     * @throws NullPointerException if format of file is wrong
      */
     public Crossword(Long ID, File f, Strategy easyStrategy,
             Strategy hardStraategy) throws IOException, NullPointerException {
@@ -99,17 +87,37 @@ public class Crossword {
                                 reader.readLine(), Integer.parseInt(splited[0]),
                                 Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.HORIZ), strategy);
+                        strategyID = Strategy.hardStrategyID;
                         break;
                     case "VERT":
                         addCwEntry(new CwEntry(reader.readLine(),
                                 reader.readLine(), Integer.parseInt(splited[0]),
                                 Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.VERT), strategy);
+                        strategyID = Strategy.easyStrategyID;
                         break;
                 }
             }
         }
 
+    }
+
+    /**
+     * Strategy id getter
+     *
+     * @return strategy ID - 0 or 1
+     */
+    public int getStrategyID() {
+        return strategyID;
+    }
+
+    /**
+     * Strategy id setter
+     *
+     * @param strategyID - value to set, should bo 0 or 1
+     */
+    public void setStrategyID(int strategyID) {
+        this.strategyID = strategyID;
     }
 
     /**
@@ -205,8 +213,8 @@ public class Crossword {
     /**
      * Checks if board cell is not empty
      *
-     * @param i
-     * @param j
+     * @param i - column
+     * @param j - row
      * @return logical value
      */
     public boolean checkBoardCell(int i, int j) {
@@ -217,7 +225,7 @@ public class Crossword {
      * Function checks if crossword contains given word
      *
      * @param word - word to find
-     * @return true if contains
+     * @return true if contains, false otherwise
      */
     public boolean contains(String word) {
         java.util.ListIterator<CwEntry> iter = getEntries().listIterator();
@@ -258,10 +266,13 @@ public class Crossword {
         while ((entry = strategy.findEntry(this)) != null) {
             addCwEntry(entry, strategy);
         }
+        if (entry == null && entries.size() == 0) {
+            throw new FailedToGenerateCrosswordException("No entries found");
+        }
     }
-    
+
     /**
-     * Function prints all entries
+     * Function prints all entries (divided to vertical and horizontal)
      *
      * @return string with output
      */
