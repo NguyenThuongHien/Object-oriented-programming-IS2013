@@ -106,7 +106,7 @@ public class Board {
     }
 
     /**
-     * Sets ability to false in places like corners and others.
+     * Sets ability to false in places like corners and at borders.
      */
     private void setAllAbilitiesAtTheBeginning() {
         for (int i = 0; i < getWidth(); i++) {
@@ -134,7 +134,7 @@ public class Board {
     /**
      * Gets cells in which word can start
      *
-     * @return list of cells
+     * @return list of cells with beg ability
      */
     public LinkedList<BoardCell> getStartCells() {
         LinkedList<BoardCell> startCells = new LinkedList<>();
@@ -172,7 +172,7 @@ public class Board {
      * @param fromy - beginning in y axe
      * @param tox - end in x axe
      * @param toy - end in y axe
-     * @return pattern
+     * @return pattern string
      */
     public String createPattern(int fromx, int fromy, int tox, int toy) {
         String pattern = "";
