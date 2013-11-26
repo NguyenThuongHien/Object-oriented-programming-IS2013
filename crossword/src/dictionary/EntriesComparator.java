@@ -1,8 +1,3 @@
-/**
- * EntriesComparator.java
- * @author - wukat
- * @data - 13 paź 2013
- */
 package dictionary;
 
 import java.util.Comparator;

@@ -21,6 +21,11 @@ public class DrawingPanel extends JPanel implements Printable {
 
     Crossword actual = null;
 
+    /**
+     * Sets actual crossword to paint/print/solve&paint
+     *
+     * @param actual - crossword to set
+     */
     public void setActual(Crossword actual) {
         this.actual = actual;
     }
@@ -141,6 +146,11 @@ public class DrawingPanel extends JPanel implements Printable {
         return PAGE_EXISTS;
     }
 
+    /**
+     * Paints solved crossword on the screen
+     *
+     * @param graphic
+     */
     public void paintSolved(Graphics graphic) {
         graphic.setColor(Color.BLACK);
         for (int i = 0; i < actual.getBoardWidth(); i++) {

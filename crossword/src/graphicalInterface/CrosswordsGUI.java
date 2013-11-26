@@ -1,13 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * ProgramNB.java
- *
- * Created on 2013-11-10, 00:48:03
- */
 package graphicalInterface;
 
 import java.awt.print.PrinterException;
@@ -416,7 +406,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
 
     /**
      * Action when loadButton pressed - choosing folder with crosswords and
-     * loading it, exceptions handling
+     * loading it (exceptions handled)
      *
      * @param evt - event
      */
@@ -444,8 +434,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when the importButton pressed, choosing database file, handling
-     * exceptions
+     * Action when the importButton pressed, choosing database file (exceptions handled)
      *
      * @param evt - event
      */
@@ -469,7 +458,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when generateButton pressed, trying to generate crossword
+     * Action when generateButton pressed, trying to generate crossword (exceptions handled)
      *
      * @param evt - event
      */
@@ -488,7 +477,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * TODO
+     * Action when solve button pressed, painting solved crossword
      *
      * @param evt
      */
@@ -497,7 +486,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when print button pressed, printing
+     * Action when print button pressed, printing (exceptions handled)
      *
      * @param evt - event
      */
@@ -537,7 +526,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
 
     /**
      * Action when saveButton pressed, saves actual crossword in choosen
-     * directory
+     * directory (exceptions handled)
      *
      * @param evt - event
      */
@@ -556,7 +545,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * TODO
+     * Action when toPDF button pressed, creating pdf (exceptions handled)
      *
      * @param evt
      */
@@ -580,8 +569,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
 
     }
 
-    private static CwBrowser browser; // crosswords browser
-    // instance
+    private static CwBrowser browser; // crosswords browser instance
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel browsePanel;
     private javax.swing.ButtonGroup buttonStrategyGropu;
