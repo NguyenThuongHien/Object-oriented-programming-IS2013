@@ -1,9 +1,3 @@
-/**
- * HardStrategy.java
- *
- * @author - wukat
- * @data - 15 lis 2013
- */
 package Strategies;
 
 import Exceptions.FailedToGenerateCrosswordException;
@@ -22,6 +16,17 @@ import java.util.Random;
  */
 public class HardStrategy extends Strategy {
 
+    /**
+     * Fuction checks if every cell between begining and end can be 'in' and if
+     * end cell can be 'end' in given direction.
+     *
+     * @param size - number of checking cells
+     * @param board
+     * @param dir - direction - vertical or horizontal
+     * @param positionVer - position of starting cell in vertical
+     * @param positionHor - position of starting cell in horizontal
+     * @return true if all cells have required ability, false otherwise
+     */
     private Boolean checkAbilities(int size, Board board, int dir, int positionVer, int positionHor) {
         if (dir == BoardCell.ver) {
             for (int i = positionVer + 1; i < positionVer + size - 1; i++) {
@@ -45,6 +50,16 @@ public class HardStrategy extends Strategy {
         return Boolean.TRUE;
     }
 
+    /**
+     * Function checks if any cell between begining and end have any content.
+     *
+     * @param size - number of checking cells
+     * @param board
+     * @param dir - direction - vertical or horizontal
+     * @param positionVer - position of starting cell in vertical
+     * @param positionHor - position of starting cell in horizontal
+     * @return true if any have content, false otherwise
+     */
     private Boolean checkIfHaveAnyLetter(int size, Board board, int dir, int positionVer, int positionHor) {
         if (dir == BoardCell.ver) {
             for (int i = positionVer; i < positionVer + size; i++) {
@@ -61,10 +76,10 @@ public class HardStrategy extends Strategy {
         }
         return Boolean.FALSE;
     }
+
     /* (non-Javadoc)
      * @see board.Strategy#findEntry(board.Crossword)
      */
-
     @Override
     public CwEntry findEntry(Crossword crossword)
             throws FailedToGenerateCrosswordException {
@@ -73,19 +88,19 @@ public class HardStrategy extends Strategy {
         }
         Random rand = new Random();
         Board board = crossword.getBoardCopy();
-        LinkedList<BoardCell> startingCells = board.getStartCells();
-        Boolean flag = Boolean.FALSE;
+        LinkedList<BoardCell> startingCells = board.getStartCells(); // cells which have beginning ability = true
+        Boolean flag = Boolean.FALSE; // if proper entry found
         CwEntry toReturn = null;
         while (startingCells.size() > 0 && !flag) {
             BoardCell temp;
-            if (crossword.isEmpty()) {
+            if (crossword.isEmpty()) {  // firts starting cell
                 if (rand.nextBoolean()) {
                     temp = board.getCell(0, rand.nextInt(board.getHeight()));
                 } else {
                     temp = board.getCell(rand.nextInt(board.getWidth()), 0);
                 }
             } else {
-                temp = startingCells.get(rand.nextInt(startingCells.size()));
+                temp = startingCells.get(rand.nextInt(startingCells.size())); // random starting cell
             }
             if (temp.getAbility(BoardCell.beg, BoardCell.ver)) {
                 int size = board.getHeight() - board.getVerPosition(temp);
@@ -99,7 +114,7 @@ public class HardStrategy extends Strategy {
                                 toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.VERT);
                             }
                             matched.remove(found);
-                        } 
+                        }
                     }
                     size--;
                 }
@@ -108,7 +123,7 @@ public class HardStrategy extends Strategy {
                 int size = board.getWidth() - board.getHorPosition(temp);
                 while (size > 1 && !flag) {
                     if (checkAbilities(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) && (checkIfHaveAnyLetter(size, board, BoardCell.hor, board.getVerPosition(temp), board.getHorPosition(temp)) || crossword.isEmpty())) {
-                        LinkedList<Entry> matched =  crossword.getCwdb().findAll(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp) + size, board.getVerPosition(temp)));
+                        LinkedList<Entry> matched = crossword.getCwdb().findAll(board.createPattern(board.getHorPosition(temp), board.getVerPosition(temp), board.getHorPosition(temp) + size, board.getVerPosition(temp)));
                         while (matched.size() > 0 && !flag) {
                             Entry found = matched.get(rand.nextInt(matched.size()));
                             if (!crossword.contains(found.getWord())) {
@@ -116,7 +131,7 @@ public class HardStrategy extends Strategy {
                                 toReturn = new CwEntry(found, board.getHorPosition(temp), board.getVerPosition(temp), CwEntry.Direction.HORIZ);
                             }
                             matched.remove(found);
-                        } 
+                        }
                     }
                     size--;
                 }
@@ -130,8 +145,7 @@ public class HardStrategy extends Strategy {
      * @see board.Strategy#updateBoard(board.Board, dictionary.CwEntry)
      */
     @Override
-    public void updateBoard(Board board, CwEntry entry
-    ) {
+    public void updateBoard(Board board, CwEntry entry) { // setting false in every place, where - after adding new entry - some ability is false
         if (entry.getDir() == CwEntry.Direction.VERT) {
             if (entry.getY() > 0 && entry.getX() < board.getWidth() - 1) {
                 board.getCell(entry.getX() + 1, entry.getY() - 1).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
