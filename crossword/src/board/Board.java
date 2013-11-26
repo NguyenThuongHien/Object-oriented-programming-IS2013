@@ -1,9 +1,3 @@
-/**
- * Board.java
- *
- * @author - wukat
- * @data - 16 paź 2013
- */
 package board;
 
 import java.util.LinkedList;
