@@ -1,9 +1,3 @@
-/**
- * CwBrower.java
- *
- * @author - wukat
- * @data - 2 lis 2013
- */
 package browser;
 
 import Exceptions.FailedToGenerateCrosswordException;

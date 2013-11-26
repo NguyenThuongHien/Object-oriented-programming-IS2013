@@ -1,9 +1,3 @@
-/**
- * Crossword.java
- *
- * @author - wukat
- * @data - 18 paź 2013
- */
 package board;
 
 import Exceptions.FailedToGenerateCrosswordException;

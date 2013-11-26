@@ -85,7 +85,9 @@ public class CwWriter implements Writer {
     public void createCrossowrdPDF(Crossword crossword) throws DocumentException, IOException {
         Document document = new Document();
 
+        System.setProperty("file.encoding", "Cp852");
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath() + "/" + getUniqueID().toString() + ".pdf"));
+      
         document.open();
         document.add(new Paragraph("Crossword"));
 
@@ -93,8 +95,7 @@ public class CwWriter implements Writer {
         cb.setColorStroke(GrayColor.BLACK);
         cb.setFontAndSize(BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED), 12);
         cb.setColorFill(BaseColor.BLACK);
-        cb.saveState();
-
+        
         if (crossword.getStrategyID() == Strategy.easyStrategyID) {
             int j = 1;
             while (j <= crossword.getBoardHeight()) {
@@ -137,7 +138,6 @@ public class CwWriter implements Writer {
             cb.showText(entry);
             j++;
         }
-        cb.restoreState();
         document.close();
     }
 }
