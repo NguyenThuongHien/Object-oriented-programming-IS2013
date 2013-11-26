@@ -1,9 +1,3 @@
-/**
- * Board.java
- *
- * @author - wukat
- * @data - 16 paź 2013
- */
 package board;
 
 /**
@@ -39,9 +33,9 @@ public class BoardCell {
     }
 
     /**
-     * Checks if there is any content
+     * Checks if there is any content in cell
      *
-     * @return true if it is
+     * @return true if cell have non zero-length content
      */
     public boolean checkContent() {
         return getContent().length() > 0;
@@ -50,8 +44,8 @@ public class BoardCell {
     /**
      * Sets ability in certain direction/position
      *
-     * @param pos - position
-     * @param dir - direction
+     * @param pos - position (beg, in, end)
+     * @param dir - direction (ver, hor)
      * @param ability - boolean - true if enable
      */
     public void setAbility(int pos, int dir, Boolean ability) {
@@ -61,8 +55,8 @@ public class BoardCell {
     /**
      * Gets ability in certain direction/position
      *
-     * @param pos - position
-     * @param dir - direction
+     * @param pos - position (beg, in, end)
+     * @param dir - direction (ver, hor)
      * @return ability - boolean - true if enable
      */
     public Boolean getAbility(int pos, int dir) {
@@ -72,7 +66,7 @@ public class BoardCell {
     /**
      * Getter
      *
-     * @return the content
+     * @return the content of cell
      */
     public String getContent() {
         return content;
@@ -97,7 +91,7 @@ public class BoardCell {
     }
 
     /**
-     * Sets vertical abilities to false.
+     * Sets vertical abilities false.
      */
     public void setVerFalse() {
         abilities[beg][ver] = Boolean.FALSE;
@@ -106,7 +100,7 @@ public class BoardCell {
     }
 
     /**
-     * Sets horizontal abilities to false.
+     * Sets horizontal abilities false.
      */
     public void setHorFalse() {
         abilities[beg][hor] = Boolean.FALSE;
@@ -115,7 +109,7 @@ public class BoardCell {
     }
 
     /**
-     * Sets all abilities to false.
+     * Sets all cell's abilities false.
      */
     public void setFalse() {
         setHorFalse();
@@ -125,7 +119,7 @@ public class BoardCell {
     /**
      * Function copying boardCell
      *
-     * @return copy
+     * @return copy of cell
      */
     public BoardCell copy() {
         BoardCell boardCellCopy = new BoardCell(new String(this.getContent()));
