@@ -1,9 +1,3 @@
-/**
- * EasyStrategy.java
- *
- * @author - wukat
- * @data - 29 paź 2013
- */
 package Strategies;
 
 import Exceptions.FailedToGenerateCrosswordException;
@@ -21,19 +15,18 @@ import java.util.*;
  */
 public class EasyStrategy extends Strategy {
 
-    private String actualPattern;
-    private String password;
-    private int actualIndex = 0;
+    private String password; // crossword password
+    private int actualIndex = 0; // index of actual word
 
     /**
      * Checks if it's possible to generate crossword with this password.
      *
      * @param crossword - input crossword
-     * @return true if password is OK
+     * @return true if password is OK, otherwise false
      */
-    private boolean checkPassword(Crossword crossword, Board board) {
+    private Boolean checkPassword(Crossword crossword, Board board) {
         char lettersOfPassword[] = password.toCharArray();
-        Map<Character, Integer> numberOfCharUse = new HashMap<>();
+        Map<Character, Integer> numberOfCharUse = new HashMap<>();  //maps character - number of use in password
         for (char letter : lettersOfPassword) {
             if (!numberOfCharUse.containsKey(letter)) {
                 numberOfCharUse.put(letter, 1);
@@ -41,30 +34,22 @@ public class EasyStrategy extends Strategy {
                 numberOfCharUse.put(letter, numberOfCharUse.get(letter) + 1);
             }
         }
-        for (char key : numberOfCharUse.keySet()) {
+        for (char key : numberOfCharUse.keySet()) { // checks if there is enough words starting with key letter
             if (key == password.charAt(0)) {
-                if (crossword
-                        .getCwdb()
-                        .findAll(
-                                key
-                                + ".{1,"
-                                + Integer.toString(board.getWidth() - 1) + "}").size() <= numberOfCharUse
-                        .get(key)) {
-                    return false;
+                if (crossword.getCwdb().findAll(key + ".{1,"
+                        + Integer.toString(board.getWidth() - 1) + "}").size()
+                        <= numberOfCharUse.get(key)) {
+                    return Boolean.FALSE;
                 }
             } else {
-                if (crossword
-                        .getCwdb()
-                        .findAll(
-                                key
-                                + ".{1,"
-                                + Integer.toString(board.getWidth() - 1) + "}").size() < numberOfCharUse
-                        .get(key)) {
-                    return false;
+                if (crossword.getCwdb().findAll(key + ".{1,"
+                        + Integer.toString(board.getWidth() - 1) + "}").size()
+                        < numberOfCharUse.get(key)) {
+                    return Boolean.FALSE;
                 }
             }
         }
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
@@ -77,19 +62,16 @@ public class EasyStrategy extends Strategy {
     private CwEntry generatePassword(Crossword crossword, Board board) throws FailedToGenerateCrosswordException {
         Random random = new Random();
         actualIndex = 0;
-        LinkedList<Entry> list = crossword.getCwdb().findAll(
-                board.getHeight());
-        if (list.isEmpty()) {
+        LinkedList<Entry> list = crossword.getCwdb().findAll(board.getHeight()); //looks for crossword's height length words
+        if (list.isEmpty()) { //if there's no - failed
             throw new FailedToGenerateCrosswordException("No matching words");
         }
-        Entry temp = list.get(random.nextInt(list.size()));
-        list.remove(temp);
-        password = temp.getWord();
-        while (!checkPassword(crossword, board) && list.size() > 0) {
+        Entry temp = null;
+        do {
             temp = list.get(random.nextInt(list.size()));
             list.remove(temp);
             password = temp.getWord();
-        }
+        } while (!checkPassword(crossword, board) && list.size() > 0); // checks possible passwords until there's no left or some is good
         if (list.isEmpty() && !checkPassword(crossword, board)) {
             throw new FailedToGenerateCrosswordException("No matching words");
         }
@@ -107,9 +89,9 @@ public class EasyStrategy extends Strategy {
         CwEntry rand = null;
         Random random = new Random();
         Board board = crossword.getBoardCopy();
-        if (crossword.isEmpty()) {
+        if (crossword.isEmpty()) { // first - password
             rand = generatePassword(crossword, board);
-        } else if (actualIndex < password.length()) {
+        } else if (actualIndex < password.length()) { // for every line - one word
             LinkedList<Entry> tempList = crossword.getCwdb().findAll(password.charAt(actualIndex) + ".{1,"
                     + Integer.toString(board.getWidth() - 1) + "}");
             Entry temp;
