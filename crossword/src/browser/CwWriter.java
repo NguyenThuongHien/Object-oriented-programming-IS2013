@@ -3,8 +3,10 @@ package browser;
 import board.Crossword;
 import board.Strategy;
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.GrayColor;
@@ -77,25 +79,27 @@ public class CwWriter implements Writer {
 
     /**
      * Creates PDF with given crossword
-     * 
+     *
      * @param crossword
      * @throws DocumentException
-     * @throws IOException 
+     * @throws IOException
      */
     public void createCrossowrdPDF(Crossword crossword) throws DocumentException, IOException {
         Document document = new Document();
 
         System.setProperty("file.encoding", "Cp852");
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath() + "/" + getUniqueID().toString() + ".pdf"));
-      
+
         document.open();
         document.add(new Paragraph("Crossword"));
 
         PdfContentByte cb = writer.getDirectContent();
+        BaseFont baseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED);
+        Font font = new Font(baseFont, 15, Font.NORMAL);
         cb.setColorStroke(GrayColor.BLACK);
-        cb.setFontAndSize(BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED), 12);
+        cb.setFontAndSize(baseFont, 12);
         cb.setColorFill(BaseColor.BLACK);
-        
+        Paragraph pageParagraph = new Paragraph();
         if (crossword.getStrategyID() == Strategy.easyStrategyID) {
             int j = 1;
             while (j <= crossword.getBoardHeight()) {
@@ -120,8 +124,9 @@ public class CwWriter implements Writer {
                 }
             }
         }
-        for (int i = 0; i < crossword.getBoardWidth(); i++) {
-            for (Integer j = 1; j <= crossword.getBoardHeight(); j++) {
+        for (int j = 1; j <= crossword.getBoardHeight(); j++) {
+            pageParagraph.add(new Chunk("\n").setLineHeight(20));
+            for (int i = 0; i < crossword.getBoardWidth(); i++) {
                 cb.setColorFill(GrayColor.WHITE);
                 if (crossword.checkBoardCell(i, j - 1)) {
                     cb.rectangle(50 + i * 20, 840 - 20 * j - 70,
@@ -132,12 +137,11 @@ public class CwWriter implements Writer {
         }
 
         cb.setColorFill(BaseColor.BLACK);
-        int j = 0;
+        pageParagraph.add(new Chunk("\n\n", font).setLineHeight(15));
         for (String entry : crossword.printAllEntries().split("\n")) {
-            cb.moveTo(30, 750 - crossword.getBoardHeight() * 20 - j * 15);
-            cb.showText(entry);
-            j++;
+              pageParagraph.add(new Chunk(entry + "\n", font).setLineHeight(15));
         }
+        document.add(pageParagraph);
         document.close();
     }
 }
