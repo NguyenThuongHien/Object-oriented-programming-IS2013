@@ -259,4 +259,35 @@ public class Crossword {
             addCwEntry(entry, strategy);
         }
     }
+    
+    /**
+     * Function prints all entries
+     *
+     * @return string with output
+     */
+    public String printAllEntries() {
+        String result = "Horizontally: \n";
+        Iterator<CwEntry> itera = entries.listIterator();
+        int k = 1;
+        while (itera.hasNext()) {
+            CwEntry temp = itera.next();
+            if (temp.getDir() == CwEntry.Direction.HORIZ) {
+                result = result + k + ". " + temp.getClue() + "\n";
+                k++;
+            }
+        }
+        if (getStrategyID() == Strategy.hardStrategyID) {
+            result = result + "Vertically: \n";
+            itera = entries.listIterator();
+            k = 1;
+            while (itera.hasNext()) {
+                CwEntry temp = itera.next();
+                if (temp.getDir() == CwEntry.Direction.VERT) {
+                    result = result + k + ". " + temp.getClue() + "\n";
+                    k++;
+                }
+            }
+        }
+        return result;
+    }
 }
