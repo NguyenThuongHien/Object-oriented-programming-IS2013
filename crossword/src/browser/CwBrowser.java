@@ -11,11 +11,15 @@ import Strategies.EasyStrategy;
 import Strategies.HardStrategy;
 import board.Crossword;
 import board.Strategy;
-import dictionary.CwEntry;
+import com.itextpdf.text.DocumentException;
 import dictionary.IntelLiCwDB;
+import graphicalInterface.DrawingPanel;
+import java.awt.Dimension;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -31,6 +35,12 @@ public class CwBrowser {
     private IntelLiCwDB defaultCwDB;
     private final EasyStrategy easyStrategy;
     private final HardStrategy hardStrategy;
+    private final DrawingPanel drawingPane;
+    private Boolean lastUsedNextButton;
+
+    public Boolean isLastUsedNextButton() {
+        return lastUsedNextButton;
+    }
 
     public EasyStrategy getEasyStrategy() {
         return easyStrategy;
@@ -75,6 +85,13 @@ public class CwBrowser {
         actual = null;
         easyStrategy = new EasyStrategy();
         hardStrategy = new HardStrategy();
+        drawingPane = new DrawingPanel();
+        drawingPane.setPreferredSize(new Dimension(0, 0));
+        lastUsedNextButton = Boolean.TRUE;
+    }
+
+    public DrawingPanel getDrawingPane() {
+        return drawingPane;
     }
 
     /**
@@ -100,15 +117,14 @@ public class CwBrowser {
         while (iter.hasNext()) {
             iter.next();
         }
+        paintCrossowrd();
     }
 
     /**
      * Next crossword
-     *
-     * @param lastUsedNext - if before was used NEXTBUTTON
      */
-    public void next(boolean lastUsedNext) {
-        if (lastUsedNext) {
+    public void next() {
+        if (lastUsedNextButton) {
             if (iter.hasNext()) {
                 actual = iter.next();
             }
@@ -116,6 +132,8 @@ public class CwBrowser {
             actual = iter.next();
             actual = iter.next();
         }
+        lastUsedNextButton = Boolean.TRUE;
+        paintCrossowrd();
     }
 
     /**
@@ -129,16 +147,16 @@ public class CwBrowser {
 
     /**
      * Previous crossword
-     *
-     * @param lastUsedNext - if before was used NEXTBUTTON
      */
-    public void previous(boolean lastUsedNext) {
-        if (lastUsedNext) {
+    public void previous() {
+        if (lastUsedNextButton) {
             actual = iter.previous();
             actual = iter.previous();
         } else if (iter.hasPrevious()) {
             actual = iter.previous();
         }
+        lastUsedNextButton = Boolean.FALSE;
+        paintCrossowrd();
     }
 
     /**
@@ -203,9 +221,11 @@ public class CwBrowser {
      */
     public void saveActual(String folderPath) throws IOException,
             NullPointerException {
-        if (actual != null) {
-            new CwWriter(folderPath).write(actual);
-        }
+        new CwWriter(folderPath).write(actual);
+    }
+
+    public void toPDF(String folderPath) throws DocumentException, IOException {
+        new CwWriter(folderPath).createCrossowrdPDF(actual);
     }
 
     /**
@@ -221,36 +241,28 @@ public class CwBrowser {
         while (iter.hasNext()) {
             actual = iter.next();
         }
+        paintCrossowrd();
     }
 
     /**
-     * Function prints all entries
-     *
-     * @return string with output
+     * Function shows actual crossword on the screen.
      */
-    public String printAllEntries() {
-        String result = "Horizontally: \n";
-        Iterator<CwEntry> itera = getActual().getROEntryIter();
-        int k = 1;
-        while (itera.hasNext()) {
-            CwEntry temp = itera.next();
-            if (temp.getDir() == CwEntry.Direction.HORIZ) {
-                result = result + k + ". " + temp.getClue() + "\n";
-                k++;
-            }
+    public void paintCrossowrd() {
+        drawingPane.setActual(actual);
+        drawingPane.paint(drawingPane.getGraphics());
+        drawingPane.revalidate();
+        drawingPane.repaint();
+    }
+
+    public void paintSolved() {
+        drawingPane.paintSolved(drawingPane.getGraphics());
+    }
+
+    public void print() throws PrinterException {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable((Printable) drawingPane);
+        if (job.printDialog()) {
+            job.print();
         }
-        if (getActual().getStrategyID() == Strategy.hardStrategyID) {
-            result = result + "Vertically: \n";
-            itera = getActual().getROEntryIter();
-            k = 1;
-            while (itera.hasNext()) {
-                CwEntry temp = itera.next();
-                if (temp.getDir() == CwEntry.Direction.VERT) {
-                    result = result + k + ". " + temp.getClue() + "\n";
-                    k++;
-                }
-            }
-        }
-        return result;
     }
 }
