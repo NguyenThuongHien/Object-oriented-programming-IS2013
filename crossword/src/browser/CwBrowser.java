@@ -32,48 +32,17 @@ public class CwBrowser {
     private final LinkedList<Crossword> crosswords; // vector of read crosswords
     private ListIterator<Crossword> iter; // vector iterator
     private Crossword actual; // actual crossword
-    private IntelLiCwDB defaultCwDB;
+    private IntelLiCwDB defaultCwDB; // crossword database
     private final EasyStrategy easyStrategy;
     private final HardStrategy hardStrategy;
-    private final DrawingPanel drawingPane;
-    private Boolean lastUsedNextButton;
-
-    public Boolean isLastUsedNextButton() {
-        return lastUsedNextButton;
-    }
-
-    public EasyStrategy getEasyStrategy() {
-        return easyStrategy;
-    }
-
-    public HardStrategy getHardStrategy() {
-        return hardStrategy;
-    }
+    private final DrawingPanel drawingPane; // extension of JPanel, prints and paints crossword
+    private Boolean lastUsedNextButton; // flag
 
     /**
-     * Setter
-     *
-     * @param defaultCwDB
-     */
-    public void setDefaultCwDB(IntelLiCwDB defaultCwDB) {
-        this.defaultCwDB = defaultCwDB;
-    }
-
-    /**
-     * getter
-     *
-     * @return actual crossword
-     */
-    public Crossword getActual() {
-        return actual;
-    }
-
-    /**
-     *
      * Constructor
      *
      * @param cwDBpath - path to database
-     * @throws IOException
+     * @throws IOException if path is wrong
      */
     public CwBrowser(String cwDBpath) throws IOException {
         if (cwDBpath == null) {
@@ -90,22 +59,17 @@ public class CwBrowser {
         lastUsedNextButton = Boolean.TRUE;
     }
 
-    public DrawingPanel getDrawingPane() {
-        return drawingPane;
-    }
-
     /**
      * Generates crossword (actual)
      *
      * @param width - board's width
      * @param height - board's height
-     * @param strategyID
+     * @param strategyID - 0 or 1, depends on strategy kind
      * @throws FailedToGenerateCrosswordException
      */
     public void generateCw(int width, int height, int strategyID)
             throws FailedToGenerateCrosswordException {
-        Crossword temp = new Crossword(width, height, defaultCwDB);
-        temp.setStrategyID(strategyID);
+        Crossword temp = new Crossword(width, height, defaultCwDB, strategyID);
         if (temp.getStrategyID() == Strategy.easyStrategyID) {
             temp.generate(easyStrategy);
         } else {
@@ -121,7 +85,7 @@ public class CwBrowser {
     }
 
     /**
-     * Next crossword
+     * Next crossword - sets actual next crossword on list
      */
     public void next() {
         if (lastUsedNextButton) {
@@ -139,14 +103,14 @@ public class CwBrowser {
     /**
      * Iter.hasNext()
      *
-     * @return
+     * @return true if there is next element in the list
      */
     public boolean hasNext() {
         return iter.hasNext();
     }
 
     /**
-     * Previous crossword
+     * Previous crossword - sets actual previous crossword on list
      */
     public void previous() {
         if (lastUsedNextButton) {
@@ -162,7 +126,7 @@ public class CwBrowser {
     /**
      * iter.hasPrevious()
      *
-     * @return
+     * @return true if there is previous element in the list
      */
     public boolean hasPrevious() {
         return iter.hasPrevious();
@@ -171,25 +135,16 @@ public class CwBrowser {
     /**
      * Checks if browser has actual crossword
      *
-     * @return logical value
+     * @return true if have, false if actual is null
      */
     public boolean hasActual() {
         return actual != null;
     }
 
     /**
-     * Index
-     *
-     * @return
-     */
-    public int getIndexOfIterator() {
-        return iter.nextIndex();
-    }
-
-    /**
      * Next index iterator
      *
-     * @return
+     * @return index of next element
      */
     public int nextIndex() {
         return iter.nextIndex();
@@ -198,7 +153,7 @@ public class CwBrowser {
     /**
      * Previous element index
      *
-     * @return
+     * @return index of previous element
      */
     public int previousIndex() {
         return iter.previousIndex();
@@ -207,16 +162,72 @@ public class CwBrowser {
     /**
      * Amount of crossword
      *
-     * @return
+     * @return size of list - number of elements (generated and loaded
+     * crosswords)
      */
     public int getAmountOfCrosswords() {
         return crosswords.size();
     }
 
     /**
-     * Saves actual crossword in file
+     * Checks flag
      *
-     * @param folderPath
+     * @return value of flag, true if last pressed button (choice of next/prev)
+     * was next
+     */
+    public Boolean isLastUsedNextButton() {
+        return lastUsedNextButton;
+    }
+
+    /**
+     * Getter
+     *
+     * @return easyStrategy object
+     */
+    public EasyStrategy getEasyStrategy() {
+        return easyStrategy;
+    }
+
+    /**
+     * Getter
+     *
+     * @return hardStrategy object
+     */
+    public HardStrategy getHardStrategy() {
+        return hardStrategy;
+    }
+
+    /**
+     * Getter
+     *
+     * @return drawing panel
+     */
+    public DrawingPanel getDrawingPane() {
+        return drawingPane;
+    }
+
+    /**
+     * Setter
+     *
+     * @param defaultCwDB
+     */
+    public void setDefaultCwDB(IntelLiCwDB defaultCwDB) {
+        this.defaultCwDB = defaultCwDB;
+    }
+
+    /**
+     * Getter
+     *
+     * @return actual crossword
+     */
+    public Crossword getActual() {
+        return actual;
+    }
+
+    /**
+     * Saves actual crossword in file in given direcotry
+     *
+     * @param folderPath - directory to save crossword in
      * @throws IOException
      */
     public void saveActual(String folderPath) throws IOException,
@@ -224,6 +235,13 @@ public class CwBrowser {
         new CwWriter(folderPath).write(actual);
     }
 
+    /**
+     * Creates PDF with crossword in given directory
+     *
+     * @param folderPath - directory to save PDF in
+     * @throws DocumentException
+     * @throws IOException
+     */
     public void toPDF(String folderPath) throws DocumentException, IOException {
         new CwWriter(folderPath).createCrossowrdPDF(actual);
     }
@@ -254,10 +272,18 @@ public class CwBrowser {
         drawingPane.repaint();
     }
 
+    /**
+     * Function paints solved crossword
+     */
     public void paintSolved() {
         drawingPane.paintSolved(drawingPane.getGraphics());
     }
 
+    /**
+     * Function prints crossword
+     *
+     * @throws PrinterException
+     */
     public void print() throws PrinterException {
         PrinterJob job = PrinterJob.getPrinterJob();
         job.setPrintable((Printable) drawingPane);
