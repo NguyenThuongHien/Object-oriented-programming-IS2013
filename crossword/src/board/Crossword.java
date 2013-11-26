@@ -81,14 +81,12 @@ public class Crossword {
                                 reader.readLine(), Integer.parseInt(splited[0]),
                                 Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.HORIZ), strategy);
-                        strategyID = Strategy.hardStrategyID;
                         break;
                     case "VERT":
                         addCwEntry(new CwEntry(reader.readLine(),
                                 reader.readLine(), Integer.parseInt(splited[0]),
                                 Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.VERT), strategy);
-                        strategyID = Strategy.easyStrategyID;
                         break;
                 }
             }

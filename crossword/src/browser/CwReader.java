@@ -16,7 +16,6 @@ public class CwReader implements Reader {
     private final File file; // folder
 
     /**
-     * 
      * Constructor
      * 
      * @param path
