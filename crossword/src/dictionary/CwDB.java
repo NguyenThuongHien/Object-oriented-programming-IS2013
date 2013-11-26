@@ -1,9 +1,3 @@
-/**
- * CwDB.java
- *
- * @author - wukat
- * @data - 12 paź 2013
- */
 package dictionary;
 
 import java.io.BufferedReader;
@@ -20,9 +14,7 @@ import java.util.LinkedList;
  */
 public class CwDB {
 
-    protected LinkedList<Entry> dict = new LinkedList<>(); // dictionary -
-    // list of
-    // entries
+    protected LinkedList<Entry> dict = new LinkedList<>(); // dictionary - list of entries 
 
     /**
      * Constructor
@@ -48,7 +40,7 @@ public class CwDB {
      * Getter
      *
      * @param word - parameter to identify entry
-     * @return entry in dictionary with field word
+     * @return entry in dictionary with field word, null if no entry have this word
      */
     public Entry get(String word) {
         java.util.ListIterator<Entry> iter = dict.listIterator(0);
