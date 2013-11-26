@@ -1,13 +1,8 @@
-/**
- * FailedToGnerateCrosswordException.java
- * @author - wukat
- * @data - 1 lis 2013
- */
 package Exceptions;
 
 /**
  * @author wukat
- *
+ * Exception class.
  */
 public class FailedToGenerateCrosswordException extends Exception {
 
