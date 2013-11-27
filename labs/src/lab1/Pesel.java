@@ -113,7 +113,11 @@ public class Pesel {
 	 */
 	@Override
 	public String toString() {
-		return Arrays.toString(pesel);
+		String result = "";
+		for (int a : pesel) {
+			result = result + a;
+		}
+		return result;
 	}
 	
 	
