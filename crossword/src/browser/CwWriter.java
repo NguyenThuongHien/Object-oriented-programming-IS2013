@@ -2,17 +2,20 @@ package browser;
 
 import board.Crossword;
 import board.Strategy;
-import com.itextpdf.text.BaseColor;
+import com.itextpdf.awt.PdfGraphics2D;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.GrayColor;
 import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 import dictionary.CwEntry;
+import graphicalInterface.DrawingPanel;
+import java.awt.Graphics2D;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -81,30 +84,27 @@ public class CwWriter implements Writer {
      * Creates PDF with given crossword
      *
      * @param crossword
+     * @param panel - panel which shows crossword on the screen
      * @throws DocumentException
      * @throws IOException
      */
-    public void createCrossowrdPDF(Crossword crossword) throws DocumentException, IOException {
-        Document document = new Document();
-
+    public void createCrossowrdPDF(Crossword crossword, DrawingPanel panel) throws DocumentException, IOException {
+        Document document = new Document(PageSize.A4);
         System.setProperty("file.encoding", "Cp852");
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath() + "/" + getUniqueID().toString() + ".pdf"));
 
         document.open();
         document.add(new Paragraph("Crossword"));
-
         PdfContentByte cb = writer.getDirectContent();
-        BaseFont baseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED);
-        Font font = new Font(baseFont, 15, Font.NORMAL);
-        cb.setColorStroke(GrayColor.BLACK);
-        cb.setFontAndSize(baseFont, 12);
-        cb.setColorFill(BaseColor.BLACK);
-        Paragraph pageParagraph = new Paragraph();
+        PdfTemplate temp = cb.createTemplate(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+        Graphics2D graphic = new PdfGraphics2D(cb, PageSize.A4.getWidth(), PageSize.A4.getHeight());
+
+        int j = 1;
+        int constXY = 50;
         if (crossword.getStrategyID() == Strategy.easyStrategyID) {
-            int j = 1;
             while (j <= crossword.getBoardHeight()) {
-                cb.moveTo(30, 775 - 20 * j);
-                cb.showText(j + ". ");
+                graphic.drawString(j + ". ", 10 + constXY,
+                        50 + (j - 1) * 30 + constXY);
                 j++;
             }
         } else {
@@ -114,32 +114,36 @@ public class CwWriter implements Writer {
             while (iter.hasNext()) {
                 CwEntry entry = iter.next();
                 if (entry.getDir() == CwEntry.Direction.VERT) {
-                    cb.moveTo(entry.getX() * 20 + 55, 775 - 20 * entry.getY());
-                    cb.showText(k + ". ");
+                    graphic.drawString(k + ". ", entry.getX() * 30 + 45 + constXY,
+                            20 + entry.getY() * 30 + constXY);
                     k++;
                 } else {
-                    cb.moveTo(entry.getX() * 20 + 35, 755 - 20 * entry.getY());
-                    cb.showText(l + ". ");
+                    graphic.drawString(l + ". ", entry.getX() * 30 + 15 + constXY,
+                            50 + entry.getY() * 30 + constXY);
                     l++;
                 }
             }
         }
-        for (int j = 1; j <= crossword.getBoardHeight(); j++) {
-            pageParagraph.add(new Chunk("\n").setLineHeight(20));
-            for (int i = 0; i < crossword.getBoardWidth(); i++) {
-                cb.setColorFill(GrayColor.WHITE);
+        for (int i = 0; i < crossword.getBoardWidth(); i++) {
+            for (j = 1; j <= crossword.getBoardHeight(); j++) {
                 if (crossword.checkBoardCell(i, j - 1)) {
-                    cb.rectangle(50 + i * 20, 840 - 20 * j - 70,
-                            20, 20);
-                    cb.fillStroke();
+                    graphic.drawRect(35 + i * 30 + constXY, 30 + (j - 1) * 30 + constXY,
+                            30, 30);
                 }
             }
         }
+        graphic.dispose();
+        cb.addTemplate(temp, 0, 0);
 
-        cb.setColorFill(BaseColor.BLACK);
+        BaseFont baseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED);
+        Font font = new Font(baseFont, 15, Font.NORMAL);
+        Paragraph pageParagraph = new Paragraph();
+        for (j = 1; j <= crossword.getBoardHeight(); j++) {
+            pageParagraph.add(new Chunk("\n").setLineHeight(30));
+        }
         pageParagraph.add(new Chunk("\n\n", font).setLineHeight(15));
         for (String entry : crossword.printAllEntries().split("\n")) {
-              pageParagraph.add(new Chunk(entry + "\n", font).setLineHeight(15));
+            pageParagraph.add(new Chunk(entry + "\n", font).setLineHeight(15));
         }
         document.add(pageParagraph);
         document.close();

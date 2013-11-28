@@ -6,11 +6,10 @@
 package browser;
 
 import Exceptions.FailedToLoadAllCwsException;
-import board.Crossword;
 
 import board.Strategy;
 import java.io.IOException;
-import java.util.LinkedList;
+
 
 /**
  * @author wukat

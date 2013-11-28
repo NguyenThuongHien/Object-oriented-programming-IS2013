@@ -238,7 +238,7 @@ public class CwBrowser {
      * @throws IOException
      */
     public void toPDF(String folderPath) throws DocumentException, IOException {
-        new CwWriter(folderPath).createCrossowrdPDF(actual);
+        new CwWriter(folderPath).createCrossowrdPDF(actual, drawingPane);
     }
 
     /**
@@ -255,13 +255,13 @@ public class CwBrowser {
             reader.getAllCws(easyStrategy, hardStrategy);
         } catch (FailedToLoadAllCwsException e) {
             crosswords.addAll(e.getCrosswords());
+            iter = crosswords.listIterator();
+            while (iter.hasNext()) {
+                actual = iter.next();
+            }
+            paintCrossowrd();
             message = e.getMessage();
         }
-        iter = crosswords.listIterator();
-        while (iter.hasNext()) {
-            actual = iter.next();
-        }
-        paintCrossowrd();
         if (message != null) {
             throw new FailedToLoadAllCwsException(message);
         }

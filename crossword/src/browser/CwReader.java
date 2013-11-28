@@ -60,7 +60,11 @@ public class CwReader implements Reader {
                 }
             }
         }
+        if (file.listFiles().length > crosswords.size()) {
         message = message + "\nLoaded " + crosswords.size() + " crosswords.";
-        throw new FailedToLoadAllCwsException(message, crosswords);
+        throw new FailedToLoadAllCwsException(message, crosswords); }
+        else {
+            throw new FailedToLoadAllCwsException("Loaded " + crosswords.size() + " crosswords.", crosswords); 
+        }
     }
 }
