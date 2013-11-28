@@ -417,7 +417,6 @@ public class CrosswordsGUI extends javax.swing.JFrame {
         if (fc.showDialog(loadButton, "Open directory") == JFileChooser.APPROVE_OPTION) {
             try {
                 browser.loadFromFiles(fc.getSelectedFile().getPath());
-                actualizeButtons();
             } catch (FailedToLoadAllCwsException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (IOException e) {
@@ -431,6 +430,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
                                 "Operation failed", JOptionPane.ERROR_MESSAGE);
             }
         }
+        actualizeButtons();
     }
 
     /**

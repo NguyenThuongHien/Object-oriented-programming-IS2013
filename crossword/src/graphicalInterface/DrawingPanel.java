@@ -158,8 +158,9 @@ public class DrawingPanel extends JPanel implements Printable {
             for (Integer j = 1; j <= actual
                     .getBoardHeight(); j++) {
                 if (actual.checkBoardCell(i, j - 1)) {
-                    JTextField a = new JTextField(1);
+                    final JTextField a = new JTextField(1);
                     a.setBounds(i * 30 + 36, (j - 1) * 30 + 30, 30, 30);
+                    a.setHorizontalAlignment(JTextField.CENTER);
                     this.add(a);
                 }
             }

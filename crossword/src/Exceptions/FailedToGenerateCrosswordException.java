@@ -12,7 +12,6 @@ public class FailedToGenerateCrosswordException extends Exception {
 	 * Constructor
 	 */
 	public FailedToGenerateCrosswordException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -21,7 +20,6 @@ public class FailedToGenerateCrosswordException extends Exception {
 	 */
 	public FailedToGenerateCrosswordException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -30,7 +28,6 @@ public class FailedToGenerateCrosswordException extends Exception {
 	 */
 	public FailedToGenerateCrosswordException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -40,7 +37,6 @@ public class FailedToGenerateCrosswordException extends Exception {
 	 */
 	public FailedToGenerateCrosswordException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -53,7 +49,6 @@ public class FailedToGenerateCrosswordException extends Exception {
 	public FailedToGenerateCrosswordException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 }
