@@ -20,7 +20,7 @@ import javax.swing.JTextField;
  */
 public class DrawingPanel extends JPanel implements Printable {
 
-    Crossword actual = null;
+    Crossword actual = null; // actual crossword showed on panel
 
     /**
      * Sets actual crossword to paint/print/solve&paint
