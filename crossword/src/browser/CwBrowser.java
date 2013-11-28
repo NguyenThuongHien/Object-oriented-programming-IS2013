@@ -1,6 +1,7 @@
 package browser;
 
 import Exceptions.FailedToGenerateCrosswordException;
+import Exceptions.FailedToLoadAllCwsException;
 import Strategies.EasyStrategy;
 import Strategies.HardStrategy;
 import board.Crossword;
@@ -245,15 +246,25 @@ public class CwBrowser {
      *
      * @param folderPath
      * @throws IOException
+     * @throws Exceptions.FailedToLoadAllCwsException
      */
-    public void loadFromFiles(String folderPath) throws IOException, NullPointerException {
+    public void loadFromFiles(String folderPath) throws IOException, FailedToLoadAllCwsException {
         CwReader reader = new CwReader(folderPath);
-        crosswords.addAll(reader.getAllCws(easyStrategy, hardStrategy));
+        String message = null;
+        try {
+            reader.getAllCws(easyStrategy, hardStrategy);
+        } catch (FailedToLoadAllCwsException e) {
+            crosswords.addAll(e.getCrosswords());
+            message = e.getMessage();
+        }
         iter = crosswords.listIterator();
         while (iter.hasNext()) {
             actual = iter.next();
         }
         paintCrossowrd();
+        if (message != null) {
+            throw new FailedToLoadAllCwsException(message);
+        }
     }
 
     /**
@@ -261,16 +272,17 @@ public class CwBrowser {
      */
     public void paintCrossowrd() {
         drawingPane.setActual(actual);
+        drawingPane.removeAll();
         drawingPane.paint(drawingPane.getGraphics());
         drawingPane.revalidate();
         drawingPane.repaint();
     }
 
     /**
-     * Function paints solved crossword
+     * Function paints crossword with text fields
      */
-    public void paintSolved() {
-        drawingPane.paintSolved(drawingPane.getGraphics());
+    public void paintSolveable() {
+        drawingPane.paintSolveable(drawingPane.getGraphics());
     }
 
     /**

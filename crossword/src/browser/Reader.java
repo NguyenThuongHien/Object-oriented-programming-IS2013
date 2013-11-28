@@ -5,6 +5,7 @@
  */
 package browser;
 
+import Exceptions.FailedToLoadAllCwsException;
 import board.Crossword;
 
 import board.Strategy;
@@ -22,9 +23,8 @@ interface Reader {
      * 
      * @param easyStrategy
      * @param hardStrategy 
-     * @return vector of loaded crosswords
      * @throws IOException
-     * @throws NullPointerException
+     * @throws FailedToLoadAllCwsException - in this exception function returns list of loaded crossword
      */
-    public LinkedList<Crossword> getAllCws(Strategy easyStrategy, Strategy hardStrategy) throws IOException, NullPointerException;
+    public void getAllCws(Strategy easyStrategy, Strategy hardStrategy) throws IOException, FailedToLoadAllCwsException;
 }

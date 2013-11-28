@@ -13,6 +13,7 @@ import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.util.Iterator;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * Printable class extending JPanel - used to draw crossword on it and print it.
@@ -147,20 +148,22 @@ public class DrawingPanel extends JPanel implements Printable {
     }
 
     /**
-     * Paints solved crossword on the screen
+     * Paints text fields on the screen
      *
      * @param graphic
      */
-    public void paintSolved(Graphics graphic) {
+    public void paintSolveable(Graphics graphic) {
         graphic.setColor(Color.BLACK);
         for (int i = 0; i < actual.getBoardWidth(); i++) {
             for (Integer j = 1; j <= actual
                     .getBoardHeight(); j++) {
                 if (actual.checkBoardCell(i, j - 1)) {
-                    graphic.drawString(actual.getBoardCopy().getCell(i, j - 1).getContent(), i * 30 + 46, (j - 1) * 30 + 50
-                    );
+                    JTextField a = new JTextField(1);
+                    a.setBounds(i * 30 + 36, (j - 1) * 30 + 30, 30, 30);
+                    this.add(a);
                 }
             }
         }
+        this.repaint();
     }
 }

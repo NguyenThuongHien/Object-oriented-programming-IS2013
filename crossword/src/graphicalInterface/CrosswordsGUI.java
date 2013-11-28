@@ -6,6 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import Exceptions.FailedToGenerateCrosswordException;
+import Exceptions.FailedToLoadAllCwsException;
 import board.Strategy;
 import browser.CwBrowser;
 import com.itextpdf.text.DocumentException;
@@ -79,7 +80,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
                         "Failed to start", JOptionPane.ERROR_MESSAGE);
             }
         }
-                
+
         initComponents();
         actualizeButtons();
     }
@@ -417,11 +418,10 @@ public class CrosswordsGUI extends javax.swing.JFrame {
             try {
                 browser.loadFromFiles(fc.getSelectedFile().getPath());
                 actualizeButtons();
+            } catch (FailedToLoadAllCwsException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Operation failed", JOptionPane.ERROR_MESSAGE);
-            } catch (NullPointerException e) {
-                JOptionPane.showMessageDialog(null, "Wrong file format.",
                         "Operation failed", JOptionPane.ERROR_MESSAGE);
             } catch (NumberFormatException e) {
                 JOptionPane
@@ -434,7 +434,8 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when the importButton pressed, choosing database file (exceptions handled)
+     * Action when the importButton pressed, choosing database file (exceptions
+     * handled)
      *
      * @param evt - event
      */
@@ -458,7 +459,8 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when generateButton pressed, trying to generate crossword (exceptions handled)
+     * Action when generateButton pressed, trying to generate crossword
+     * (exceptions handled)
      *
      * @param evt - event
      */
@@ -477,12 +479,12 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when solve button pressed, painting solved crossword
+     * Action when solve button pressed, painting solveable crossword
      *
      * @param evt
      */
     private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        browser.paintSolved();
+        browser.paintSolveable();
     }
 
     /**

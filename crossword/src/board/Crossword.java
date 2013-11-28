@@ -39,8 +39,8 @@ public class Crossword {
     }
 
     /**
-     * Constructor - crossword from file, format: strategy (EASY/HARD) \n, width, height \n, filename of
-     * cwDB \n, CwEntries;
+     * Constructor - crossword from file, format: strategy (EASY/HARD) \n,
+     * width, height \n, filename of cwDB \n, CwEntries;
      *
      * @param ID - name of file (should be parsed to long number)
      * @param f - file with crossword
@@ -48,15 +48,20 @@ public class Crossword {
      * @param hardStraategy
      *
      * @throws IOException if file is wrong
-     * @throws NullPointerException if format of file is wrong
+     * @throws Exceptions.FailedToGenerateCrosswordException if format of file
+     * is wrong
      */
     public Crossword(Long ID, File f, Strategy easyStrategy,
-            Strategy hardStraategy) throws IOException, NullPointerException {
+            Strategy hardStraategy) throws IOException, FailedToGenerateCrosswordException {
+        int temp1, temp2;
         entries = new LinkedList<>();
         this.ID = ID;
         Strategy strategy = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
             String temp = reader.readLine();
+            if (temp == null) {
+                throw new FailedToGenerateCrosswordException("Wrong file format!");
+            }
             switch (temp) {
                 case "EASY":
                     this.strategyID = Strategy.easyStrategyID;
@@ -67,14 +72,28 @@ public class Crossword {
                     this.strategyID = Strategy.hardStrategyID;
                     break;
                 default:
-                    throw new NullPointerException();
+                    throw new FailedToGenerateCrosswordException("Wrong file format!");
             }
             temp = reader.readLine();
+            if (temp == null) {
+                throw new FailedToGenerateCrosswordException("Wrong file format!");
+            }
             String[] splited = temp.split(" ");
-            board = new Board(Integer.parseInt(splited[0]),
-                    Integer.parseInt(splited[1]));
+            int width = Integer.parseInt(splited[0]);
+            int height = Integer.parseInt(splited[1]);
+            if (height < 0 || width < 0) {
+                throw new FailedToGenerateCrosswordException("Wrong file format!");
+            }
+            board = new Board(width, height);
             while ((temp = reader.readLine()) != null) {
                 splited = temp.split(" ");
+                if (splited.length < 3) {
+                    throw new FailedToGenerateCrosswordException("Wrong file format!");
+                }
+                temp1 = Integer.parseInt(splited[0]);
+                temp2 = Integer.parseInt(splited[1]);
+                if (temp1 < 0 || temp1 >= width || temp2 < 0 || temp2 >= height)
+                    throw new FailedToGenerateCrosswordException("Wrong data in file!");
                 switch (splited[2]) {
                     case "HORIZ":
                         addCwEntry(new CwEntry(reader.readLine(),
@@ -88,6 +107,8 @@ public class Crossword {
                                 Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.VERT), strategy);
                         break;
+                    default:
+                        throw new FailedToGenerateCrosswordException("Wrong file format!");
                 }
             }
         }
