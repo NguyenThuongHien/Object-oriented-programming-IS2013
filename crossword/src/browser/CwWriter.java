@@ -99,46 +99,14 @@ public class CwWriter implements Writer {
         PdfTemplate temp = cb.createTemplate(PageSize.A4.getWidth(), PageSize.A4.getHeight());
         Graphics2D graphic = new PdfGraphics2D(cb, PageSize.A4.getWidth(), PageSize.A4.getHeight());
 
-        int j = 1;
-        int constXY = 50;
-        if (crossword.getStrategyID() == Strategy.easyStrategyID) {
-            while (j <= crossword.getBoardHeight()) {
-                graphic.drawString(j + ". ", 10 + constXY,
-                        50 + (j - 1) * 30 + constXY);
-                j++;
-            }
-        } else {
-            Iterator<CwEntry> iter = crossword.getROEntryIter();
-            int k = 1;
-            int l = 1;
-            while (iter.hasNext()) {
-                CwEntry entry = iter.next();
-                if (entry.getDir() == CwEntry.Direction.VERT) {
-                    graphic.drawString(k + ". ", entry.getX() * 30 + 45 + constXY,
-                            20 + entry.getY() * 30 + constXY);
-                    k++;
-                } else {
-                    graphic.drawString(l + ". ", entry.getX() * 30 + 15 + constXY,
-                            50 + entry.getY() * 30 + constXY);
-                    l++;
-                }
-            }
-        }
-        for (int i = 0; i < crossword.getBoardWidth(); i++) {
-            for (j = 1; j <= crossword.getBoardHeight(); j++) {
-                if (crossword.checkBoardCell(i, j - 1)) {
-                    graphic.drawRect(35 + i * 30 + constXY, 30 + (j - 1) * 30 + constXY,
-                            30, 30);
-                }
-            }
-        }
+        panel.paintCw(graphic, 50);
         graphic.dispose();
         cb.addTemplate(temp, 0, 0);
 
         BaseFont baseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED);
         Font font = new Font(baseFont, 15, Font.NORMAL);
         Paragraph pageParagraph = new Paragraph();
-        for (j = 1; j <= crossword.getBoardHeight(); j++) {
+        for (int j = 1; j <= crossword.getBoardHeight(); j++) {
             pageParagraph.add(new Chunk("\n").setLineHeight(30));
         }
         pageParagraph.add(new Chunk("\n\n", font).setLineHeight(15));
