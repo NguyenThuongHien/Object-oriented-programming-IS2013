@@ -11,9 +11,12 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
+import java.text.ParseException;
 import java.util.Iterator;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 /**
  * Printable class extending JPanel - used to draw crossword on it and print it.
@@ -126,10 +129,13 @@ public class DrawingPanel extends JPanel implements Printable {
             for (Integer j = 1; j <= actual
                     .getBoardHeight(); j++) {
                 if (actual.checkBoardCell(i, j - 1)) {
-                    final JTextField a = new JTextField(1);
-                    a.setBounds(i * 30 + 36, (j - 1) * 30 + 30, 30, 30);
-                    a.setHorizontalAlignment(JTextField.CENTER);
-                    this.add(a);
+                    try {
+                        JFormattedTextField a = new JFormattedTextField(new MaskFormatter("U"));
+                        a.setBounds(i * 30 + 36, (j - 1) * 30 + 30, 30, 30);
+                        a.setHorizontalAlignment(JTextField.CENTER);
+                        this.add(a);
+                    } catch (ParseException e) {
+                    }
                 }
             }
         }
