@@ -13,19 +13,20 @@ public class EchoClient {
 
 	public static void main(String[] args) {
 		EchoClient haha = new EchoClient();
-		haha.findPassword();
-		System.out.println("Finito");
-//		try {
-//			if (haha.loginToServer("szymon", "zadźwigany")) {
-//				if (haha.ls()) {
-//					haha.get(0);
-//					haha.get(1);
-//					haha.get(2);
-//				}
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace(System.out);
-//		}
+//		haha.findPassword();
+//		System.out.println("Finito");
+		try {
+			if (haha.loginToServer("szymon", "najakuratniej")) {
+				if (haha.ls()) {
+					haha.get(0);
+					haha.get(1);
+					haha.get(2);
+				}
+//				haha.put();
+			}
+		} catch (IOException e) {
+			e.printStackTrace(System.out);
+		}
 	}
 
 	public void connect() {
@@ -94,6 +95,17 @@ public class EchoClient {
 		return true;
 	}
 
+	public boolean put() throws IOException {
+		connect();
+		out.println("PUT " + ID + " Kasperek Ha!");
+		String result = in.readLine();
+		System.out.println("echo: " + result);
+		closeAll();
+		if (result.equals("false")) {
+			return false;
+		}
+		return true;
+	}
 	public boolean get(int number) throws IOException {
 		String result = null;
 		connect();

@@ -2,8 +2,9 @@ package lab8;
 
 import java.io.*;
 import java.net.*;
- 
+
 public class EchoServer {
+
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         try {
@@ -23,13 +24,13 @@ public class EchoServer {
         System.out.println("2");
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                clientSocket.getInputStream()));
+                new InputStreamReader(
+                        clientSocket.getInputStream()));
         String inputLine;
- 
+
         System.out.println("3");
         while ((inputLine = in.readLine()) != null) {
-             out.println(inputLine);
+            out.println(inputLine);
         }
         out.close();
         in.close();
