@@ -156,23 +156,27 @@ public class HardStrategy extends Strategy {
             if (entry.getY() + entry.getWord().length() < board.getHeight()) {
                 board.getCell(entry.getX(), entry.getY() + entry.getWord().length()).setFalse();
             }
-            for (int y = entry.getY(); y < entry.getY() + entry.getWord().length(); y++) {
+            for (int y = entry.getY(); y < entry.getY() + entry.getWord().length() && y < board.getHeight(); y++) {
                 board.getCell(entry.getX(), y).setContent(
                         entry.getWord().charAt(y - entry.getY()));
                 board.getCell(entry.getX(), y).setVerFalse();
             }
             if (entry.getX() > 0) {
                 board.getCell(entry.getX() - 1, entry.getY()).setAbility(BoardCell.end, BoardCell.hor, Boolean.FALSE);
-                board.getCell(entry.getX() - 1, entry.getY() + entry.getWord().length() - 1).setAbility(BoardCell.end, BoardCell.hor, Boolean.FALSE);
-                for (int y = entry.getY(); y < entry.getY() + entry.getWord().length(); y++) {
+                if (entry.getY() + entry.getWord().length() - 1 < board.getHeight()) {
+                    board.getCell(entry.getX() - 1, entry.getY() + entry.getWord().length() - 1).setAbility(BoardCell.end, BoardCell.hor, Boolean.FALSE);
+                }
+                for (int y = entry.getY(); y < entry.getY() + entry.getWord().length() && y < board.getHeight(); y++) {
                     board.getCell(entry.getX() - 1, y).setVerFalse();
                     board.getCell(entry.getX() - 1, y).setAbility(BoardCell.end, BoardCell.hor, Boolean.FALSE);
                 }
             }
             if (entry.getX() + 1 < board.getWidth()) {
                 board.getCell(entry.getX() + 1, entry.getY()).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
-                board.getCell(entry.getX() + 1, entry.getY() + entry.getWord().length() - 1).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
-                for (int y = entry.getY(); y < entry.getY() + entry.getWord().length(); y++) {
+                if (entry.getY() + entry.getWord().length() - 1 < board.getHeight()) {
+                    board.getCell(entry.getX() + 1, entry.getY() + entry.getWord().length() - 1).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
+                }
+                for (int y = entry.getY(); y < entry.getY() + entry.getWord().length() && y < board.getHeight(); y++) {
                     board.getCell(entry.getX() + 1, y).setVerFalse();
                     board.getCell(entry.getX() + 1, y).setAbility(BoardCell.beg, BoardCell.hor, Boolean.FALSE);
                 }
@@ -187,23 +191,27 @@ public class HardStrategy extends Strategy {
             if (entry.getX() + entry.getWord().length() < board.getWidth()) {
                 board.getCell(entry.getX() + entry.getWord().length(), entry.getY()).setFalse();
             }
-            for (int x = entry.getX(); x < entry.getX() + entry.getWord().length(); x++) {
+            for (int x = entry.getX(); x < entry.getX() + entry.getWord().length() && x < board.getWidth(); x++) {
                 board.getCell(x, entry.getY()).setContent(
                         entry.getWord().charAt(x - entry.getX()));
                 board.getCell(x, entry.getY()).setHorFalse();
             }
             if (entry.getY() > 0) {
                 board.getCell(entry.getX(), entry.getY() - 1).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
-                board.getCell(entry.getX() + entry.getWord().length() - 1, entry.getY() - 1).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
-                for (int x = entry.getX(); x < entry.getX() + entry.getWord().length(); x++) {
+                if (entry.getX() + entry.getWord().length() - 1 < board.getWidth()) {
+                    board.getCell(entry.getX() + entry.getWord().length() - 1, entry.getY() - 1).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
+                }
+                for (int x = entry.getX(); x < entry.getX() + entry.getWord().length() && x < board.getWidth(); x++) {
                     board.getCell(x, entry.getY() - 1).setHorFalse();
                     board.getCell(x, entry.getY() - 1).setAbility(BoardCell.end, BoardCell.ver, Boolean.FALSE);
                 }
             }
             if (entry.getY() + 1 < board.getHeight()) {
                 board.getCell(entry.getX(), entry.getY() + 1).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
-                board.getCell(entry.getX() + entry.getWord().length() - 1, entry.getY() + 1).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
-                for (int x = entry.getX(); x < entry.getX() + entry.getWord().length(); x++) {
+                if (entry.getX() + entry.getWord().length() - 1 < board.getWidth()) {
+                    board.getCell(entry.getX() + entry.getWord().length() - 1, entry.getY() + 1).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
+                }
+                for (int x = entry.getX(); x < entry.getX() + entry.getWord().length() && x < board.getWidth(); x++) {
                     board.getCell(x, entry.getY() + 1).setHorFalse();
                     board.getCell(x, entry.getY() + 1).setAbility(BoardCell.beg, BoardCell.ver, Boolean.FALSE);
                 }

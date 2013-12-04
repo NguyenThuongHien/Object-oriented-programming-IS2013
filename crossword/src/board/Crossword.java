@@ -85,9 +85,15 @@ public class Crossword {
                 throw new FailedToGenerateCrosswordException("Wrong file format!");
             }
             board = new Board(width, height);
-            while ((temp = reader.readLine()) != null) {
+            int count = 0;
+            String tempStr1, tempStr2;
+            while (((temp = reader.readLine()) != null) && ((tempStr1 = reader.readLine()) != null) && ((tempStr2 = reader.readLine()) != null)) {
+                if (tempStr1.length() < 2 || tempStr2.length() < 2) {
+                    throw new FailedToGenerateCrosswordException("Wrong file format!");
+                }
+                count++;
                 splited = temp.split(" ");
-                if (splited.length < 3) {
+                if (splited.length != 3) {
                     throw new FailedToGenerateCrosswordException("Wrong file format!");
                 }
                 temp1 = Integer.parseInt(splited[0]);
@@ -96,21 +102,21 @@ public class Crossword {
                     throw new FailedToGenerateCrosswordException("Wrong data in file!");
                 switch (splited[2]) {
                     case "HORIZ":
-                        addCwEntry(new CwEntry(reader.readLine(),
-                                reader.readLine(), Integer.parseInt(splited[0]),
-                                Integer.parseInt(splited[1]),
+                        addCwEntry(new CwEntry(tempStr1, tempStr2, 
+                                Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.HORIZ), strategy);
                         break;
                     case "VERT":
-                        addCwEntry(new CwEntry(reader.readLine(),
-                                reader.readLine(), Integer.parseInt(splited[0]),
-                                Integer.parseInt(splited[1]),
+                        addCwEntry(new CwEntry(tempStr1, tempStr2, 
+                                Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.VERT), strategy);
                         break;
                     default:
                         throw new FailedToGenerateCrosswordException("Wrong file format!");
                 }
             }
+            if (this.strategyID == Strategy.easyStrategyID && count < height + 1)
+                throw new FailedToGenerateCrosswordException("Wrong file format!");
         }
 
     }

@@ -113,12 +113,12 @@ public class EasyStrategy extends Strategy {
     @Override
     public void updateBoard(Board board, CwEntry entry) {
         if (entry.getDir() == CwEntry.Direction.VERT) {
-            for (int y = entry.getY(); y < entry.getWord().length(); y++) {
+            for (int y = entry.getY(); y < entry.getWord().length() && y < board.getHeight(); y++) {
                 board.getCell(entry.getX(), y).setContent(
                         entry.getWord().charAt(y));
             }
         } else {
-            for (int x = entry.getX(); x < entry.getWord().length(); x++) {
+            for (int x = entry.getX(); x < entry.getWord().length() && x < board.getWidth(); x++) {
                 board.getCell(x, entry.getY()).setContent(
                         entry.getWord().charAt(x));
             }
