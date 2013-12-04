@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 
 public class EchoClient {
+
 	private Socket echoSocket = null;
 	private PrintWriter out = null;
 	private BufferedReader in = null;
@@ -14,12 +15,17 @@ public class EchoClient {
 		EchoClient haha = new EchoClient();
 		haha.findPassword();
 		System.out.println("Finito");
-		// try {
-		// haha.loginToServer("szymon", "zadźwigany");
-		// haha.ls();
-		// } catch (IOException e) {
-		// e.printStackTrace(System.out);
-		// }
+//		try {
+//			if (haha.loginToServer("szymon", "zadźwigany")) {
+//				if (haha.ls()) {
+//					haha.get(0);
+//					haha.get(1);
+//					haha.get(2);
+//				}
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace(System.out);
+//		}
 	}
 
 	public void connect() {
@@ -39,12 +45,15 @@ public class EchoClient {
 	}
 
 	public void closeAll() throws IOException {
-		if (out != null)
+		if (out != null) {
 			out.close();
-		if (in != null)
+		}
+		if (in != null) {
 			in.close();
-		if (echoSocket != null)
+		}
+		if (echoSocket != null) {
 			echoSocket.close();
+		}
 	}
 
 	public boolean loginToServer(String login, String password)
@@ -78,8 +87,9 @@ public class EchoClient {
 		String result = in.readLine();
 		System.out.println("echo: " + result);
 		closeAll();
-		if (result.equals("false"))
+		if (result.equals("false")) {
 			return false;
+		}
 		files = result.split(";");
 		return true;
 	}
@@ -107,7 +117,7 @@ public class EchoClient {
 			int i = 0;
 			boolean flag = false;
 			while ((strLine = br.readLine()) != null) {
-				if (strLine.contains("zadźwigany")) {
+				if (strLine.contains("zadreptany")) {
 					flag = true;
 				}
 				if (flag) {
