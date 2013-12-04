@@ -131,7 +131,7 @@ public class DrawingPanel extends JPanel implements Printable {
                 if (actual.checkBoardCell(i, j - 1)) {
                     try {
                         JFormattedTextField a = new JFormattedTextField(new MaskFormatter("U"));
-                        a.setBounds(i * 30 + 36, (j - 1) * 30 + 30, 30, 30);
+                        a.setBounds(i * 30 + 36 + 1, (j - 1) * 30 + 30 + 1, 28, 28);
                         a.setHorizontalAlignment(JTextField.CENTER);
                         this.add(a);
                     } catch (ParseException e) {
@@ -179,6 +179,10 @@ public class DrawingPanel extends JPanel implements Printable {
                 if (actual.checkBoardCell(i, j - 1)) {
                     graphic.drawRect(35 + i * 30 + constXY, 30 + (j - 1) * 30 + constXY,
                             30, 30);
+                    graphic.setColor(Color.gray);
+                    graphic.drawRect(35 + i * 30 + constXY + 2, 30 + (j - 1) * 30 + constXY + 2,
+                            26, 26);
+                    graphic.setColor(Color.black);
                 }
             }
         }
