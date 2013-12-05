@@ -1,6 +1,5 @@
 package graphicalInterface;
 
-
 /**
  *
  * @author wukat
@@ -17,7 +16,6 @@ public class CrosswordMain {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {

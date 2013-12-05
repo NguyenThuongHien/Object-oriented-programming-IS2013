@@ -1,7 +1,6 @@
 package browser;
 
 import board.Crossword;
-import board.Strategy;
 import com.itextpdf.awt.PdfGraphics2D;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

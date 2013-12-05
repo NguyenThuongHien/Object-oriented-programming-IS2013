@@ -98,16 +98,17 @@ public class Crossword {
                 }
                 temp1 = Integer.parseInt(splited[0]);
                 temp2 = Integer.parseInt(splited[1]);
-                if (temp1 < 0 || temp1 >= width || temp2 < 0 || temp2 >= height)
+                if (temp1 < 0 || temp1 >= width || temp2 < 0 || temp2 >= height) {
                     throw new FailedToGenerateCrosswordException("Wrong data in file!");
+                }
                 switch (splited[2]) {
                     case "HORIZ":
-                        addCwEntry(new CwEntry(tempStr1, tempStr2, 
+                        addCwEntry(new CwEntry(tempStr1, tempStr2,
                                 Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.HORIZ), strategy);
                         break;
                     case "VERT":
-                        addCwEntry(new CwEntry(tempStr1, tempStr2, 
+                        addCwEntry(new CwEntry(tempStr1, tempStr2,
                                 Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
                                 dictionary.CwEntry.Direction.VERT), strategy);
                         break;
@@ -115,8 +116,9 @@ public class Crossword {
                         throw new FailedToGenerateCrosswordException("Wrong file format!");
                 }
             }
-            if (this.strategyID == Strategy.easyStrategyID && count < height + 1)
+            if (this.strategyID == Strategy.easyStrategyID && count < height + 1) {
                 throw new FailedToGenerateCrosswordException("Wrong file format!");
+            }
         }
 
     }
@@ -146,6 +148,15 @@ public class Crossword {
      */
     private LinkedList<CwEntry> getEntries() {
         return entries;
+    }
+
+    /**
+     * Gets number of entries (clues to show) in crossword
+     *
+     * @return entries size.
+     */
+    public int getNumberOfClues() {
+        return entries.size();
     }
 
     /**

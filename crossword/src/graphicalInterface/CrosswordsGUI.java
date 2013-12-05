@@ -136,9 +136,9 @@ public class CrosswordsGUI extends javax.swing.JFrame {
 
         rowsLabel.setText("Rows");
 
-        columns.setModel(new javax.swing.SpinnerNumberModel(5, 2, 14, 1));
+        columns.setModel(new javax.swing.SpinnerNumberModel(5, 2, 15, 1));
 
-        rows.setModel(new javax.swing.SpinnerNumberModel(5, 2, 14, 1));
+        rows.setModel(new javax.swing.SpinnerNumberModel(5, 2, 15, 1));
 
         generateButton.setText("Generate");
         generateButton.addActionListener(new java.awt.event.ActionListener() {
