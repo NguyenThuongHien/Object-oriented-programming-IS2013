@@ -10,7 +10,11 @@ import Strategies.Strategy;
 import browser.CwBrowser;
 import com.itextpdf.text.DocumentException;
 import dictionary.IntelLiCwDB;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -416,7 +420,9 @@ public class CrosswordsGUI extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (fc.showDialog(loadButton, "Open directory") == JFileChooser.APPROVE_OPTION) {
             try {
-                JOptionPane.showMessageDialog(null, browser.loadFromFiles(fc.getSelectedFile().getPath()));
+                JScrollPane messagePanel = new JScrollPane(new JTextArea(browser.loadFromFiles(fc.getSelectedFile().getPath())));
+                messagePanel.setPreferredSize(new Dimension(520, 300));
+                JOptionPane.showMessageDialog(null, messagePanel);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                         "Operation failed", JOptionPane.ERROR_MESSAGE);
