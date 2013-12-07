@@ -1,6 +1,8 @@
-package board;
+package Strategies;
 
 import Exceptions.FailedToGenerateCrosswordException;
+import board.Board;
+import board.Crossword;
 import dictionary.CwEntry;
 
 /**

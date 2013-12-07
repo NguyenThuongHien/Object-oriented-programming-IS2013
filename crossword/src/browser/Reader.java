@@ -5,9 +5,8 @@
  */
 package browser;
 
-import Exceptions.FailedToLoadAllCwsException;
 
-import board.Strategy;
+import Strategies.Strategy;
 import java.io.IOException;
 
 
@@ -23,7 +22,6 @@ interface Reader {
      * @param easyStrategy
      * @param hardStrategy 
      * @throws IOException
-     * @throws FailedToLoadAllCwsException - in this exception function returns list of loaded crossword
      */
-    public void getAllCws(Strategy easyStrategy, Strategy hardStrategy) throws IOException, FailedToLoadAllCwsException;
+    public CwsAndReport getAllCws(Strategy easyStrategy, Strategy hardStrategy) throws IOException;
 }

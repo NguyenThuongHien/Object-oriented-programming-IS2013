@@ -6,11 +6,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import Exceptions.FailedToGenerateCrosswordException;
-import Exceptions.FailedToLoadAllCwsException;
-import board.Strategy;
+import Strategies.Strategy;
 import browser.CwBrowser;
 import com.itextpdf.text.DocumentException;
 import dictionary.IntelLiCwDB;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -411,14 +411,12 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void loadButtonActionPerformed(ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (fc.showDialog(loadButton, "Open directory") == JFileChooser.APPROVE_OPTION) {
             try {
-                browser.loadFromFiles(fc.getSelectedFile().getPath());
-            } catch (FailedToLoadAllCwsException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                JOptionPane.showMessageDialog(null, browser.loadFromFiles(fc.getSelectedFile().getPath()));
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                         "Operation failed", JOptionPane.ERROR_MESSAGE);
@@ -439,7 +437,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void importButtonActionPerformed(ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt",
                 "txt");
@@ -464,7 +462,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void generateButtonActionPerformed(ActionEvent evt) {
         try {
             browser.generateCw(
                     Integer.parseInt(columns.getValue().toString()),
@@ -483,7 +481,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt
      */
-    private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void solveButtonActionPerformed(ActionEvent evt) {
         browser.paintSolved();
     }
 
@@ -492,7 +490,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void printButtonActionPerformed(ActionEvent evt) {
         try {
             browser.print();
         } catch (PrinterException ex) {
@@ -509,7 +507,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void prevButtonActionPerformed(ActionEvent evt) {
         browser.previous();
         actualizeButtons();
     }
@@ -521,7 +519,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void nextButtonActionPerformed(ActionEvent evt) {
         browser.next();
         actualizeButtons();
     }
@@ -532,7 +530,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt - event
      */
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void saveButtonActionPerformed(ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (fc.showDialog(saveButton, "Save in directory") == JFileChooser.APPROVE_OPTION) {
@@ -551,7 +549,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
      *
      * @param evt
      */
-    private void toPDFButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void toPDFButtonActionPerformed(ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 

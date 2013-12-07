@@ -4,7 +4,6 @@ import Exceptions.FailedToGenerateCrosswordException;
 import board.Board;
 import board.BoardCell;
 import board.Crossword;
-import board.Strategy;
 import dictionary.CwEntry;
 import dictionary.Entry;
 import java.util.LinkedList;

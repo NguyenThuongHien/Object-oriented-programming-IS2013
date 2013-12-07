@@ -18,9 +18,9 @@ public class EchoClient {
 		try {
 			if (haha.loginToServer("szymon", "najakuratniej")) {
 				if (haha.ls()) {
-					haha.get(0);
-					haha.get(1);
-					haha.get(2);
+//					haha.get(0);
+//					haha.get(1);
+//					haha.get(2);
 				}
 //				haha.put();
 			}

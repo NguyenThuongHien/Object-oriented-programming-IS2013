@@ -3,7 +3,6 @@ package Strategies;
 import Exceptions.FailedToGenerateCrosswordException;
 import board.Board;
 import board.Crossword;
-import board.Strategy;
 import dictionary.CwEntry;
 import dictionary.Entry;
 

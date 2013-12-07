@@ -2,7 +2,7 @@ package graphicalInterface;
 
 import board.Board;
 import board.Crossword;
-import board.Strategy;
+import Strategies.Strategy;
 import dictionary.CwEntry;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,7 +23,7 @@ import javax.swing.text.MaskFormatter;
 public class DrawingPanel extends JPanel implements Printable {
 
     Crossword actual = null; // actual crossword showed on panel
-    JFormattedTextField[][] textBoard = null;
+    JFormattedTextField[][] textBoard = null; // text fields shown on board
 
     /**
      * Sets actual crossword to paint/print/solve&paint
@@ -38,9 +38,9 @@ public class DrawingPanel extends JPanel implements Printable {
     protected void paintComponent(Graphics graphic) {
         super.paintComponent(graphic);
         if (actual != null) {
-            paintCw(graphic, 0);
             int j = 0;
             int maxWidth = actual.getBoardWidth() * 30 + 45;
+            graphic.setColor(Color.black);
             for (String entry : actual.printAllEntries().split("\n")) {
                 graphic.drawString(entry, 10, actual.getBoardHeight() * 30 + 50 + j * 15);
                 if (maxWidth < entry.length() * 7) {
@@ -48,13 +48,21 @@ public class DrawingPanel extends JPanel implements Printable {
                 }
                 j++;
             }
-            if (this.getSize().width != maxWidth
+            if (this.getPreferredSize().width >= maxWidth && this.getPreferredSize().height >= j * 16
+                    + actual.getBoardHeight() * 30
+                    + 38) {
+                this.revalidate();
+                this.setPreferredSize(new Dimension(maxWidth, j * 16
+                        + actual.getBoardHeight() * 30 + 38));
+                this.paintCw(graphic, 0);
+            } else if (this.getSize().width != maxWidth
                     || this.getSize().height != j * 16
                     + actual.getBoardHeight() * 30
                     + 38) {
                 this.setPreferredSize(new Dimension(maxWidth, j * 16
                         + actual.getBoardHeight() * 30 + 38));
                 this.revalidate();
+                this.paintCw(graphic, 0);
                 this.repaint();
             }
         }
@@ -175,14 +183,26 @@ public class DrawingPanel extends JPanel implements Printable {
         for (int i = 0; i < actual.getBoardWidth(); i++) {
             for (j = 1; j <= actual.getBoardHeight(); j++) {
                 if (actual.checkBoardCell(i, j - 1)) {
-                    graphic.drawRect(35 + i * 30 + constXY, 30 + (j - 1) * 30 + constXY,
-                            30, 30);
-                    graphic.setColor(Color.gray);
-                    graphic.drawRect(35 + i * 30 + constXY + 2, 30 + (j - 1) * 30 + constXY + 2,
-                            26, 26);
-                    graphic.setColor(Color.black);
+                    paintCell(graphic, i, j - 1, constXY);
                 }
             }
         }
+    }
+
+    /**
+     * Paints single cell
+     *
+     * @param graphic
+     * @param i - position
+     * @param j - position
+     * @param constXY - shift
+     */
+    private void paintCell(Graphics graphic, int i, int j, int constXY) {
+        graphic.setColor(Color.black);
+        graphic.drawRect(35 + i * 30 + constXY, 30 + j * 30 + constXY,
+                30, 30);
+        graphic.setColor(Color.gray);
+        graphic.drawRect(35 + i * 30 + constXY + 2, 30 + j * 30 + constXY + 2,
+                26, 26);
     }
 }
