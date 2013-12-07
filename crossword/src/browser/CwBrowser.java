@@ -274,15 +274,14 @@ public class CwBrowser {
         drawingPane.setActual(actual);
         drawingPane.removeAll();
         drawingPane.paint(drawingPane.getGraphics());
-        drawingPane.revalidate();
-        drawingPane.repaint();
+        drawingPane.paintSolveable(drawingPane.getGraphics());
     }
 
     /**
-     * Function paints crossword with text fields
+     * Function paints crossword with filled text fields
      */
-    public void paintSolveable() {
-        drawingPane.paintSolveable(drawingPane.getGraphics());
+    public void paintSolved() {
+        drawingPane.paintSolved(drawingPane.getGraphics());
     }
 
     /**

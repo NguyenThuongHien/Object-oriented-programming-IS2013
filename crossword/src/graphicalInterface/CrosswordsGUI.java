@@ -479,12 +479,12 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Action when solve button pressed, painting solveable crossword
+     * Action when solve button pressed, painting solved crossword
      *
      * @param evt
      */
     private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        browser.paintSolveable();
+        browser.paintSolved();
     }
 
     /**

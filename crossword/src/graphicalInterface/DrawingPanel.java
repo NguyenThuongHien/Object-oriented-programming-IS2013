@@ -1,5 +1,6 @@
 package graphicalInterface;
 
+import board.Board;
 import board.Crossword;
 import board.Strategy;
 import dictionary.CwEntry;
@@ -22,6 +23,7 @@ import javax.swing.text.MaskFormatter;
 public class DrawingPanel extends JPanel implements Printable {
 
     Crossword actual = null; // actual crossword showed on panel
+    JFormattedTextField[][] textBoard = null;
 
     /**
      * Sets actual crossword to paint/print/solve&paint
@@ -49,9 +51,11 @@ public class DrawingPanel extends JPanel implements Printable {
             if (this.getSize().width != maxWidth
                     || this.getSize().height != j * 16
                     + actual.getBoardHeight() * 30
-                    + 18) {
+                    + 38) {
                 this.setPreferredSize(new Dimension(maxWidth, j * 16
                         + actual.getBoardHeight() * 30 + 38));
+                this.revalidate();
+                this.repaint();
             }
         }
     }
@@ -93,21 +97,47 @@ public class DrawingPanel extends JPanel implements Printable {
      */
     public void paintSolveable(Graphics graphic) {
         graphic.setColor(Color.BLACK);
+        textBoard = new JFormattedTextField[actual.getBoardWidth()][actual.getBoardHeight()];
         for (int i = 0; i < actual.getBoardWidth(); i++) {
             for (Integer j = 1; j <= actual
                     .getBoardHeight(); j++) {
                 if (actual.checkBoardCell(i, j - 1)) {
                     try {
-                        JFormattedTextField a = new JFormattedTextField(new MaskFormatter("U"));
-                        a.setBounds(i * 30 + 36 + 1, (j - 1) * 30 + 30 + 1, 28, 28);
-                        a.setHorizontalAlignment(JTextField.CENTER);
-                        this.add(a);
+                        textBoard[i][j - 1] = new JFormattedTextField(new MaskFormatter("U"));
+                        textBoard[i][j - 1].setBounds(i * 30 + 36 + 1, (j - 1) * 30 + 30 + 1, 28, 28);
+                        textBoard[i][j - 1].setHorizontalAlignment(JTextField.CENTER);
+                        this.add(textBoard[i][j - 1]);
                     } catch (ParseException e) {
                     }
                 }
             }
         }
-        this.repaint();
+    }
+
+    /**
+     * Paints solved crossword, green color when the field is filled properly,
+     * red otherwise.
+     *
+     * @param graphic
+     */
+    public void paintSolved(Graphics graphic) {
+        graphic.setColor(Color.BLACK);
+        Board tempBoard = actual.getBoardCopy();
+        for (int i = 0; i < actual.getBoardWidth(); i++) {
+            for (Integer j = 1; j <= actual
+                    .getBoardHeight(); j++) {
+                if (tempBoard.getCell(i, j - 1).checkContent()) {
+                    String temp = tempBoard.getCell(i, j - 1).getContent();
+                    if (temp.equals(textBoard[i][j - 1].getText())) {
+                        textBoard[i][j - 1].setForeground(Color.green);
+                    } else {
+                        textBoard[i][j - 1].setForeground(Color.red);
+                    }
+                    textBoard[i][j - 1].setText(temp);
+                    this.add(textBoard[i][j - 1]);
+                }
+            }
+        }
     }
 
     /**
