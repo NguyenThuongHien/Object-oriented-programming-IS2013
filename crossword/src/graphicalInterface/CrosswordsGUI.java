@@ -13,6 +13,7 @@ import dictionary.IntelLiCwDB;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +23,7 @@ import javax.swing.JTextArea;
  *
  * @author wukat
  */
-public class CrosswordsGUI extends javax.swing.JFrame {
+public class CrosswordsGUI extends JFrame {
 
     /**
      * Function checks and sets buttons to enable or disable state
@@ -43,31 +44,36 @@ public class CrosswordsGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Creates new form ProgramNB
+     * Creates new CrosswordsGUI
      */
     public CrosswordsGUI() {
+        initComponents();
+        actualizeButtons();
+    }
+
+    /**
+     * Try to create browser instance.
+     *
+     * @return true, if program can start (browser created), false otherwise.
+     */
+    public static Boolean tryToStart() {
+        Boolean flag = Boolean.FALSE;
         try {
             browser = new CwBrowser(null);
+            flag = Boolean.TRUE;
         } catch (IOException e) {
             Object[] options = {"Yes", "No",};
-            int n = JOptionPane
-                    .showOptionDialog(
-                            null,
-                            "Failed to load default data base. Do you want to choose it manually?",
-                            "Failed to start",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.ERROR_MESSAGE, null, options,
-                            options[0]);
-
+            int n = JOptionPane.showOptionDialog(null,
+                    "Failed to load default data base. Do you want to choose it manually?",
+                    "Failed to start", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.ERROR_MESSAGE, null, options, options[0]);
             if (n == 0) {
                 JFileChooser fc = new JFileChooser();
-                int returnVal = fc.showDialog(fc, "Import database");
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                if (fc.showDialog(fc, "Import database") == JFileChooser.APPROVE_OPTION) {
                     try {
                         browser = new CwBrowser(fc.getSelectedFile()
                                 .getAbsolutePath());
-                        new CrosswordsGUI().setVisible(true);
-
+                        flag = Boolean.TRUE;
                     } catch (IOException a) {
                         JOptionPane.showMessageDialog(null,
                                 "Failed to load data base.",
@@ -86,9 +92,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
                         "Failed to start", JOptionPane.ERROR_MESSAGE);
             }
         }
-
-        initComponents();
-        actualizeButtons();
+        return flag;
     }
 
     /**
@@ -436,7 +440,7 @@ public class CrosswordsGUI extends javax.swing.JFrame {
                     JScrollPane messagePanel = new JScrollPane(new JTextArea(message));
                     dialogPanel.add(new JLabel(temp[0] + temp[1]));
                     dialogPanel.add(messagePanel);
-                    dialogPanel.add( new JLabel(temp[temp.length - 1]));
+                    dialogPanel.add(new JLabel(temp[temp.length - 1]));
                     messagePanel.setPreferredSize(new Dimension(520, 300));
                     dialogPanel.setPreferredSize(new Dimension(520, 345));
                     JOptionPane.showMessageDialog(null, dialogPanel, "Report", JOptionPane.PLAIN_MESSAGE);

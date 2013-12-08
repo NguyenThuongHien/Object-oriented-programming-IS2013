@@ -26,7 +26,9 @@ public class CrosswordMain {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CrosswordsGUI().setVisible(true);
+                if (CrosswordsGUI.tryToStart()) {
+                    new CrosswordsGUI().setVisible(true);
+                }
             }
         });
     }
