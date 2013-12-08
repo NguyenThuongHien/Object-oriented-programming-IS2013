@@ -39,18 +39,18 @@ public class CwReader implements Reader {
 	public CwsAndReport getAllCws(Strategy easyStrategy, Strategy hardStrategy)
 			throws IOException {
 		LinkedList<Crossword> crosswords = new LinkedList<>();
-		String message = "Failed to read create crossword from every file in directory. This files failed: \n";
+		String message = "Failed to read/create crossword from every file in directory. \nThis files failed: \n";
 		if (file.listFiles().length == 0) {
 			throw new IOException("Directory is empty!");
 		} else {
 			for (File f : file.listFiles()) {
 				if (f.isHidden()) {
-					message = message + f.getName() + " - File is hidden! \n";
+					message = message + f.getName() + " - File is hidden!\n";
 				} else if (!f.canRead()) {
 					message = message + f.getName()
-							+ " - File is not readable! \n";
+							+ " - File is not readable!\n";
 				} else if (f.isDirectory()) {
-					message = message + f.getName() + " - It's a directory! \n";
+					message = message + f.getName() + " - It's a directory!\n";
 				} else {
 					try {
 						crosswords.add(new Crossword(
@@ -58,7 +58,7 @@ public class CwReader implements Reader {
 								hardStrategy));
 					} catch (NumberFormatException a) {
 						message = message + f.getName()
-								+ " - Wrong file name or format! \n";
+								+ " - Wrong file name or format!\n";
 					} catch (FailedToGenerateCrosswordException a) {
 						message = message + f.getName() + " - "
 								+ a.getMessage() + "\n";

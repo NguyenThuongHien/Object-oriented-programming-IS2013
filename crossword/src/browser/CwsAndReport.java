@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class CwsAndReport {
 
     private LinkedList<Crossword> crosswords; // list of crosswords
-    private String message; // report
+    private final String message; // report
 
     /**
      * Getter
@@ -37,14 +37,16 @@ public class CwsAndReport {
      * @param crosswords
      */
     public CwsAndReport(String message, LinkedList<Crossword> crosswords) {
-    	this.message = message;
+        this.message = message;
         this.crosswords = crosswords;
     }
 
-	/**
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
-	}
+    /**
+     * Getter
+     *
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
 }

@@ -10,9 +10,11 @@ import Strategies.Strategy;
 import browser.CwBrowser;
 import com.itextpdf.text.DocumentException;
 import dictionary.IntelLiCwDB;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -420,9 +422,25 @@ public class CrosswordsGUI extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (fc.showDialog(loadButton, "Open directory") == JFileChooser.APPROVE_OPTION) {
             try {
-                JScrollPane messagePanel = new JScrollPane(new JTextArea(browser.loadFromFiles(fc.getSelectedFile().getPath())));
-                messagePanel.setPreferredSize(new Dimension(520, 300));
-                JOptionPane.showMessageDialog(null, messagePanel);
+                String[] temp = browser.loadFromFiles(fc.getSelectedFile().getPath()).split("\n");
+                if (temp.length < 2) {
+                    JOptionPane.showMessageDialog(null, temp[0], "Report", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    String message = "";
+                    for (int i = 2; i < temp.length - 2; i++) {
+                        message = message + temp[i] + "\n";
+                    }
+                    message = message + temp[temp.length - 2];
+                    JPanel dialogPanel = new JPanel();
+                    dialogPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                    JScrollPane messagePanel = new JScrollPane(new JTextArea(message));
+                    dialogPanel.add(new JLabel(temp[0] + temp[1]));
+                    dialogPanel.add(messagePanel);
+                    dialogPanel.add( new JLabel(temp[temp.length - 1]));
+                    messagePanel.setPreferredSize(new Dimension(520, 300));
+                    dialogPanel.setPreferredSize(new Dimension(520, 345));
+                    JOptionPane.showMessageDialog(null, dialogPanel, "Report", JOptionPane.PLAIN_MESSAGE);
+                }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                         "Operation failed", JOptionPane.ERROR_MESSAGE);

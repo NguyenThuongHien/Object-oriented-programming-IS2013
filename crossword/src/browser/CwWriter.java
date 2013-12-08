@@ -93,7 +93,6 @@ public class CwWriter implements Writer {
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath() + "/" + getUniqueID().toString() + ".pdf"));
 
         document.open();
-        document.add(new Paragraph("Crossword"));
         PdfContentByte cb = writer.getDirectContent();
         PdfTemplate temp = cb.createTemplate(PageSize.A4.getWidth(), PageSize.A4.getHeight());
         Graphics2D graphic = new PdfGraphics2D(cb, PageSize.A4.getWidth(), PageSize.A4.getHeight());
@@ -105,7 +104,7 @@ public class CwWriter implements Writer {
         BaseFont baseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1250, BaseFont.EMBEDDED);
         Font font = new Font(baseFont, 15, Font.NORMAL);
         Paragraph pageParagraph = new Paragraph();
-        for (int j = 1; j <= crossword.getBoardHeight(); j++) {
+        for (int j = 1; j <= crossword.getBoardHeight() + 1; j++) {
             pageParagraph.add(new Chunk("\n").setLineHeight(30));
         }
         pageParagraph.add(new Chunk("\n\n", font).setLineHeight(15));
