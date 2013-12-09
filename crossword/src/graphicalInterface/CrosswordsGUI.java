@@ -57,6 +57,8 @@ public class CrosswordsGUI extends JFrame {
      * @return true, if program can start (browser created), false otherwise.
      */
     public static Boolean tryToStart() {
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt",
+                "txt");
         Boolean flag = Boolean.FALSE;
         try {
             browser = new CwBrowser(null);
@@ -69,6 +71,8 @@ public class CrosswordsGUI extends JFrame {
                     JOptionPane.ERROR_MESSAGE, null, options, options[0]);
             if (n == 0) {
                 JFileChooser fc = new JFileChooser();
+                fc.setAcceptAllFileFilterUsed(false);
+                fc.setFileFilter(filter);
                 if (fc.showDialog(fc, "Import database") == JFileChooser.APPROVE_OPTION) {
                     try {
                         browser = new CwBrowser(fc.getSelectedFile()
