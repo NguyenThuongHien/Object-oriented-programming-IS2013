@@ -43,7 +43,7 @@ public class CwBrowser {
 	 */
 	public CwBrowser(String cwDBpath) throws IOException {
 		if (cwDBpath == null) {
-			cwDBpath = "cwdb.txt";
+			cwDBpath = "src/dictionary/cwdb.txt";
 		}
 		defaultCwDB = new IntelLiCwDB(cwDBpath);
 		crosswords = new LinkedList<>();
