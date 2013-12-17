@@ -2,9 +2,12 @@ package lab9;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EchoServer implements Runnable {
 
+	static private ExecutorService ex = Executors.newFixedThreadPool(5);
 	public static void acceptConnections() {
 		try {
 			ServerSocket server = new ServerSocket(13666);
@@ -22,7 +25,7 @@ public class EchoServer implements Runnable {
 	}
 
 	public static void handleConnection(Socket connectionToHandle) {
-		new Thread(new EchoServer(connectionToHandle)).start();
+		ex.execute(new EchoServer(connectionToHandle));
 	}
 
 	static Socket socketToHandle;
@@ -49,7 +52,7 @@ public class EchoServer implements Runnable {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {		
 		acceptConnections();
 	}
 }
