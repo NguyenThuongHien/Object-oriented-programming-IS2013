@@ -8,8 +8,8 @@ import java.util.concurrent.Executors;
  * 
  */
 public class Philosopher implements Runnable {
-
-	final static Fork[] Forks = new Fork[5];
+	
+	final static Fork[] Forks = {new Fork(), new Fork(), new Fork(), new Fork(), new Fork()};
 	final int ID;
 	final Fork left;
 	final Fork right;
@@ -36,7 +36,7 @@ public class Philosopher implements Runnable {
 			System.out.println(ID + " bierze prawy widelec");
 			right.use();
 			Thread.currentThread();
-			Thread.sleep(500);
+			Thread.sleep(200);
 			System.out.println(ID
 					+ " oddaje się przyziemnej przyjemności jedzenia");
 			left.drop();
@@ -48,7 +48,7 @@ public class Philosopher implements Runnable {
 		try {
 			live();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.out.println("PAT KONIEC ŻARCIA");
 		}
 	}
 
