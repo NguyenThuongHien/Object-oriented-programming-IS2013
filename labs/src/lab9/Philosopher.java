@@ -44,11 +44,12 @@ public class Philosopher implements Runnable {
 		}
 	}
 
+        @Override
 	public void run() {
 		try {
 			live();
 		} catch (InterruptedException e) {
-			System.out.println("PAT KONIEC ŻARCIA");
+			System.out.println("pat");
 		}
 	}
 
