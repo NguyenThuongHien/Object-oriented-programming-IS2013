@@ -1,5 +1,6 @@
 package lab9;
 
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -28,17 +29,18 @@ public class Philosopher implements Runnable {
     }
 
     public void live() throws InterruptedException {
+        Random rand = new Random();
         while (true) {
             System.out.println(ID
                     + " właśnie kontempluje piękno otaczającego świata");
             Thread.currentThread();
-            Thread.sleep(100);
+            Thread.sleep(rand.nextInt(100) +30);
             System.out.println(ID + " bierze lewy widelec");
             left.use();
             System.out.println(ID + " bierze prawy widelec");
             right.use();
             Thread.currentThread();
-            Thread.sleep(200);
+            Thread.sleep(rand.nextInt(100) + 30);
             System.out.println(ID
                     + " oddaje się przyziemnej przyjemności jedzenia");
             left.drop();
