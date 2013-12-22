@@ -11,7 +11,7 @@ public class Fork {
 	private boolean using = false;
 
 	public synchronized void use() throws InterruptedException {
-		if (using)
+		while (using)
 			wait();
 		using = true;
 	}
