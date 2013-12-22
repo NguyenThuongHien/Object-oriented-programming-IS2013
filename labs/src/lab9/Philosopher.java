@@ -65,7 +65,6 @@ public class Philosopher implements Runnable {
         execut.execute(new Philosopher(3));
         execut.execute(new Philosopher(4));
 
-        Thread.currentThread();
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
