@@ -68,7 +68,7 @@ public class Philosopher implements Runnable {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(Philosopher.class.getName()).log(Level.SEVERE, null, ex);
+            ;
         }
         execut.shutdownNow();
     }
