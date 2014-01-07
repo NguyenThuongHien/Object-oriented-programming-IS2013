@@ -28,4 +28,28 @@ public class Wielobok extends Polygon {
 // narysowanie wieloboku o kształcie obiektu klasy Wielobok (Polygon)
         g.setColor(b); // przywrócenie bieżącego koloru kanwy
     }
+    
+    void przesun(int dx, int dy) {
+        super.translate(dx, dy);
+    }
+    
+    void skaluj(double sx, double sy) {
+        for (int x : super.xpoints) 
+            x = (int) Math.round(x * sx);
+        for (int y : super.ypoints) 
+            y = (int) Math.round(y * sy);
+    }
+    
+    void obrot(int x0, int y0, int alfa) {
+        przesun(-x0, -y0);
+        int [] x = super.xpoints;
+        int [] y = super.ypoints;
+        int tempX;
+        for (int i = 0; i < super.npoints; i++) {
+            tempX = (int) Math.round(x[i] * Math.cos(alfa * Math.PI / 180) - y[i] * Math.sin(alfa * 2 * Math.PI / 180));
+            y[i] = (int) Math.round(x[i] * Math.cos(alfa * Math.PI / 180) + y[i] * Math.sin(alfa * 2 * Math.PI / 180));
+            x[i] = tempX;
+        }
+        przesun(x0, y0);
+    }
 }
